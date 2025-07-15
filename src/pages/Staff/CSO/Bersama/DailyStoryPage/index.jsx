@@ -1,0 +1,185 @@
+import ContainerCarrot from "@/components/Container";
+import { StyledDailyStoryPage } from "./DailyStoryPage.styled";
+import InfoCard from "@/components/InfoCard";
+import { useMemo } from "react";
+import Loading from "@/components/Loading";
+import { LuCloudOff, LuCloudUpload} from "react-icons/lu";
+import ProgressBarChart from "@/components/ProgressBarChart";
+import SistemTabs from "@/components/SistemTabs";
+import { Checkbox, useToast } from "@chakra-ui/react";
+import { endOfWeek, format, parse, startOfWeek } from "date-fns";
+import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
+import { getDailyStoryData, markStoryAsDone } from "@/features/cso/csoApiService";
+
+const tabItems = [
+    {key: 'undone', label: 'Not Done'},
+    {key: 'done', label: 'Done'}
+];
+
+function DailyStoryPage() {
+    const queryClient = useQueryClient();
+    const toast = useToast();
+
+    const { data: story, isLoading, isError, error } = useQuery({
+        queryKey: ['dailyStory'],
+        queryFn: getDailyStoryData,
+        initialData: { undone: [], done: [] }
+    });
+
+    const { mutate: markDoneMutation } = useMutation({
+        mutationFn: (rowData) => markStoryAsDone(rowData.tanggal),
+        onMutate: async (updatedRow) => {
+            await queryClient.cancelQueries({ queryKey: ['dailyStory'] });
+
+            const previousStoryData = queryClient.getQueryData(['dailyStory']);
+
+            queryClient.setQueryData(['dailyStory'], (oldData) => {
+                if (!oldData) return { undone: [], done: [] };
+                const newUndone = oldData.undone.map(item => {
+                    if (item.id === updatedRow.id) {
+                        return { ...item, done: true };
+                    }
+                    return item;
+                });
+                return { ...oldData, undone: newUndone };
+            });
+            return { previousStoryData };
+        },
+        onError: (error, updatedRow, context) => {
+            if (context.previousStoryData) {
+                queryClient.setQueryData(['dailyStory'], context.previousStoryData);
+            }
+            toast({
+                title: 'Action Failed',
+                description: error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true
+            });
+        },
+        onSuccess: () => {
+            toast({
+                title: 'Update Sukses!',
+                status: 'success',
+                duration: 2000,
+                isClosable: true
+            });
+
+            setTimeout(() => {
+                queryClient.invalidateQueries({ queryKey: ['dailyStory'] });
+            }, 500);
+        },
+    });
+
+    const handleStoryDone = (rowData) => {
+       markDoneMutation(rowData);
+    }
+
+    const headerItems = [
+        { key: 'no', label: 'No' },
+        { key: 'tanggal', label: 'Tanggal' },
+        { key: 'link_dropbox', label: 'Link Dropbox' },
+        { key: 'status_marcom_ceklis', label: 'Status Marcom' },
+        { 
+            key: 'done',
+            label: 'Done?',
+            render: (item) => (
+                <Checkbox
+                    isChecked={item.done}
+                    isDisabled={item.done} 
+                    onChange={() => handleStoryDone(item)}
+                    colorScheme="orange"
+                    sx={{
+                        borderColor: 'orange.200', 
+                        bg: 'white',
+                        '.chakra-checkbox__control': {
+                            '&[data-checked]': {
+                                bg: '#f9dbcfff',
+                                borderColor: '#f9dbcfff',
+                            },
+                            '&[data-checked]:hover': {
+                                bg: '#FE7743',
+                                borderColor: '#FE7743',
+                            }
+                        }
+                    }}
+                />
+            )
+        }
+    ];
+
+    const weeklyProgressData = useMemo(() => {
+        const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        let weekData = daysOfWeek.map(day => ({day, progress: 0}));
+
+        const doneTasks = story.done;
+        if (doneTasks.length === 0) return weekData;
+
+        const now = new Date();
+        const startOfThisWeek = startOfWeek(now, { weekStartsOn: 1 });
+        const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
+
+        const tasksInThisWeek = doneTasks.filter(task => {
+            if (!task.timestamp) return false;
+
+            try {
+                const taskDate = parse(task.timestamp, 'M/d/yyyy HH:mm:ss', new Date());
+                return taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
+            } catch (e) {
+                console.error("Invalid date format in task:", e, task);
+                return false;
+            }
+        });
+
+        tasksInThisWeek.forEach(task => {
+            if (task.timestamp) {
+                const taskDate = parse(task.timestamp, 'M/d/yyyy HH:mm:ss', new Date());
+                const dayName = format(taskDate, 'EEE');
+                const dayIndex = weekData.findIndex(d => d.day.startsWith(dayName));
+                if (dayIndex !== -1) {
+                    weekData[dayIndex].progress += 1;
+                }
+            }
+        });
+
+        const maxProgressPerDay = 1; 
+        weekData = weekData.map(day => ({
+            ...day,
+            progress: Math.min(100, (day.progress / maxProgressPerDay) * 100)
+        }));
+
+        return weekData;
+    }, [story?.done])
+
+    if (isLoading) return <Loading />
+    if (isError) return <div>Error: {error.message}</div>;
+    const todayDay = format(new Date(), 'EEE');
+
+    return (
+        <StyledDailyStoryPage>
+            <ContainerCarrot>
+                <div className="hero-section">
+                    <div className="hero-section__left">
+                        <h1 className="page-title">Daily Story - Overview</h1>
+                        <div className="stats-grid-prospective">
+                            <InfoCard><LuCloudOff size="30px" /> <p>Total yang belum diupload</p> <p className="card__points">{story.undone.length}</p></InfoCard>
+                            <InfoCard><LuCloudUpload size="30px" /> <p>Total yang sudah diupload</p> <p className="card__points">{story.done.length}</p></InfoCard>
+                        </div>
+                    </div>
+                    <div className="hero-section__right">
+                        <InfoCard>
+                            <ProgressBarChart chartData={weeklyProgressData} todayDay={todayDay} />
+                        </InfoCard>
+                    </div>
+                </div>
+            </ContainerCarrot>
+            <div className="main-content-section">
+                <ContainerCarrot>
+                    <SistemTabs tabItems={tabItems} tableData={story} headerItems={headerItems} />
+                </ContainerCarrot>
+            </div>
+        </StyledDailyStoryPage>
+    );
+}
+
+export default DailyStoryPage;
