@@ -616,47 +616,44 @@ export const getPendaftaranLanjutan = async () => {
             params: { action: 'data-pendaftaran-lanjutan' }
         });
 
-        const result = response.data;
-
-        if (result.status === 'success') {
-            const headerItems = [
-                { key: 'nis', label: 'NIS' },
-                { key: 'nama', label: 'Nama' },
-                { key: 'linkPendaftaran', label: 'Link Pendaftaran' },
-                { key: 'tanggalKirim', label: 'Tanggal Kirim' }
-            ];
-
-            const formattedOpen = transformRawData(result.dataOpen || [], headerItems);
+        if (response.data.status === 'success') {
+            // Transform array data to object format
+            const transformData = (dataArray) => dataArray.map((row) => ({
+                psid: row[0],
+                nama: row[1],
+                linkPendaftaran: row[2],
+                tanggalKirim: row[3]
+            }));
 
             return {
-                dataOpen: formattedOpen
+                status: 'success',
+                dataOpen: transformData(response.data.dataOpen || []),
+                dataClose: transformData(response.data.dataClose || [])
             };
-        } else {
-            throw new Error(result.message || 'Failed to fetch data');
         }
+
+        throw new Error(response.data.message || 'Failed to fetch data');
     } catch (error) {
-        console.error("Error fetching pendaftaran lanjutan:", error);
-        throw error;
+        throw new Error(error.message || 'Failed to fetch data');
     }
 };
 
-export const postTanggalKirimPendaftaran = async ({ rowData }) => {
-    const params = new URLSearchParams({
-        action: 'input-tanggal-kirim',
-        nis: rowData.nis
-    });
-
+export const postTanggalKirimPendaftaran = async ({ rowData, tanggalKirim }) => {
     try {
-        const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
-        
-        const result = response.data;
-        if (result.status === 'success') {
-            return result;
-        } else {
-            throw new Error(result.message || 'Failed to submit data');
+        const response = await apiClient.post(ENDPOINT.csoBersama, null, {
+            params: {
+                action: 'input-tanggal-kirim',
+                psid: rowData.psid,
+                tanggalKirim
+            }
+        });
+
+        if (response.data.status === 'success') {
+            return response.data;
         }
+
+        throw new Error(response.data.message || 'Failed to update data');
     } catch (error) {
-        console.error("Error posting tanggal kirim:", error);
-        throw error;
+        throw new Error(error.message || 'Failed to update data');
     }
 };
