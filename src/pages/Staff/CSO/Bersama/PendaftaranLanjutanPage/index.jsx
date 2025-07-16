@@ -216,10 +216,10 @@ function PendaftaranLanjutanPage() {
                     </div>
                 </div>
                 <Box bg="white" borderRadius="24px" p={6} boxShadow="0 4px 12px rgba(0, 0, 0, 0.08)">
-                    <Tabs variant="soft-rounded" colorScheme="orange" onChange={() => setCurrentPage(1)}>
+                    <Tabs align="center" variant="soft-rounded" colorScheme="orange" onChange={() => setCurrentPage(1)}>
                         <TabList mb={4}>
-                            <Tab>Belum Terkirim</Tab>
-                            <Tab>Sudah Terkirim</Tab>
+                            <Tab _selected={{ color: 'white', bg: 'gray.800' }}>Belum Terkirim</Tab>
+                            <Tab _selected={{ color: 'white', bg: 'gray.800' }}>Sudah Terkirim</Tab>
                         </TabList>
                         <TabPanels>
                             <TabPanel p={0}>

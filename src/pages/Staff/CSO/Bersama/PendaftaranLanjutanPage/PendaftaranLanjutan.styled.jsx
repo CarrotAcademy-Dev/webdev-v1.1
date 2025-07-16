@@ -39,11 +39,11 @@ export const StyledPendaftaranLanjutanPage = styled.div`
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px solid #dde5f1ff;
         }
 
         th {
-            background-color: #F7FAFC;
+            background-color: #fbf9e8ff;
             font-weight: 600;
             color: #4A5568;
             white-space: nowrap;
