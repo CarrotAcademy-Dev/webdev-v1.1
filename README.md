@@ -33,7 +33,7 @@ Untuk menjalankan project ini di mesin lokal, ikutin langkah-langkah berikut:
 
 1.  **Clone Repository**
     ```bash
-    git clone [URL_REPOSITORY_GITHUB_LO]
+    git clone https://github.com/CarrotAcademy-Dev/webdev-v1.1.git
     cd [NAMA_FOLDER_PROJECT]
     ```
 
