@@ -1,12 +1,13 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
-import Loading from "@/components/Loading";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
 import { Checkbox, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
 import { getLostnFound, postLostNFound } from "@/features/cso/csoApiService";
 import { StyledLostNFoundPage } from "./LostNFound.styled";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const tabItems = [
     {key: 'dataOpen', label: 'Ticket Open'},
@@ -18,9 +19,9 @@ function LostNFoundPage() {
     const toast = useToast();
 
     const { data: lostnfound, isLoading, isError, error } = useQuery({
-        queryKey: ['lostNFound'],
+        queryKey: ['lostFound'],
         queryFn: getLostnFound,
-        initialData: { dataOpen: [], dataClose: [] }
+        placeholderData: { dataOpen: [], dataClose: [] }
     });
 
     const { mutate: markDoneMutation } = useMutation({
@@ -34,7 +35,7 @@ function LostNFoundPage() {
                 if (!oldData) return { dataOpen: [], dataClose: [] };
                 const newUndone = oldData.dataOpen.map(item => {
                     if (item.id === updatedRow.id) {
-                        return { ...item, dataOpen: true };
+                        return { ...item, done: true };
                     }
                     return item;
                 });
@@ -109,7 +110,6 @@ function LostNFoundPage() {
         }
     ];
 
-    if (isLoading) return <Loading />
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
@@ -119,15 +119,23 @@ function LostNFoundPage() {
                     <div className="hero-section__left">
                         <h1 className="page-title">Lost And Found - Overview</h1>
                         <div className="stats-grid-prospective">
-                            <InfoCard><LuTicket size="30px" /> <p>Total ticket yang masih Open</p> <p className="card__points">{lostnfound.dataOpen.length}</p></InfoCard>
-                            <InfoCard><LuTicketCheck size="30px" /> <p>Total ticket yang sudah closed</p> <p className="card__points">{lostnfound.dataClose.length}</p></InfoCard>
+                            <InfoCard>
+                                <LuTicket size="30px" />
+                                <p>Total ticket yang masih Open</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{lostnfound.dataOpen.length}</p>}
+                            </InfoCard>
+                            <InfoCard>
+                                <LuTicketCheck size="30px" />
+                                <p>Total ticket yang sudah closed</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{lostnfound.dataClose.length}</p>}
+                            </InfoCard>
                         </div>
                     </div>
                 </div>
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={lostnfound} headerItems={headerItems} />
+                    <SistemTabs tabItems={tabItems} tableData={lostnfound} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledLostNFoundPage>

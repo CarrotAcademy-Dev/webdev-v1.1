@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { nanoid } from 'nanoid';
+import { API_CONFIG } from '@/config/api.config';
+import { logError, ApiError } from '@/utils/errorHandler';
 
 const apiClient = axios.create({
-    baseURL: 'https://script.google.com/macros/s',
+    baseURL: API_CONFIG.baseURL,
     withCredentials: false,
-    timeout: 30000,
+    timeout: API_CONFIG.timeout,
     validateStatus: function () {
         return true; 
     },
@@ -12,8 +14,36 @@ const apiClient = axios.create({
         return data;
     }]
 });
+
 const ENDPOINT = {
-    'csoBersama': '/AKfycbzDiNXFej4tFpppXYDFPg0wwlOWvCBZ1jbFpQmDVojdb1f1TvVjfPw9jkkb5_oqVYDAwA/exec',
+    'csoBersama': API_CONFIG.endpoints.csoBersama,
+}
+
+// Helper function untuk parsing dan sorting timestamp
+function sortByTimestampDescending(data, timestampKey = 'timestamp') {
+    return data.sort((a, b) => {
+        const parseTimestamp = (ts) => {
+            if (!ts) return new Date(0);
+            
+            // Try to parse as standard date
+            const date = new Date(ts);
+            if (!isNaN(date)) return date;
+            
+            // Parse DD/MM/YYYY HH:mm:ss format
+            const [datePart, timePart] = String(ts).split(' ');
+            if (datePart) {
+                const parts = datePart.split('/');
+                if (parts.length === 3) {
+                    const [day, month, year] = parts;
+                    return new Date(`${year}-${month}-${day}${timePart ? ' ' + timePart : ''}`);
+                }
+            }
+            
+            return new Date(0);
+        };
+        
+        return parseTimestamp(b[timestampKey]) - parseTimestamp(a[timestampKey]);
+    });
 }
 
 // Fungsi transform umum untuk backward compatibility
@@ -109,12 +139,13 @@ export const getTrialStudents = async () => {
                 return studentObject;
             });
             
-            return formattedData;
+            // Sort by timestamp (newest first)
+            return sortByTimestampDescending(formattedData);
         } else {
-            throw new Error(result.message || 'Failed to fetch data');
+            throw new ApiError(result.message || 'Failed to fetch data', 500);
         }
     } catch (error) {
-        console.error("Error fetching trial students:", error);
+        logError(error, 'getTrialStudents');
         throw error;
     }
 };
@@ -138,14 +169,45 @@ export const getMerchandiseData = async () => {
     }
 };
 
-export const postDataKirimMerch = async (rowData) => {
-    const params = new URLSearchParams({
-        action: 'update-kirim-merchandise',
-        nis: rowData.nis,
-        jenisPaket: rowData.jenisPaket
-    });
-
+export const getJenisMerchandise = async () => {
     try {
+        const response = await apiClient.get(ENDPOINT.csoBersama, {
+            params: { action: 'jenis-merchandise' }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            // Return array of jenis merchandise
+            return result.jenis_paket || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch jenis merchandise');
+        }
+    } catch (error) {
+        console.error("Error fetching jenis merchandise:", error);
+        throw error;
+    }
+};
+
+export const postDataKirimMerch = async (rowData) => {
+    try {
+        // Validasi input
+        if (!rowData.nis || !rowData.jenisPaket) {
+            throw new Error('NIS dan jenis paket wajib diisi');
+        }
+
+        // Ambil codeName dari user yang login
+        const userDataString = localStorage.getItem('user');
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const pic = userData?.codeName || 'Unknown';
+
+        const params = new URLSearchParams({
+            action: 'update-kirim-merchandise',
+            nis: rowData.nis,
+            jenisPaket: rowData.jenisPaket,
+            pic: pic // codeName dari user yang login
+        });
+
         const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
 
         const result = response.data;
@@ -182,9 +244,13 @@ export const getDailyStoryData = async () => {
                     timestamp: item.timestamp || '-'
                 }))
             }
+            
+            const undoneData = formattedData(result.data.undone);
+            const doneData = formattedData(result.data.done);
+            
             return {
-                undone: formattedData(result.data.undone),
-                done: formattedData(result.data.done)
+                undone: sortByTimestampDescending(undoneData, 'tanggal'),
+                done: sortByTimestampDescending(doneData, 'tanggal')
             };
         } else {
             throw new Error(result.message || 'Failed to fetch data');
@@ -196,9 +262,15 @@ export const getDailyStoryData = async () => {
 };
 
 export const markStoryAsDone = async (date) => {
+    // Ambil codeName dari user yang login
+        const userDataString = localStorage.getItem('user');
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const pic = userData?.codeName || 'Unknown';
+
     const params = new URLSearchParams();
     params.append('action', 'done-story');
     params.append('date', date);
+    params.append('pic', pic);
 
     try {
         const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
@@ -224,7 +296,36 @@ export const getDaftarOffboarding = async () => {
         const result = response.data;
 
         if (result.status === 'success') {
-            return result.data;
+            // Transform data to match frontend expectations
+            const formattedData = result.result.map((item, index) => ({
+                no: index + 1,
+                id: item.id_offboarding,
+                id_ticket: item.id_offboarding, // untuk compatibility
+                timestamp: item.timestamp || '',
+                pic: item.pic || '',
+                nama: item.nama || '',
+                program: item.program || '',
+                modul: item.modul || '',
+                level: item.level || '',
+                keterangan: item.keterangan || '',
+                keteranganDetail: item.keterangan_detail || '',
+                tanggalMulaiCuti: item.tanggal_mulai_cuti || '',
+                tanggalAkhirCuti: item.tanggal_akhir_cuti || '',
+                done_lastDay: item.last_day,
+                done_scheduleSudahDirapihkan: item.schedule_dirapihkan,
+                done_reminderWhatsapp: item.reminder_whatsapp,
+                done_sertifSudahDikirim: item.sertifikat_dikirim,
+                done_progressReportSudahDikirim: item.progress_report_dikirim,
+                // Check if all tasks are done
+                done: item.last_day === true && 
+                      item.schedule_dirapihkan === true && 
+                      item.reminder_whatsapp === true && 
+                      item.sertifikat_dikirim === true && 
+                      item.progress_report_dikirim === true
+            }));
+
+            // Sort by timestamp (newest first)
+            return sortByTimestampDescending(formattedData);
         } else {
             throw new Error(result.message || 'Failed to fetch data');
         }
@@ -237,17 +338,17 @@ export const getDaftarOffboarding = async () => {
 export const postOffboardingData = async (rowData) => {
     const params = new URLSearchParams({
         action: 'ceklis-daftar-offboarding',
-        id_ticket: rowData.id,
-        program: rowData.program,
-        modul: rowData.modul,
-        level: rowData.level,
-        tanggal_mulai_cuti: rowData.tanggalMulaiCuti,
-        tanggal_akhir_cuti: rowData.tanggalAkhirCuti,
-        last_day: rowData.done_lastDay,
-        schedule_dirapihkan: rowData.done_scheduleSudahDirapihkan,
-        reminder_whatsapp: rowData.done_reminderWhatsapp,
-        sertifikat_dikirim: rowData.done_sertifSudahDikirim,
-        progress_report: rowData.done_progressReportSudahDikirim
+        id_ticket: rowData.id_ticket || rowData.id,
+        program: rowData.program || '',
+        modul: rowData.modul || '',
+        level: rowData.level || '',
+        tanggal_mulai_cuti: rowData.tanggalMulaiCuti || '',
+        tanggal_akhir_cuti: rowData.tanggalAkhirCuti || '',
+        last_day: rowData.done_lastDay || false,
+        schedule_dirapihkan: rowData.done_scheduleSudahDirapihkan || false,
+        reminder_whatsapp: rowData.done_reminderWhatsapp || false,
+        sertifikat_dikirim: rowData.done_sertifSudahDikirim || false,
+        progress_report: rowData.done_progressReportSudahDikirim || false
     });
     
     try {
@@ -274,32 +375,45 @@ export const getPendaftaranFD = async () => {
         const result = response.data;
 
         if (result.status === 'success') {
-            const headerItems = [
-                { key: 'angkatan', label: 'Angkatan' },
-                { key: 'tahun', label: 'Tahun' },
-                { key: 'noFd', label: 'No' },
-                { key: 'nis', label: 'NIS'},
-                { key: 'nama', label: 'Nama'},
-                { key: 'linkPendaftaran', label: 'Link Pendaftaran Lanjutan'},
-                { key: 'done_reminderH9', label: 'Reminder H-9'},
-                { key: 'done_reminderH6', label: 'Keterangan Detail'},
-                { key: 'done_reminderH4', label: 'Tanggal Mulai Cuti'},
-                { key: 'done_reminderH2', label: 'Tanggal Akhir Cuti'},
-                { key: 'done_reminderH1', label: 'Last Day'},
-                { key: 'done_reminderH11', label: 'Schedule Sudah Dirapihkan?'},
-                { key: 'done_reminderH12', label: 'Reminder Whatsapp'},
-            ];
-
+            // Backend returns: Angkatan, Tahun, No, NIS, Nama, Link, H-9, H-6, H-4, H-3, H-2, H-1, H+1, H+2
             const formattedData = result.data.map((item, index) => {
-                const pendaftaranFdObject = {}
+                // Parse checkbox values (TRUE/FALSE string to boolean)
+                const parseCheckbox = (val) => {
+                    if (typeof val === 'boolean') return val;
+                    return val === 'TRUE' || val === true;
+                };
 
-                headerItems.forEach((headerName, col) => {
-                    const key = headerName.key;
-                    pendaftaranFdObject[key] = item[col] || '';
-                });
-                pendaftaranFdObject.no = index + 1;
+                const reminderH9 = parseCheckbox(item[6]);
+                const reminderH6 = parseCheckbox(item[7]);
+                const reminderH4 = parseCheckbox(item[8]);
+                const reminderH3 = parseCheckbox(item[9]);
+                const reminderH2 = parseCheckbox(item[10]);
+                const reminderH1 = parseCheckbox(item[11]);
+                const reminderHplus1 = parseCheckbox(item[12]);
+                const reminderHplus2 = parseCheckbox(item[13]);
 
-                return pendaftaranFdObject;
+                // Check if all reminders are done
+                const allDone = reminderH9 && reminderH6 && reminderH4 && reminderH3 && 
+                               reminderH2 && reminderH1 && reminderHplus1 && reminderHplus2;
+
+                return {
+                    no: index + 1,
+                    angkatan: item[0] || '',
+                    tahun: item[1] || '',
+                    noFd: item[2] || '',
+                    nis: item[3] || '',
+                    nama: item[4] || '',
+                    linkPendaftaran: item[5] || '',
+                    done_reminderH9: reminderH9,
+                    done_reminderH6: reminderH6,
+                    done_reminderH4: reminderH4,
+                    done_reminderH3: reminderH3,
+                    done_reminderH2: reminderH2,
+                    done_reminderH1: reminderH1,
+                    done_reminderHplus1: reminderHplus1,
+                    done_reminderHplus2: reminderHplus2,
+                    done: allDone
+                };
             });
             
             return formattedData;
@@ -308,6 +422,55 @@ export const getPendaftaranFD = async () => {
         }
     } catch (error) {
         console.error("Error fetching data pendaftaran FD:", error);
+        throw error;
+    }
+};
+
+export const postPendaftaranFD = async (rowData) => {
+    try {
+        if (!rowData.nis) {
+            throw new Error('NIS wajib diisi');
+        }
+
+        // Ambil codeName dari user yang login
+        const userDataString = localStorage.getItem('user');
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const pic = userData?.codeName || 'Unknown';
+
+        // Convert boolean to TRUE/FALSE string for backend
+        const boolToString = (val) => val ? 'TRUE' : 'FALSE';
+
+        const params = new URLSearchParams({
+            action: 'ceklis-pendaftaran-fd',
+            nis: rowData.nis,
+            pic: pic
+        });
+
+        // Tambahkan parameter optional jika ada
+        if (rowData.angkatan) params.append('angkatan', rowData.angkatan);
+        if (rowData.tahun) params.append('tahun', rowData.tahun);
+        if (rowData.noFd) params.append('nomor', rowData.noFd);
+        
+        // Tambahkan checkbox values
+        if (rowData.done_reminderH9 !== undefined) params.append('reminder_hmin9', boolToString(rowData.done_reminderH9));
+        if (rowData.done_reminderH6 !== undefined) params.append('reminder_hmin6', boolToString(rowData.done_reminderH6));
+        if (rowData.done_reminderH4 !== undefined) params.append('reminder_hmin4', boolToString(rowData.done_reminderH4));
+        if (rowData.done_reminderH3 !== undefined) params.append('reminder_hmin3', boolToString(rowData.done_reminderH3));
+        if (rowData.done_reminderH2 !== undefined) params.append('reminder_hmin2', boolToString(rowData.done_reminderH2));
+        if (rowData.done_reminderH1 !== undefined) params.append('reminder_hmin1', boolToString(rowData.done_reminderH1));
+        if (rowData.done_reminderHplus1 !== undefined) params.append('reminder_hplus1', boolToString(rowData.done_reminderHplus1));
+        if (rowData.done_reminderHplus2 !== undefined) params.append('reminder_hplus2', boolToString(rowData.done_reminderHplus2));
+
+        const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit data');
+        }
+    } catch (error) {
+        console.error("Error posting pendaftaran FD:", error);
         throw error;
     }
 };
@@ -350,9 +513,15 @@ export const getLostnFound = async () => {
 };
 
 export const postLostNFound = async (rowData) => {
+    // Ambil codeName dari user yang login
+        const userDataString = localStorage.getItem('user');
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const pic = userData?.codeName || 'Unknown';
+
     const params = new URLSearchParams({
         action: 'done-lostnfound',
-        id_ticket: rowData.idTicket
+        id_ticket: rowData.idTicket,
+        pic: pic
     });
 
     try {
@@ -396,9 +565,10 @@ export const getProspektifDariMarcom = async () => {
             const formattedOpen = transformProspektifData(dataOpen, headerItems, false);
             const formattedClose = transformProspektifData(dataClose, headerItems, true);
 
+            // Sort by timestamp (newest first)
             return {
-                dataOpen: formattedOpen,
-                dataClose: formattedClose
+                dataOpen: sortByTimestampDescending(formattedOpen),
+                dataClose: sortByTimestampDescending(formattedClose)
             };
         } else {
             throw new Error(result.message || 'Failed to fetch data');
@@ -411,11 +581,23 @@ export const getProspektifDariMarcom = async () => {
 
 export const postProspektifDariMarcom = async ({ rowData }) => {
     try {
-        const formData = new FormData();
-        formData.append('action', 'done-prospektif-marcom');
-        formData.append('nomor_hp', rowData.nomor_hp);
+        if (!rowData.nomor_hp) {
+            throw new Error('Nomor HP wajib diisi');
+        }
 
-        const response = await apiClient.post(ENDPOINT.csoBersama, formData);
+        // Ambil codeName dari user yang login
+        const userDataString = localStorage.getItem('user');
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const pic = userData?.codeName || 'Unknown';
+
+        // Coba dengan GET method karena backend GAS tidak return ContentService dengan benar
+        const response = await apiClient.get(ENDPOINT.csoBersama, {
+            params: {
+                action: 'done-prospektif-marcom',
+                nomor_hp: rowData.nomor_hp,
+                pic: pic
+            }
+        });
 
         const result = response.data;
         if (result.status === 'success') {
@@ -513,9 +695,10 @@ export const getJanjiTemu = async () => {
             const formattedOpen = transformRawData(result.dataOpen || [], headerItems);
             const formattedClose = transformRawData(result.dataClose || [], headerItems);
 
+            // Sort by tanggal (newest first)
             return {
-                dataOpen: formattedOpen,
-                dataClose: formattedClose
+                dataOpen: sortByTimestampDescending(formattedOpen, 'tanggal'),
+                dataClose: sortByTimestampDescending(formattedClose, 'tanggal')
             };
         } else {
             throw new Error(result.message || 'Failed to fetch data');
@@ -556,29 +739,66 @@ export const getTicketExternal = async () => {
         const result = response.data;
 
         if (result.status === 'success') {
-            const headerItems = [
-                { key: 'timestamp', label: 'Timestamp' },
-                { key: 'idTicket', label: 'ID Ticket' },
-                { key: 'nama', label: 'Nama' },
-                { key: 'status', label: 'Status' },
-                { key: 'jam', label: 'Jam' },
-                { key: 'tanggal', label: 'Tanggal' },
-                { key: 'nomor_hp', label: 'Nomor HP' },
-                { key: 'media', label: 'Media' },
-                { key: 'kategori', label: 'Kategori' },
-                { key: 'subKategori', label: 'Sub Kategori' },
-                { key: 'detail', label: 'Detail' },
-                { key: 'pic', label: 'PIC' },
-                { key: 'hasil', label: 'Hasil' },
-                { key: 'done', label: 'Done?' }
-            ];
+            // Transform data dari backend ke format frontend
+            const formattedOpen = (result.dataOpen || []).map(item => ({
+                timestamp: item.timestamp || '',
+                idTicket: item.id_ticket || '',
+                nama: item.nama || '',
+                status: item.status || '',
+                jam: item.jam || '',
+                tanggal: item.deadline || '',
+                nomor_hp: item.nomor_hp || '',
+                media: item.from || '',
+                kategori: item.kategori || '',
+                subKategori: item.request || '',
+                detail: item.request_detail || '',
+                pic: item.pic || '',
+                hasil: item.hasil || '',
+                done: false
+            }));
 
-            const formattedOpen = transformRawData(result.dataOpen || [], headerItems);
-            const formattedClose = transformRawData(result.dataClose || [], headerItems);
+            const formattedClose = (result.dataClose || []).map(item => ({
+                timestamp: item.timestamp || '',
+                idTicket: item.id_ticket || '',
+                nama: item.nama || '',
+                status: item.status || '',
+                jam: item.jam || '',
+                tanggal: item.deadline || '',
+                nomor_hp: item.nomor_hp || '',
+                media: item.from || '',
+                kategori: item.kategori || '',
+                subKategori: item.request || '',
+                detail: item.request_detail || '',
+                pic: item.pic || '',
+                hasil: item.hasil || '',
+                done: true
+            }));
+
+            // Sort by timestamp (newest first) - parse DD/MM/YYYY HH:mm:ss format
+            const sortByTimestamp = (a, b) => {
+                const parseTimestamp = (ts) => {
+                    if (!ts) return new Date(0);
+                    // Try to parse various formats
+                    const date = new Date(ts);
+                    if (!isNaN(date)) return date;
+                    
+                    // Parse DD/MM/YYYY HH:mm:ss format
+                    const [datePart, timePart] = ts.split(' ');
+                    if (datePart) {
+                        const [day, month, year] = datePart.split('/');
+                        if (year && month && day) {
+                            return new Date(`${year}-${month}-${day}${timePart ? ' ' + timePart : ''}`);
+                        }
+                    }
+                    return new Date(0);
+                };
+                
+                return parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp);
+            };
 
             return {
-                dataOpen: formattedOpen,
-                dataClose: formattedClose
+                dataOpen: formattedOpen.sort(sortByTimestamp),
+                dataClose: formattedClose.sort(sortByTimestamp)
             };
         } else {
             throw new Error(result.message || 'Failed to fetch data');
@@ -605,7 +825,7 @@ export const postTicketExternal = async ({ rowData }) => {
             throw new Error(result.message || 'Failed to submit data');
         }
     } catch (error) {
-        console.error("Error posting ticket external:", error);
+        logError(error, 'postTicketExternal');
         throw error;
     }
 };
@@ -617,34 +837,52 @@ export const getPendaftaranLanjutan = async () => {
         });
 
         if (response.data.status === 'success') {
-            // Transform array data to object format
-            const transformData = (dataArray) => dataArray.map((row) => ({
-                psid: row[0],
-                nama: row[1],
-                linkPendaftaran: row[2],
-                tanggalKirim: row[3]
-            }));
+            // Backend returns array of objects
+            // Key names: psid, nama, prefilld_link (2 L's, 1 D), tanggal_kirim
+            const transformData = (dataArray) => {
+                if (!Array.isArray(dataArray)) return [];
+                
+                return dataArray.map((item) => ({
+                    psid: item.psid || '',
+                    nama: item.nama || '',
+                    linkPendaftaran: item.prefilld_link || '',
+                    tanggalKirim: item.tanggal_kirim || ''
+                }));
+            };
+
+            const dataOpen = transformData(response.data.dataOpen || []);
+            const dataClose = transformData(response.data.dataClose || []);
 
             return {
-                status: 'success',
-                dataOpen: transformData(response.data.dataOpen || []),
-                dataClose: transformData(response.data.dataClose || [])
+                dataOpen: sortByTimestampDescending(dataOpen, 'tanggalKirim'),
+                dataClose: sortByTimestampDescending(dataClose, 'tanggalKirim')
             };
         }
 
         throw new Error(response.data.message || 'Failed to fetch data');
     } catch (error) {
+        console.error('Error fetching pendaftaran lanjutan:', error);
         throw new Error(error.message || 'Failed to fetch data');
     }
 };
 
 export const postTanggalKirimPendaftaran = async ({ rowData, tanggalKirim }) => {
     try {
+        if (!rowData.psid || !tanggalKirim) {
+            throw new Error('PSID dan tanggal kirim wajib diisi');
+        }
+
+        // Ambil codeName dari user yang login
+        const userDataString = localStorage.getItem('user');
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const pic = userData?.codeName || 'Unknown';
+
         const response = await apiClient.post(ENDPOINT.csoBersama, null, {
             params: {
                 action: 'input-tanggal-kirim',
                 psid: rowData.psid,
-                tanggalKirim
+                tanggal_kirim: tanggalKirim, // Format YYYY-MM-DD
+                pic: pic // codeName dari user yang login
             }
         });
 
@@ -654,6 +892,161 @@ export const postTanggalKirimPendaftaran = async ({ rowData, tanggalKirim }) => 
 
         throw new Error(response.data.message || 'Failed to update data');
     } catch (error) {
+        console.error('Error posting tanggal kirim:', error);
         throw new Error(error.message || 'Failed to update data');
+    }
+};
+
+export const getPartnershipData = async () => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoBersama, {
+            params: { action: 'data-partnership' }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            const formattedDataOpen = (result.dataOpen || []).map((item) => ({
+                timestamp: item.timestamp || '',
+                idTicket: item.id_ticket || '',
+                nama: item.nama || '',
+                status: item.status || '',
+                jam: item.jam || '',
+                tanggal: item.deadline || '',
+                nomorHp: item.nomor_hp || '',
+                media: item.from || '',
+                kategori: item.kategori || '',
+                subKategori: item.request || '',
+                detail: item.request_detail || '',
+                responsible: item.responsible || '',
+                accountable: item.accountable || '',
+                consulted: item.consulted || '',
+                informed: item.informed || '',
+                lampiran: item.lampiran || '',
+                hasil: item.hasil || '',
+                todo: item.todo || '',
+                comment: item.comment || '',
+                pic: item.pic || '',
+                done: false
+            }));
+
+            const formattedDataClose = (result.dataClose || []).map((item) => ({
+                timestamp: item.timestamp || '',
+                idTicket: item.id_ticket || '',
+                nama: item.nama || '',
+                status: item.status || '',
+                jam: item.jam || '',
+                tanggal: item.deadline || '',
+                nomorHp: item.nomor_hp || '',
+                media: item.from || '',
+                kategori: item.kategori || '',
+                subKategori: item.request || '',
+                detail: item.request_detail || '',
+                responsible: item.responsible || '',
+                accountable: item.accountable || '',
+                consulted: item.consulted || '',
+                informed: item.informed || '',
+                lampiran: item.lampiran || '',
+                hasil: item.hasil || '',
+                todo: item.todo || '',
+                comment: item.comment || '',
+                pic: item.pic || '',
+                done: true
+            }));
+
+            const sortByTimestamp = (a, b) => {
+                const parseTimestamp = (ts) => {
+                    if (!ts) return new Date(0);
+
+                    const date = new Date(ts);
+                    if (!isNaN(date)) return date;
+
+                    const [datePart, timePart] = ts.split(' ');
+                    if (datePart) {
+                        const [day, month, year] = datePart.split('/');
+                        if (year && month && day) {
+                            return new Date(`${year}-${month}-${day}${timePart ? ' ' + timePart : ''}`);
+                        }
+                    }
+
+                    return new Date(0);
+                }
+                return parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp);
+            }
+
+            return {
+                dataOpen: formattedDataOpen.sort(sortByTimestamp),
+                dataClose: formattedDataClose.sort(sortByTimestamp)
+            };
+        } else {
+            throw new Error(result.message || 'Failed to fetch data');
+        }
+    } catch (error) {
+        console.error("Error fetching partnership data:", error);
+        throw error;
+    }
+};
+
+export const postPartnership = async ({ rowData }) => {
+    const params = new URLSearchParams({
+        action: 'done-partnership',
+        id_ticket: rowData.idTicket
+    });
+
+    try {
+        const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit data');
+        }
+    } catch (error) {
+        logError(error, 'postPartnership');
+        throw error;
+    }
+};
+
+export const getDataSiswaAktifPerBulan = async ({ tahun, bulan }) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoBersama, {
+            params: {
+                action: 'data-siswa-aktif-perbulan',
+                tahun: tahun,
+                bulan: bulan
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch data');
+        }
+    } catch (error) {
+        console.error("Error fetching data siswa aktif per bulan:", error);
+        throw error;
+    }
+};
+
+export const getDashboardSiswaAktifTahunan = async (tahunFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoBersama, {
+            params: {
+                action: 'data-dashboard-siswa-aktif',
+                tahun_filter: tahunFilter
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || {};
+        } else {
+            throw new Error(result.message || 'Failed to fetch data');
+        }
+    } catch (error) {
+        console.error("Error fetching dashboard siswa aktif tahunan:", error);
+        throw error;
     }
 };

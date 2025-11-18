@@ -1,80 +1,251 @@
-import { useState } from 'react';
+import { useState, useMemo, memo } from 'react';
 import {
     Table, Thead, Tbody, Tr, Th, Td, TableContainer, Checkbox,
-    Flex, IconButton, Text
+    Flex, IconButton, Text, Input, InputGroup, InputLeftElement, Box, Select
 } from '@chakra-ui/react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
-function DataTableComponent( {tableData, headerItems, onAction} ) {
+function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const itemsPerPage = 10;
+
+    // Filter data berdasarkan search query
+    const filteredData = useMemo(() => {
+        if (!searchQuery) return tableData;
+        
+        return tableData.filter(item => {
+            return headerItems.some(header => {
+                const value = item[header.key];
+                if (value === null || value === undefined) return false;
+                return String(value).toLowerCase().includes(searchQuery.toLowerCase());
+            });
+        });
+    }, [tableData, searchQuery, headerItems]);
+
+    // Sort data berdasarkan sortConfig
+    const sortedData = useMemo(() => {
+        if (!sortConfig.key) return filteredData;
+
+        const sorted = [...filteredData].sort((a, b) => {
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            // Handle null/undefined values
+            if (!aValue && !bValue) return 0;
+            if (!aValue) return 1;
+            if (!bValue) return -1;
+
+            // Try to parse as date (format: DD/MM/YYYY or YYYY-MM-DD)
+            const dateA = new Date(aValue);
+            const dateB = new Date(bValue);
+            
+            if (!isNaN(dateA) && !isNaN(dateB)) {
+                return sortConfig.direction === 'asc' 
+                    ? dateA - dateB 
+                    : dateB - dateA;
+            }
+
+            // Try to parse as number
+            const numA = parseFloat(aValue);
+            const numB = parseFloat(bValue);
+            
+            if (!isNaN(numA) && !isNaN(numB)) {
+                return sortConfig.direction === 'asc' 
+                    ? numA - numB 
+                    : numB - numA;
+            }
+
+            // String comparison
+            const strA = String(aValue).toLowerCase();
+            const strB = String(bValue).toLowerCase();
+            
+            if (sortConfig.direction === 'asc') {
+                return strA.localeCompare(strB);
+            } else {
+                return strB.localeCompare(strA);
+            }
+        });
+
+        return sorted;
+    }, [filteredData, sortConfig]);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(tableData.length / itemsPerPage);
+    const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+
+    // Reset to page 1 when search or sort changes
+    const handleSearchChange = (value) => {
+        setSearchQuery(value);
+        setCurrentPage(1);
+    };
+
+    const handleSort = (key) => {
+        setSortConfig(prev => {
+            if (prev.key === key) {
+                // Toggle direction
+                return {
+                    key,
+                    direction: prev.direction === 'asc' ? 'desc' : 'asc'
+                };
+            } else {
+                // New column, default to asc
+                return { key, direction: 'asc' };
+            }
+        });
+        setCurrentPage(1);
+    };
 
     return (
-        <TableContainer>
-            <Table variant="simple">
-                <Thead bg="orange.50">
-                    <Tr>
-                        {headerItems.map((headerName) => (
-                            <Th key={headerName.key}>{headerName.label}</Th>
-                        ))}
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {currentItems.map((item, rowIndex) => (
-                        <Tr key={item.idTicket}>
-                            {headerItems.map(headerName => (
-                                <Td key={headerName.key} >
-                                    {headerName.render ? (
-                                        headerName.render(item, rowIndex)
-                                    ): (
-                                        headerName.key.toLowerCase() === 'done' ? (
-                                        <Checkbox
-                                                isChecked={item[headerName.key]}
-                                                onChange={() => onAction(item)}
-                                                colorScheme="orange" 
-                                            />
-                                        ): headerName.key.toLowerCase().includes('link') ? (
-                                            item[headerName.key] != '-' ? (
-                                                <a href={item[headerName.key]} target="_blank" style={{textDecoration: 'underline'}}>
-                                                    {headerName.label}
-                                                </a>
-                                            ): <p>-</p>
-                                        ) : (
-                                            item[headerName.key]
-                                        )
-                                    )}
-                                </Td>
+        <Box>
+            {/* Search Bar */}
+            <Flex mb={4} gap={3} alignItems="center">
+                <InputGroup maxW="400px">
+                    <InputLeftElement pointerEvents="none">
+                        <FiSearch color="gray" />
+                    </InputLeftElement>
+                    <Input
+                        placeholder="Search across all columns..."
+                        value={searchQuery}
+                        onChange={(e) => handleSearchChange(e.target.value)}
+                        borderRadius="md"
+                    />
+                </InputGroup>
+                <Text fontSize="sm" color="gray.600">
+                    {sortedData.length} results
+                </Text>
+            </Flex>
+
+            {/* Table Container - Only table scrolls horizontally */}
+            <TableContainer 
+                overflowX="auto" 
+                maxW="100%"
+                border="1px solid"
+                borderColor="gray.200"
+                borderRadius="md"
+                sx={{
+                    '&::-webkit-scrollbar': {
+                        height: '8px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: '#f7fafc',
+                        borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        background: '#cbd5e0',
+                        borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                        background: '#a0aec0',
+                    },
+                }}
+            >
+                <Table variant="simple">
+                    <Thead bg="orange.50">
+                        <Tr>
+                            {headerItems.map((headerName) => (
+                                <Th 
+                                    key={headerName.key}
+                                    cursor="pointer"
+                                    onClick={() => handleSort(headerName.key)}
+                                    userSelect="none"
+                                    _hover={{ bg: 'orange.100' }}
+                                    position="relative"
+                                >
+                                    <Flex alignItems="center" gap={1}>
+                                        {headerName.label}
+                                        {sortConfig.key === headerName.key && (
+                                            sortConfig.direction === 'asc' 
+                                                ? <FiChevronUp size={14} /> 
+                                                : <FiChevronDown size={14} />
+                                        )}
+                                    </Flex>
+                                </Th>
                             ))}
                         </Tr>
-                    ))}
-                </Tbody>
-            </Table>
+                    </Thead>
+                    <Tbody>
+                        {isLoading ? (
+                            // Skeleton loading rows
+                            Array.from({ length: 5 }).map((_, idx) => (
+                                <Tr key={idx}>
+                                    {headerItems.map((header) => (
+                                        <Td key={header.key}>
+                                            <Skeleton height="20px" />
+                                        </Td>
+                                    ))}
+                                </Tr>
+                            ))
+                        ) : currentItems.length === 0 ? (
+                            <Tr>
+                                <Td colSpan={headerItems.length} textAlign="center">
+                                    <Text color="gray.500" py={4}>No data available</Text>
+                                </Td>
+                            </Tr>
+                        ) : (
+                            currentItems.map((item, rowIndex) => (
+                            <Tr key={item.idTicket || item.id || item.nis || item.nomor_hp || rowIndex}>
+                                {headerItems.map(headerName => (
+                                    <Td key={`${item.idTicket || item.id || item.nis || item.nomor_hp || rowIndex}-${headerName.key}`} >
+                                        {headerName.render ? (
+                                            headerName.render(item, rowIndex)
+                                        ): (
+                                            headerName.key.toLowerCase() === 'done' || headerName.key.toLowerCase().includes('done') ? (
+                                            <Checkbox
+                                                    isChecked={item[headerName.key]}
+                                                    onChange={() => onAction(item)}
+                                                    colorScheme="orange" 
+                                                />
+                                            ): headerName.key.toLowerCase().includes('link') ? (
+                                                item[headerName.key] != '-' ? (
+                                                    <a href={item[headerName.key]} target="_blank" style={{textDecoration: 'underline'}}>
+                                                        {headerName.label}
+                                                    </a>
+                                                ): <p>-</p>
+                                            ) : (
+                                                item[headerName.key]
+                                            )
+                                        )}
+                                    </Td>
+                                ))}
+                            </Tr>
+                        ))
+                        )}
+                    </Tbody>
+                </Table>
+            </TableContainer>
             
-            <Flex justifyContent="flex-end" alignItems="center" mt={4}>
-                <Text fontSize="sm" mr={4}>
-                    Page {currentPage} of {totalPages}
+            {/* Pagination - Fixed, tidak ikut scroll */}
+            <Flex justifyContent="space-between" alignItems="center" mt={4} flexWrap="wrap" gap={3}>
+                <Text fontSize="sm" color="gray.600">
+                    Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, sortedData.length)} of {sortedData.length} entries
                 </Text>
-                <IconButton
-                    aria-label="Previous Page"
-                    icon={<FiChevronLeft />}
-                    onClick={() => setCurrentPage(prev => prev - 1)}
-                    isDisabled={currentPage === 1}
-                    mr={2}
-                />
-                <IconButton
-                    aria-label="Next Page"
-                    icon={<FiChevronRight />}
-                    onClick={() => setCurrentPage(prev => prev + 1)}
-                    isDisabled={currentPage === totalPages}
-                />
+                <Flex alignItems="center" gap={2}>
+                    <Text fontSize="sm">
+                        Page {currentPage} of {totalPages}
+                    </Text>
+                    <IconButton
+                        aria-label="Previous Page"
+                        icon={<FiChevronLeft />}
+                        onClick={() => setCurrentPage(prev => prev - 1)}
+                        isDisabled={currentPage === 1}
+                        size="sm"
+                    />
+                    <IconButton
+                        aria-label="Next Page"
+                        icon={<FiChevronRight />}
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        isDisabled={currentPage === totalPages}
+                        size="sm"
+                    />
+                </Flex>
             </Flex>
-        </TableContainer>
+        </Box>
     );
 }
 
-export default DataTableComponent;
+export default memo(DataTableComponent);

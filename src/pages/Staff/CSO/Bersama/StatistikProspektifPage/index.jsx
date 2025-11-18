@@ -1,17 +1,18 @@
 import ContainerCarrot from "@/components/Container";
-import Loading from "@/components/Loading";
 import { Select } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getStatistikProspektif } from "@/features/cso/csoApiService";
 import { StyledStatistikProspektifPage } from "./StatistikProspektif.styled";
 import { useState, useMemo } from "react";
 import StatisticsBarChart from "@/components/StatisticsBarChart";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function StatistikProspektifPage() {
     const currentYear = new Date().getFullYear();
     const [selectedYear, setSelectedYear] = useState(currentYear.toString());
 
-    const { data, isLoading, isError, error } = useQuery({
+    const { data = [], isError, error } = useQuery({
         queryKey: ['statistikProspektif', selectedYear],
         queryFn: () => getStatistikProspektif(selectedYear),
     });
@@ -49,7 +50,6 @@ function StatistikProspektifPage() {
         };
     }, [data, chartCategories]);
 
-    if (isLoading) return <Loading />;
     if (isError) return <div>Error: {error.message}</div>;
 
     return (

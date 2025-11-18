@@ -1,21 +1,33 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
-import Loading from "@/components/Loading";
 import { getDaftarOffboarding, postOffboardingData } from "@/features/cso/csoApiService";
-import DataTableComponent from "@/components/Table";
+import SistemTabs from "@/components/SistemTabs";
 import StyledDaftarOffboardingPage from "./DaftarOffboarding.styled";
 import { BiTask, BiTaskX } from "react-icons/bi";
 import { Checkbox, Input, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+const tabItems = [
+    { key: 'notDone', label: 'Not Done' },
+    { key: 'done', label: 'Done' }
+];
 
 function DaftarOffboardingPage() {
     const queryClient = useQueryClient();       
     const toast = useToast();
 
-    const { data: offboarding = [], isLoading, isError, error } = useQuery({
+    const { data: rawData = [], isLoading, isError, error } = useQuery({
         queryKey: ['offboarding'],
         queryFn: getDaftarOffboarding,
     });
+
+    // Separate data into done and not done
+    const offboardingData = {
+        notDone: rawData.filter(item => !item.done),
+        done: rawData.filter(item => item.done)
+    };
 
     const { mutate: updateOffboarding } = useMutation({
         mutationFn: postOffboardingData,
@@ -71,7 +83,7 @@ function DaftarOffboardingPage() {
         },
         { 
             key: 'modul',
-            label: 'Label',
+            label: 'Modul',
             render: (item) => (
                 <Input 
                     value={item.modul}
@@ -174,7 +186,7 @@ function DaftarOffboardingPage() {
     ];
 
     const handleCellChange = (newValue, rowId, columnKey) => {
-        const itemToUpdate = offboarding.find(item => item.id_ticket === rowId);
+        const itemToUpdate = rawData.find(item => item.id_ticket === rowId);
         if (itemToUpdate) {
             updateOffboarding({
                 ...itemToUpdate,
@@ -187,11 +199,10 @@ function DaftarOffboardingPage() {
         updateOffboarding(rowData);
     };
 
-    if (isLoading) return <Loading />
     if (isError) return <div>Error: {error.message}</div>;
 
-    const doneCount = offboarding.filter(item => item.done).length;
-    const notDoneCount = offboarding.length - doneCount;
+    const doneCount = rawData.filter(item => item.done).length;
+    const notDoneCount = rawData.length - doneCount;
 
     return (
         <StyledDaftarOffboardingPage>
@@ -200,18 +211,29 @@ function DaftarOffboardingPage() {
                     <div className="hero-section__left">
                         <h1 className="page-title">Daftar Offboarding - Overview</h1>
                         <div className="stats-grid-prospective">
-                            <InfoCard><BiTask size="30px" /> <p>Done</p> <p className="card__points">{doneCount}</p></InfoCard>
-                            <InfoCard><BiTaskX size="30px" /> <p>Not Done</p> <p className="card__points">{notDoneCount}</p></InfoCard>
+                            <InfoCard>
+                                <BiTask size="30px" />
+                                <p>Done</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{doneCount}</p>}
+                            </InfoCard>
+                            <InfoCard>
+                                <BiTaskX size="30px" />
+                                <p>Not Done</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{notDoneCount}</p>}
+                            </InfoCard>
                         </div>
                     </div>
                 </div>
             </ContainerCarrot>
             <ContainerCarrot>
                 <div className="main-content-section">
-                    <DataTableComponent 
-                        tableData={offboarding} 
+                    <SistemTabs 
+                        tabItems={tabItems}
+                        tableData={offboardingData} 
                         headerItems={headerItems} 
                         onAction={handleDoneAction}
+                        onCellChange={handleCellChange}
+                        isLoading={isLoading}
                     />
                 </div>
             </ContainerCarrot>

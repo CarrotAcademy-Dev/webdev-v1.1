@@ -1,28 +1,35 @@
 import { Route, Routes } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import Layout from './Layout';
-import OverviewPage from './pages/Staff/OverviewPage';
-import Login from './components/Login';
-import KpiDetailsPage from './pages/Staff/KpiDetailsPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import NotFoundPage from './pages/NotFound';
-import ProspectivePage from './pages/Staff/CSO/Personal/ProspectivePage';
-import DaftarKirimMerchPage from './pages/Staff/CSO/Bersama/DaftarKirimMerchPage';
-import DaftarSiswaTrialPage from './pages/Staff/CSO/Bersama/DaftarSiswaTrialPage';
-import DailyStoryPage from './pages/Staff/CSO/Bersama/DailyStoryPage';
-import DaftarOffboardingPage from './pages/Staff/CSO/Bersama/DaftarOffboardingPage';
-import PendaftaranFdPage from './pages/Staff/CSO/Bersama/PendaftaranFDPage';
-import LostNFoundPage from './pages/Staff/CSO/Bersama/LostNFound';
-import ProspektifMarcomPage from './pages/Staff/CSO/Bersama/ProspektifDariMarcom';
-import DaftarKelasTersediaPage from './pages/Staff/CSO/Bersama/DaftarKelasTersediaPage';
-import RekapJadwalMentorPage from './pages/Staff/CSO/Bersama/RekapJadwalMentorPage';
-import StatistikProspektifPage from './pages/Staff/CSO/Bersama/StatistikProspektifPage';
-import JanjiTemuPage from './pages/Staff/CSO/Bersama/JanjiTemuPage';
-import TicketExternalPage from './pages/Staff/CSO/Bersama/TicketExternalPage';
-import PendaftaranLanjutanPage from './pages/Staff/CSO/Bersama/PendaftaranLanjutanPage';
+import Loading from './components/Loading';
+
+// Lazy load pages for better performance
+const Login = lazy(() => import('./components/Login'));
+const OverviewPage = lazy(() => import('./pages/Staff/OverviewPage'));
+const KpiDetailsPage = lazy(() => import('./pages/Staff/KpiDetailsPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFound'));
+const ProspectivePage = lazy(() => import('./pages/Staff/CSO/Personal/ProspectivePage'));
+const DaftarKirimMerchPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarKirimMerchPage'));
+const DaftarSiswaTrialPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarSiswaTrialPage'));
+const DailyStoryPage = lazy(() => import('./pages/Staff/CSO/Bersama/DailyStoryPage'));
+const DaftarOffboardingPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarOffboardingPage'));
+const PendaftaranFdPage = lazy(() => import('./pages/Staff/CSO/Bersama/PendaftaranFDPage'));
+const LostNFoundPage = lazy(() => import('./pages/Staff/CSO/Bersama/LostNFound'));
+const ProspektifMarcomPage = lazy(() => import('./pages/Staff/CSO/Bersama/ProspektifDariMarcom'));
+const DaftarKelasTersediaPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarKelasTersediaPage'));
+const RekapJadwalMentorPage = lazy(() => import('./pages/Staff/CSO/Bersama/RekapJadwalMentorPage'));
+const StatistikProspektifPage = lazy(() => import('./pages/Staff/CSO/Bersama/StatistikProspektifPage'));
+const JanjiTemuPage = lazy(() => import('./pages/Staff/CSO/Bersama/JanjiTemuPage'));
+const TicketExternalPage = lazy(() => import('./pages/Staff/CSO/Bersama/TicketExternalPage'));
+const PendaftaranLanjutanPage = lazy(() => import('./pages/Staff/CSO/Bersama/PendaftaranLanjutanPage'));
+const PartnershipPage = lazy(() => import('./pages/Staff/CSO/Bersama/PartnershipPage'));
+const DashboardSiswaAktifPage = lazy(() => import('./pages/Staff/CSO/Bersama/DashboardSiswaAktifPage'));
 
 function App() {
   return (
-    <Routes>
+    <Suspense fallback={<Loading />}>
+      <Routes>
       <Route path="/" element={<Login />} />
       <Route 
         path="/home" 
@@ -151,8 +158,23 @@ function App() {
           </Layout>
         </ProtectedRoute>
       } />
+      <Route path="/my-tasks/partnership" element={
+        <ProtectedRoute>
+          <Layout>
+            <PartnershipPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/my-tasks/dashboard-siswa-aktif" element={
+        <ProtectedRoute>
+          <Layout>
+            <DashboardSiswaAktifPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
       <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 }
 

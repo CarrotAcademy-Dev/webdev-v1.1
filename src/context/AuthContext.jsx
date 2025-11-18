@@ -1,5 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useEffect } from 'react';
+import { auth as storageAuth } from '@/utils/storage';
+import { API_CONFIG } from '@/config/api.config';
 
 export const AuthContext = createContext();
 
@@ -8,15 +10,15 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = storageAuth.getUser();
         if (storedUser) {
-            setCurrentUser(JSON.parse(storedUser));
+            setCurrentUser(storedUser);
         }
         setLoading(false);
     }, []);
 
     const login = async (email, password) => {
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbzaQqdmBXWstfEkDm3lMpC7DFeselitztz7zsxIYVWeOmVoDAxFQPiAqkm0EWrDpMFl2A/exec';
+        const apiUrl = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.auth}`;
         
         const response = await fetch(`${apiUrl}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
             method: 'GET',
@@ -27,7 +29,7 @@ export function AuthProvider({ children }) {
         
         if (result.message.includes('berhasil')) {
             setCurrentUser(result);
-            localStorage.setItem('user', JSON.stringify(result));
+            storageAuth.setUser(result);
             return result;
         } else {
             throw new Error(result.message || 'Login failed');
@@ -36,7 +38,7 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         setCurrentUser(null);
-        localStorage.removeItem('user');
+        storageAuth.logout();
     };
 
     const value = {

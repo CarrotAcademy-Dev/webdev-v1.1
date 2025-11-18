@@ -1,12 +1,13 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
-import Loading from "@/components/Loading";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
 import { Checkbox, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getTicketExternal, postTicketExternal } from "@/features/cso/csoApiService";
 import { StyledTicketExternalPage } from "./TicketExternal.styled";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const tabItems = [
     {key: 'dataOpen', label: 'Ticket Open'},
@@ -20,7 +21,7 @@ function TicketExternalPage() {
     const { data: ticketExternal, isLoading, isError, error } = useQuery({
         queryKey: ['ticketExternal'],
         queryFn: getTicketExternal,
-        initialData: { dataOpen: [], dataClose: [] }
+        placeholderData: { dataOpen: [], dataClose: [] }
     });
 
     const { mutate: markDoneMutation } = useMutation({
@@ -148,7 +149,6 @@ function TicketExternalPage() {
         }
     ];
 
-    if (isLoading) return <Loading />
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
@@ -161,12 +161,20 @@ function TicketExternalPage() {
                             <InfoCard>
                                 <LuTicket size="30px" />
                                 <p>Total ticket yang masih Open</p>
-                                <p className="card__points">{ticketExternal.dataOpen.length}</p>
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{ticketExternal.dataOpen.length}</p>
+                                )}
                             </InfoCard>
                             <InfoCard>
                                 <LuTicketCheck size="30px" />
                                 <p>Total ticket yang sudah closed</p>
-                                <p className="card__points">{ticketExternal.dataClose.length}</p>
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{ticketExternal.dataClose.length}</p>
+                                )}
                             </InfoCard>
                         </div>
                     </div>
@@ -174,7 +182,7 @@ function TicketExternalPage() {
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={ticketExternal} headerItems={headerItems} />
+                    <SistemTabs tabItems={tabItems} tableData={ticketExternal} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledTicketExternalPage>

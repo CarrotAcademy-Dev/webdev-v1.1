@@ -1,26 +1,94 @@
 import styled from "@emotion/styled";
 
 export const StyledPendaftaranLanjutanPage = styled.div`
+    width: 100%;
+    padding: 2rem;
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        color: #2D3748;
+    }
+
     .hero-section {
+        display: flex;
+        gap: 1.5rem;
+        align-items: stretch;
         margin-bottom: 2rem;
 
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #2D3748;
+        .hero-section__left {
+            flex: 2;
         }
 
-        .info-cards {
+        .hero-section__right {
+            flex: 1;
+            
+            & > div {
+                height: 100%;
+            }
+        }
+
+        .stats-grid-prospective {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
 
-        .progress-section {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+        .progress-info {
+            width: 100%;
+            
+            h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #2D3748;
+                margin-bottom: 1rem;
+            }
+
+            .progress-stats {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.5rem;
+
+                .percentage {
+                    font-size: 2rem;
+                    font-weight: 700;
+                    color: #F97316;
+                }
+
+                .count {
+                    font-size: 0.9rem;
+                    color: #718096;
+                }
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 12px;
+                background-color: #E2E8F0;
+                border-radius: 6px;
+                overflow: hidden;
+
+                .progress-fill {
+                    height: 100%;
+                    background: linear-gradient(90deg, #F97316 0%, #FBBF24 100%);
+                    transition: width 0.3s ease;
+                    border-radius: 6px;
+                }
+            }
+        }
+    }
+
+    @media (min-width: 769px) {
+        .stats-grid-prospective {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .hero-section {
+            flex-direction: column;
         }
     }
 

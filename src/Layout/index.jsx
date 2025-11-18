@@ -4,8 +4,8 @@ import Navbar from "../components/Navbar";
 function Layout({ children, name }) {
   return (
     <>
-      <main>
-        <Navbar name={name} />
+      <Navbar name={name} />
+      <main style={{ paddingTop: '70px' }}>
         {children}
         <Footer />
       </main>

@@ -3,7 +3,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, useBreakpointValue, Butto
 import DataTableComponent from '../Table';
 import { FiChevronDown } from 'react-icons/fi';
 
-function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange }) {
+function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange, isLoading }) {
     const [tabIndex, setTabIndex] = useState(0);
 
     const isDesktop = useBreakpointValue({ base: false, md: true });
@@ -67,7 +67,13 @@ function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange }
                 <TabPanels mt={6}>
                     {tabItems.map(tabName => (
                         <TabPanel key={`${tabName.key}-panel`} p={0}>
-                            <DataTableComponent tableData={tableData[tabName.key] || []} headerItems={headerItems} onAction={onAction} onCellChange={onCellChange} />
+                            <DataTableComponent 
+                                tableData={tableData[tabName.key] || []} 
+                                headerItems={headerItems} 
+                                onAction={onAction} 
+                                onCellChange={onCellChange}
+                                isLoading={isLoading}
+                            />
                         </TabPanel>
                     ))}
                 </TabPanels>

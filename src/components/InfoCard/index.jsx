@@ -1,3 +1,4 @@
+import { memo } from "react";
 import StyledInfoCard from "./InfoCard.Styled";
 
 function InfoCard ({ children, ...rest }) {
@@ -8,4 +9,4 @@ function InfoCard ({ children, ...rest }) {
     );
 }
 
-export default InfoCard;
+export default memo(InfoCard);
