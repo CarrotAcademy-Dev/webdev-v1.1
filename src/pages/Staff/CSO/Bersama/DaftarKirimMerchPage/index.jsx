@@ -1,19 +1,18 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
-import Loading from "@/components/Loading";
 import { LuTruck, LuPackage } from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
 import { Button, Select, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { getMerchandiseData, postDataKirimMerch } from "@/features/cso/csoApiService";
+import { getMerchandiseData, postDataKirimMerch, getJenisMerchandise } from "@/features/cso/csoApiService";
 import StyledDaftarKirimMerchPage from "./DaftarKirimMerchPage.Styled";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const tabItems = [
     {key: 'belumDikirim', label: 'Belum Dikirim'},
     {key: 'sudahDikirim', label: 'Sudah Dikirim'}
 ];
-
-const paketOptions = ['Foundation Merch.', 'Drawing Merch.', 'Painting Merch.', 'Digital Merch', 'Portfolio Merch.', 'Opening Full-Time Course Merch.', 'Closing Full-Time Course Merch.', 'Friendsip Merch.', 'Giveaway Merch.', 'Artububurit Giveaway Merch.'];
 
 function DaftarKirimMerchPage() {
     const queryClient = useQueryClient();
@@ -22,7 +21,14 @@ function DaftarKirimMerchPage() {
     const { data: merch, isLoading, isError, error } = useQuery({
         queryKey: ['merchandise'],
         queryFn: getMerchandiseData,
-        initialData: { belumDikirim: [], sudahDikirim: [] }
+        placeholderData: { belumDikirim: [], sudahDikirim: [] }
+    });
+
+    // Fetch jenis merchandise dari API
+    const { data: jenisMerchandise = [], isLoading: isLoadingJenis } = useQuery({
+        queryKey: ['jenisMerchandise'],
+        queryFn: getJenisMerchandise,
+        placeholderData: []
     });
 
     const { mutate: markDoneMutation } = useMutation({
@@ -105,8 +111,9 @@ function DaftarKirimMerchPage() {
                         onChange={(e) => handleCellChange(e.target.value, item.nis, 'jenisPaket')}
                         placeholder="Pilih paket"
                         width="10rem"
+                        isDisabled={isLoadingJenis}
                     >
-                        {paketOptions.map(option => (
+                        {jenisMerchandise.map(option => (
                             <option key={option} value={option}>
                                 {option}
                             </option>
@@ -150,7 +157,6 @@ function DaftarKirimMerchPage() {
         });
     };
 
-    if (isLoading) return <Loading />;
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
@@ -162,13 +168,13 @@ function DaftarKirimMerchPage() {
                         <div className="stats-grid-prospective">
                             <InfoCard>
                                 <LuPackage size="30px" />
-                                <p>Total yang belum dikirm</p>
-                                <p className="card__points">{merch.belumDikirim.length}</p>
+                                <p>Total yang belum dikirim</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{merch.belumDikirim.length}</p>}
                             </InfoCard>
                             <InfoCard>
                                 <LuTruck size="30px" />
                                 <p>Total yang sudah dikirim</p>
-                                <p className="card__points">{merch.sudahDikirim.length}</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{merch.sudahDikirim.length}</p>}
                             </InfoCard>
                         </div>
                     </div>
@@ -181,6 +187,7 @@ function DaftarKirimMerchPage() {
                         tableData={merch} 
                         headerItems={headerItems} 
                         onCellChange={handleCellChange}
+                        isLoading={isLoading}
                     />
                 </ContainerCarrot>
             </div>

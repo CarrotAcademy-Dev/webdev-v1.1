@@ -2,11 +2,12 @@ import ContainerCarrot from "@/components/Container";
 import { StyledDailyStoryPage } from "./DailyStoryPage.styled";
 import InfoCard from "@/components/InfoCard";
 import { useMemo } from "react";
-import Loading from "@/components/Loading";
 import { LuCloudOff, LuCloudUpload} from "react-icons/lu";
 import ProgressBarChart from "@/components/ProgressBarChart";
 import SistemTabs from "@/components/SistemTabs";
 import { Checkbox, useToast } from "@chakra-ui/react";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { endOfWeek, format, parse, startOfWeek } from "date-fns";
 import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
 import { getDailyStoryData, markStoryAsDone } from "@/features/cso/csoApiService";
@@ -23,7 +24,7 @@ function DailyStoryPage() {
     const { data: story, isLoading, isError, error } = useQuery({
         queryKey: ['dailyStory'],
         queryFn: getDailyStoryData,
-        initialData: { undone: [], done: [] }
+        placeholderData: { undone: [], done: [] }
     });
 
     const { mutate: markDoneMutation } = useMutation({
@@ -151,7 +152,6 @@ function DailyStoryPage() {
         return weekData;
     }, [story?.done])
 
-    if (isLoading) return <Loading />
     if (isError) return <div>Error: {error.message}</div>;
     const todayDay = format(new Date(), 'EEE');
 
@@ -162,8 +162,24 @@ function DailyStoryPage() {
                     <div className="hero-section__left">
                         <h1 className="page-title">Daily Story - Overview</h1>
                         <div className="stats-grid-prospective">
-                            <InfoCard><LuCloudOff size="30px" /> <p>Total yang belum diupload</p> <p className="card__points">{story.undone.length}</p></InfoCard>
-                            <InfoCard><LuCloudUpload size="30px" /> <p>Total yang sudah diupload</p> <p className="card__points">{story.done.length}</p></InfoCard>
+                            <InfoCard>
+                                <LuCloudOff size="30px" /> 
+                                <p>Total yang belum diupload</p> 
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{story.undone.length}</p>
+                                )}
+                            </InfoCard>
+                            <InfoCard>
+                                <LuCloudUpload size="30px" /> 
+                                <p>Total yang sudah diupload</p> 
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{story.done.length}</p>
+                                )}
+                            </InfoCard>
                         </div>
                     </div>
                     <div className="hero-section__right">
@@ -175,7 +191,7 @@ function DailyStoryPage() {
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={story} headerItems={headerItems} />
+                    <SistemTabs tabItems={tabItems} tableData={story} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledDailyStoryPage>

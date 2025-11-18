@@ -2,9 +2,10 @@ import StyledDaftarSiswaTrialPage from "./DaftarSiswaTrial.style";
 import DataTableComponent from "@/components/Table";
 import { Heading } from "@chakra-ui/react";
 import ContainerCarrot from "@/components/Container";
-import { useEffect, useState } from "react";
-import Loading from "@/components/Loading";
+import { useQuery } from "@tanstack/react-query";
 import { getTrialStudents } from "@/features/cso/csoApiService";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const headerItems = [
     { key: 'no', label: 'No' },
@@ -25,33 +26,19 @@ const headerItems = [
 ];
 
 function DaftarSiswaTrialPage() {
-    const [students, setStudents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setErr] = useState(null);
+    const { data: students = [], isLoading, isError, error } = useQuery({
+        queryKey: ['trialStudents'],
+        queryFn: getTrialStudents,
+    });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getTrialStudents();
-                setStudents(data);
-            } catch (err) {
-                setErr(err.message || 'An error occurred while fetching data');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    if (loading) return <Loading />
-    if (error) return <div>Error: {error}</div>;
+    if (isError) return <div>Error: {error.message}</div>;
 
     return (
         <StyledDaftarSiswaTrialPage>
             <div className="main-content-section">
                 <ContainerCarrot>
                     <Heading mb="2rem">Daftar Siswa Trial</Heading>
-                    <DataTableComponent tableData={students} headerItems={headerItems} />
+                    <DataTableComponent tableData={students} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledDaftarSiswaTrialPage>

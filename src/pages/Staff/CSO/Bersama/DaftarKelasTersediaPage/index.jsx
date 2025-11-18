@@ -1,9 +1,10 @@
 import ContainerCarrot from "@/components/Container";
-import Loading from "@/components/Loading";
 import { useQuery } from "@tanstack/react-query";
 import { getDaftarKelasTersedia } from "@/features/cso/csoApiService";
 import { StyledDaftarKelasTersediaPage } from "./DaftarKelasTersedia.styled";
 import { HEADER_CONFIG, TOTAL_COLUMNS } from "./DaftarKelas.config";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const HARI = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
@@ -13,7 +14,6 @@ function DaftarKelasTersediaPage() {
         queryFn: getDaftarKelasTersedia,
     });
 
-    if (isLoading) return <Loading />;
     if (isError) return <div>Error: {error.message}</div>;
 
     return (

@@ -3,9 +3,9 @@ import InfoCard from "@/components/InfoCard";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
 import { Checkbox, useToast } from "@chakra-ui/react";
-import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
-import { getProspektifDariMarcom, postProspektifDariMarcom} from "@/features/cso/csoApiService";
-import { StyledProspektifDariMarcomPage } from "./ProspektifDariMarcom.styled";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { getPartnershipData, postPartnership } from "@/features/cso/csoApiService";
+import { StyledPartnershipPage } from "./Partnership.styled";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -14,36 +14,35 @@ const tabItems = [
     {key: 'dataClose', label: 'Ticket Close'}
 ];
 
-function ProspektifMarcomPage() {
+function PartnershipPage() {
     const queryClient = useQueryClient();
     const toast = useToast();
 
-    const { data: prosMarcom, isLoading, isError, error } = useQuery({
-        queryKey: ['prosMarcom'],
-        queryFn: getProspektifDariMarcom,
+    const { data: partnershipData, isLoading, isError, error } = useQuery({
+        queryKey: ['partnership'],
+        queryFn: getPartnershipData,
         placeholderData: { dataOpen: [], dataClose: [] }
     });
 
     const { mutate: markDoneMutation } = useMutation({
-        mutationFn: ({ rowData }) => postProspektifDariMarcom({ rowData }),
+        mutationFn: ({ rowData }) => postPartnership({ rowData }),
         onMutate: async (variables) => {
             const { rowData: updatedRow } = variables;
 
-            await queryClient.cancelQueries({ queryKey: ['prosMarcom'] });
-            const previousData = queryClient.getQueryData(['prosMarcom']);
+            await queryClient.cancelQueries({ queryKey: ['partnership'] });
+            const previousData = queryClient.getQueryData(['partnership']);
 
-            queryClient.setQueryData(['prosMarcom'], (oldData) => {
+            queryClient.setQueryData(['partnership'], (oldData) => {
                 if (!oldData) return { dataOpen: [], dataClose: [] };
                 
-                // Update item in dataOpen to show it as done
                 const newDataOpen = oldData.dataOpen.map(item => {
-                    if (item.nomor_hp === updatedRow.nomor_hp) {
+                    if (item.idTicket === updatedRow.idTicket) {
                         return { ...item, done: true };
                     }
                     return item;
                 });
 
-                const itemToMove = oldData.dataOpen.find(item => item.nomor_hp === updatedRow.nomor_hp);
+                const itemToMove = oldData.dataOpen.find(item => item.idTicket === updatedRow.idTicket);
                 const newDataClose = itemToMove 
                     ? [...oldData.dataClose, { ...itemToMove, done: true }]
                     : oldData.dataClose;
@@ -58,7 +57,7 @@ function ProspektifMarcomPage() {
         },
         onError: (error, updatedRow, context) => {
             if (context.previousData) {
-                queryClient.setQueryData(['prosMarcom'], context.previousData);
+                queryClient.setQueryData(['partnership'], context.previousData);
             }
             toast({
                 title: 'Action Failed',
@@ -77,16 +76,16 @@ function ProspektifMarcomPage() {
             });
 
             setTimeout(() => {
-                queryClient.invalidateQueries({ queryKey: ['prosMarcom'] });
+                queryClient.invalidateQueries({ queryKey: ['partnership'] });
             }, 500);
         },
     });
 
     const handleActionDone = (rowData) => {
-        if (!rowData.nomor_hp) {
+        if (!rowData.idTicket) {
             toast({
                 title: 'Error',
-                description: 'Nomor HP tidak ditemukan',
+                description: 'ID Ticket tidak ditemukan',
                 status: 'error',
                 duration: 3000,
                 isClosable: true
@@ -94,16 +93,14 @@ function ProspektifMarcomPage() {
             return;
         }
 
-        // Reset any existing isUpdating flags first
-        queryClient.setQueryData(['prosMarcom'], (oldData) => ({
+        queryClient.setQueryData(['partnership'], (oldData) => ({
             ...oldData,
             dataOpen: oldData.dataOpen.map(item => ({
                 ...item,
-                isUpdating: item.nomor_hp === rowData.nomor_hp
+                isUpdating: item.idTicket === rowData.idTicket
             }))
         }));
 
-        // Execute mutation after a short delay for animation
         setTimeout(() => {
             markDoneMutation({ rowData });
         }, 300);
@@ -111,19 +108,31 @@ function ProspektifMarcomPage() {
 
     const headerItems = [
         { key: 'timestamp', label: 'Timestamp' },
+        { key: 'idTicket', label: 'ID Ticket' },
         { key: 'nama', label: 'Nama' },
-        { key: 'nomor_hp', label: 'Nomor HP' },
-        { key: 'firstContact', label: 'First Contact' },
+        { key: 'status', label: 'Status' },
+        { key: 'jam', label: 'Jam' },
+        { key: 'tanggal', label: 'Tanggal' },
+        { key: 'nomorHp', label: 'Nomor HP' },
         { key: 'media', label: 'Media' },
-        { key: 'programYangMenarik', label: 'Program Yang Menarik' },
-        { key: 'referral', label: 'Referral (Optional)' },
-        { key: 'keterangan', label: 'Keterangan' },
+        { key: 'kategori', label: 'Kategori' },
+        { key: 'subKategori', label: 'Sub Kategori' },
+        { key: 'detail', label: 'Detail' },
+        { key: 'responsible', label: 'Responsible' },
+        { key: 'accountable', label: 'Accountable' },
+        { key: 'consulted', label: 'Consulted' },
+        { key: 'informed', label: 'Informed' },
+        { key: 'lampiran', label: 'Lampiran' },
+        { key: 'hasil', label: 'Hasil' },
+        { key: 'todo', label: 'To Do' },
+        { key: 'comment', label: 'Comment' },
+        { key: 'pic', label: 'PIC' },
         { 
             key: 'done',
             label: 'Done?',
             render: (item) => (
                 <Checkbox
-                    key={item.nomor_hp} // Add unique key to force re-render
+                    key={item.idTicket}
                     isChecked={item.done || item.isUpdating}
                     isDisabled={item.done || item.isUpdating} 
                     onChange={() => handleActionDone(item)}
@@ -150,21 +159,21 @@ function ProspektifMarcomPage() {
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
-        <StyledProspektifDariMarcomPage>
+        <StyledPartnershipPage>
             <ContainerCarrot>
                 <div className="hero-section">
                     <div className="hero-section__left">
-                        <h1 className="page-title">Prospektif Dari Marcom - Overview</h1>
-                        <div className="stats-grid-prospective">
+                        <h1 className="page-title">Partnership - Overview</h1>
+                        <div className="stats-grid">
                             <InfoCard>
                                 <LuTicket size="30px" />
-                                <p>Total prospek yang masih Open</p>
-                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{prosMarcom.dataOpen.length}</p>}
+                                <p>Total ticket yang masih Open</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{partnershipData.dataOpen.length}</p>}
                             </InfoCard>
                             <InfoCard>
                                 <LuTicketCheck size="30px" />
-                                <p>Total prospek yang sudah closed</p>
-                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{prosMarcom.dataClose.length}</p>}
+                                <p>Total ticket yang sudah closed</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{partnershipData.dataClose.length}</p>}
                             </InfoCard>
                         </div>
                     </div>
@@ -172,11 +181,11 @@ function ProspektifMarcomPage() {
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={prosMarcom} headerItems={headerItems} isLoading={isLoading} />
+                    <SistemTabs tabItems={tabItems} tableData={partnershipData} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
-        </StyledProspektifDariMarcomPage>
+        </StyledPartnershipPage>
     );
 }
 
-export default ProspektifMarcomPage;
+export default PartnershipPage;
