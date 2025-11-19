@@ -43,7 +43,7 @@ function DaftarKelasTersediaPage() {
                         </thead>
                         <tbody>
                             {isLoading ? (
-                                HARI.map((hari, rowIndex) => (
+                                HARI.map((hari) => (
                                     <tr key={hari}>
                                         <td className="fixed-column">{hari}</td>
                                         {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (

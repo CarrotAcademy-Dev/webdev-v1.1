@@ -2,6 +2,7 @@ import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { API_CONFIG } from '@/config/api.config';
 import { logError, ApiError } from '@/utils/errorHandler';
+import { auth } from '@/utils/storage';
 
 const apiClient = axios.create({
     baseURL: API_CONFIG.baseURL,
@@ -197,8 +198,7 @@ export const postDataKirimMerch = async (rowData) => {
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         const params = new URLSearchParams({
@@ -263,8 +263,7 @@ export const getDailyStoryData = async () => {
 
 export const markStoryAsDone = async (date) => {
     // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
     const params = new URLSearchParams();
@@ -433,8 +432,7 @@ export const postPendaftaranFD = async (rowData) => {
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         // Convert boolean to TRUE/FALSE string for backend
@@ -514,8 +512,7 @@ export const getLostnFound = async () => {
 
 export const postLostNFound = async (rowData) => {
     // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
     const params = new URLSearchParams({
@@ -586,8 +583,7 @@ export const postProspektifDariMarcom = async ({ rowData }) => {
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         // Coba dengan GET method karena backend GAS tidak return ContentService dengan benar
@@ -873,8 +869,7 @@ export const postTanggalKirimPendaftaran = async ({ rowData, tanggalKirim }) => 
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         const response = await apiClient.post(ENDPOINT.csoBersama, null, {
