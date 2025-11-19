@@ -25,6 +25,7 @@ const TicketExternalPage = lazy(() => import('./pages/Staff/CSO/Bersama/TicketEx
 const PendaftaranLanjutanPage = lazy(() => import('./pages/Staff/CSO/Bersama/PendaftaranLanjutanPage'));
 const PartnershipPage = lazy(() => import('./pages/Staff/CSO/Bersama/PartnershipPage'));
 const DashboardSiswaAktifPage = lazy(() => import('./pages/Staff/CSO/Bersama/DashboardSiswaAktifPage'));
+const DashboardProspektifPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardProspektifPage'));
 
 function App() {
   return (
@@ -169,6 +170,13 @@ function App() {
         <ProtectedRoute>
           <Layout>
             <DashboardSiswaAktifPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/my-tasks/dashboard-prospektif" element={
+        <ProtectedRoute>
+          <Layout>
+            <DashboardProspektifPage />
           </Layout>
         </ProtectedRoute>
       } />

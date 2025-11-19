@@ -3,6 +3,7 @@ export const API_CONFIG = {
     baseURL: import.meta.env.VITE_API_BASE_URL,
     endpoints: {
         csoBersama: import.meta.env.VITE_API_CSO_BERSAMA_ENDPOINT,
+        csoPersonal: import.meta.env.VITE_API_CSO_PERSONAL_ENDPOINT,
         auth: import.meta.env.VITE_API_AUTH_ENDPOINT,
     },
     timeout: 30000,

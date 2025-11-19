@@ -18,6 +18,7 @@ const apiClient = axios.create({
 
 const ENDPOINT = {
     'csoBersama': API_CONFIG.endpoints.csoBersama,
+    'csoPersonal': API_CONFIG.endpoints.csoPersonal
 }
 
 // Helper function untuk parsing dan sorting timestamp
@@ -1042,6 +1043,56 @@ export const getDashboardSiswaAktifTahunan = async (tahunFilter) => {
         }
     } catch (error) {
         console.error("Error fetching dashboard siswa aktif tahunan:", error);
+        throw error;
+    }
+};
+
+// ==================== CSO PERSONAL ====================
+
+export const getDashboardProspektifPersonal = async (dateFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashbord-prospektif',
+                date_req: dateFilter
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || {};
+        } else {
+            throw new Error(result.message || 'Failed to fetch dashboard prospektif');
+        }
+    } catch (error) {
+        console.error("Error fetching dashboard prospektif personal:", error);
+        throw error;
+    }
+};
+
+export const ceklisDashboardProspektif = async ({ target, psid }) => {
+    try {
+        const formData = new FormData();
+        
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const pic = userData?.codeName || 'Unknown';
+
+        formData.append('action', 'ceklis-dashbord-prospektif');
+        formData.append('target', target);
+        formData.append('psid', psid);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.message || 'Berhasil di update';
+        } else {
+            throw new Error(result.message || 'Failed to update checklist');
+        }
+    } catch (error) {
+        console.error("Error updating checklist dashboard prospektif:", error);
         throw error;
     }
 };
