@@ -1,6 +1,6 @@
 import Logo from "../../assets/images/logo1.svg?react";
 import StyledNavbar from "./Navbar.Styled";
-import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack } from "@chakra-ui/react";
+import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack } from "@chakra-ui/react"
 import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu } from "react-icons/fi";
 import { PiSuitcaseBold } from "react-icons/pi";
 import NavbarMenu from "../Menu";
