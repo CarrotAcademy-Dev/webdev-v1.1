@@ -110,7 +110,7 @@ function DailyStoryPage() {
     ];
 
     const parseTimestamp = (timestamp) => {
-        if (!timestamp) return null;
+        if (!timestamp || timestamp === '-') return null;
         
         try {
             // Format 1: M/d/yyyy HH:mm:ss (old format from sheet)
@@ -123,8 +123,19 @@ function DailyStoryPage() {
 
         try {
             // Format 2: JavaScript Date toString() format (new format from backend)
-            // Example: timestamp Wed Nov 19 2025 11:36:26 GMT+0700 (Western Indonesia Time)
-            const cleanedTimestamp = timestamp.replace(/^timestamp\s+/, '').trim();
+            // Example: "timestamp Wed Nov 19 2025 11:45:01 GMT+0700\n pic : CM"
+            // Need to extract only the date part before newline
+            let cleanedTimestamp = timestamp;
+            
+            // Remove "timestamp " prefix
+            cleanedTimestamp = cleanedTimestamp.replace(/^timestamp\s+/, '');
+            
+            // Extract only the date portion (before any newline or "pic:")
+            const dateMatch = cleanedTimestamp.match(/^([^\n]+)/);
+            if (dateMatch) {
+                cleanedTimestamp = dateMatch[1].trim();
+            }
+            
             const parsed = new Date(cleanedTimestamp);
             if (!isNaN(parsed.getTime())) return parsed;
         } catch (err) {
@@ -145,11 +156,27 @@ function DailyStoryPage() {
         const startOfThisWeek = startOfWeek(now, { weekStartsOn: 1 });
         const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
 
+        console.log('🔍 Debug Weekly Progress:');
+        console.log('Current week range:', format(startOfThisWeek, 'dd MMM yyyy'), 'to', format(endOfThisWeek, 'dd MMM yyyy'));
+        console.log('Total done tasks:', doneTasks.length);
+
         const tasksInThisWeek = doneTasks.filter(task => {
             const taskDate = parseTimestamp(task.timestamp);
-            if (!taskDate) return false;
-            return taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
+            if (!taskDate) {
+                console.log('❌ Failed to parse:', task.timestamp);
+                return false;
+            }
+            
+            const isInRange = taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
+            console.log(
+                isInRange ? '✅' : '❌',
+                'Task date:', format(taskDate, 'dd MMM yyyy HH:mm'),
+                '| In range:', isInRange
+            );
+            return isInRange;
         });
+
+        console.log('📊 Tasks in this week:', tasksInThisWeek.length);
 
         tasksInThisWeek.forEach(task => {
             const taskDate = parseTimestamp(task.timestamp);
@@ -158,6 +185,7 @@ function DailyStoryPage() {
                 const dayIndex = weekData.findIndex(d => d.day.startsWith(dayName));
                 if (dayIndex !== -1) {
                     weekData[dayIndex].progress += 1;
+                    console.log('✅ Added to', dayName, '| Total:', weekData[dayIndex].progress);
                 }
             }
         });
@@ -167,6 +195,8 @@ function DailyStoryPage() {
             ...day,
             progress: Math.min(100, (day.progress / maxProgressPerDay) * 100)
         }));
+
+        console.log('📈 Final week data:', weekData);
 
         return weekData;
     }, [story?.done])
