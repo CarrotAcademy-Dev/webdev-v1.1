@@ -109,6 +109,31 @@ function DailyStoryPage() {
         }
     ];
 
+    const parseTimestamp = (timestamp) => {
+        if (!timestamp) return null;
+        
+        try {
+            // Format 1: M/d/yyyy HH:mm:ss (old format from sheet)
+            // Example: 8/8/2025 11:08:53
+            const parsed = parse(timestamp, 'M/d/yyyy HH:mm:ss', new Date());
+            if (!isNaN(parsed.getTime())) return parsed;
+        } catch {
+            // Format 1 failed, try next
+        }
+
+        try {
+            // Format 2: JavaScript Date toString() format (new format from backend)
+            // Example: timestamp Wed Nov 19 2025 11:36:26 GMT+0700 (Western Indonesia Time)
+            const cleanedTimestamp = timestamp.replace(/^timestamp\s+/, '').trim();
+            const parsed = new Date(cleanedTimestamp);
+            if (!isNaN(parsed.getTime())) return parsed;
+        } catch (err) {
+            console.error("Failed to parse timestamp:", timestamp, err);
+        }
+
+        return null;
+    };
+
     const weeklyProgressData = useMemo(() => {
         const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         let weekData = daysOfWeek.map(day => ({day, progress: 0}));
@@ -121,20 +146,14 @@ function DailyStoryPage() {
         const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
 
         const tasksInThisWeek = doneTasks.filter(task => {
-            if (!task.timestamp) return false;
-
-            try {
-                const taskDate = parse(task.timestamp, 'M/d/yyyy HH:mm:ss', new Date());
-                return taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
-            } catch (e) {
-                console.error("Invalid date format in task:", e, task);
-                return false;
-            }
+            const taskDate = parseTimestamp(task.timestamp);
+            if (!taskDate) return false;
+            return taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
         });
 
         tasksInThisWeek.forEach(task => {
-            if (task.timestamp) {
-                const taskDate = parse(task.timestamp, 'M/d/yyyy HH:mm:ss', new Date());
+            const taskDate = parseTimestamp(task.timestamp);
+            if (taskDate) {
                 const dayName = format(taskDate, 'EEE');
                 const dayIndex = weekData.findIndex(d => d.day.startsWith(dayName));
                 if (dayIndex !== -1) {
