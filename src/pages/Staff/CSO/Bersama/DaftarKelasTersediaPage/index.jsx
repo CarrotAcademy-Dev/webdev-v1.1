@@ -42,20 +42,33 @@ function DaftarKelasTersediaPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {HARI.map((hari, rowIndex) => (
-                                <tr key={hari}>
-                                    <td className="fixed-column">{hari}</td>
-                                    {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (
-                                        <td key={colIndex}>
-                                            {data?.[rowIndex]?.[colIndex] && data[rowIndex][colIndex] !== '-' ? (
-                                                data[rowIndex][colIndex].split(', ').map((jam, i) => (
-                                                    <div key={i} className="jadwal-item">{jam}</div>
-                                                ))
-                                            ) : '-'}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
+                            {isLoading ? (
+                                HARI.map((hari, rowIndex) => (
+                                    <tr key={hari}>
+                                        <td className="fixed-column">{hari}</td>
+                                        {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (
+                                            <td key={colIndex}>
+                                                <Skeleton height="20px" width="80%" />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            ) : (
+                                HARI.map((hari, rowIndex) => (
+                                    <tr key={hari}>
+                                        <td className="fixed-column">{hari}</td>
+                                        {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (
+                                            <td key={colIndex}>
+                                                {data?.[rowIndex]?.[colIndex] && data[rowIndex][colIndex] !== '-' ? (
+                                                    data[rowIndex][colIndex].split(', ').map((jam, i) => (
+                                                        <div key={i} className="jadwal-item">{jam}</div>
+                                                    ))
+                                                ) : '-'}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
