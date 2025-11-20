@@ -34,23 +34,7 @@ function DashboardProspektifPage() {
     const { data: dashboardData, isLoading, refetch } = useQuery({
         queryKey: ['dashboardProspektifPersonal', selectedDate],
         queryFn: () => getDashboardProspektifPersonal(selectedDate),
-        enabled: !!selectedDate,
-        placeholderData: {
-            angka: {
-                followup_1: "0 / 0",
-                followup_2: "0 / 0",
-                followup_3: "0 / 0",
-                trial_class: 0,
-                first_class: 0
-            },
-            data: {
-                daftar_first_class: [],
-                daftar_trial_class: [],
-                list_ongoing_fu1: [],
-                list_ongoing_fu2: [],
-                list_ongoing_fu3: []
-            }
-        }
+        enabled: !!selectedDate
     });
 
     // Mutation untuk checklist
@@ -198,14 +182,14 @@ function DashboardProspektifPage() {
                         </Box>
                         <Box as="tbody">
                             {isLoading ? (
-                                Array(3).fill(0).map((_, idx) => (
+                                Array(5).fill(0).map((_, idx) => (
                                     <Box as="tr" key={idx}>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell wrap><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={40} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={30} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={90} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={60} /></TableCell>
+                                        <TableCell wrap><Skeleton height={20} width={150} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={100} /></TableCell>
                                     </Box>
                                 ))
                             ) : paginatedData && paginatedData.length > 0 ? (
@@ -279,14 +263,14 @@ function DashboardProspektifPage() {
                         </Box>
                         <Box as="tbody">
                             {isLoading ? (
-                                Array(3).fill(0).map((_, idx) => (
+                                Array(5).fill(0).map((_, idx) => (
                                     <Box as="tr" key={idx}>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell wrap><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
-                                        <TableCell><Skeleton height={20} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={40} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={30} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={60} /></TableCell>
+                                        <TableCell wrap><Skeleton height={20} width={150} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={90} /></TableCell>
+                                        <TableCell><Skeleton height={20} width={100} /></TableCell>
                                     </Box>
                                 ))
                             ) : paginatedData && paginatedData.length > 0 ? (
@@ -355,41 +339,51 @@ function DashboardProspektifPage() {
                     <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4} mb={8}>
                         <GridItem>
                             <Box className="kpi-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
-                                <Text fontSize="sm" color="gray.600" mb={2}>Trial Class hari ini</Text>
-                                <Text fontSize="2xl" fontWeight="bold" color="brand.primary">
-                                    {isLoading ? <Skeleton width={60} /> : angka.trial_class || 0}
+                                <Text fontSize="sm" color="gray.600" mb={2}>
+                                    {isLoading ? <Skeleton width={120} height={16} /> : "Trial Class hari ini"}
+                                </Text>
+                                <Text fontSize="2xl" fontWeight="bold" color="#FE7743">
+                                    {isLoading ? <Skeleton width={60} height={32} /> : angka.trial_class || 0}
                                 </Text>
                             </Box>
                         </GridItem>
                         <GridItem>
                             <Box className="kpi-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
-                                <Text fontSize="sm" color="gray.600" mb={2}>First Class hari ini</Text>
-                                <Text fontSize="2xl" fontWeight="bold" color="brand.primary">
-                                    {isLoading ? <Skeleton width={60} /> : angka.first_class || 0}
+                                <Text fontSize="sm" color="gray.600" mb={2}>
+                                    {isLoading ? <Skeleton width={120} height={16} /> : "First Class hari ini"}
+                                </Text>
+                                <Text fontSize="2xl" fontWeight="bold" color="#FE7743">
+                                    {isLoading ? <Skeleton width={60} height={32} /> : angka.first_class || 0}
                                 </Text>
                             </Box>
                         </GridItem>
                         <GridItem>
                             <Box className="kpi-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
-                                <Text fontSize="sm" color="gray.600" mb={2}>Follow Up 1</Text>
-                                <Text fontSize="2xl" fontWeight="bold" color="brand.accent">
-                                    {isLoading ? <Skeleton width={60} /> : angka.followup_1 || "0 / 0"}
+                                <Text fontSize="sm" color="gray.600" mb={2}>
+                                    {isLoading ? <Skeleton width={100} height={16} /> : "Follow Up 1"}
+                                </Text>
+                                <Text fontSize="2xl" fontWeight="bold" color="#FE7743">
+                                    {isLoading ? <Skeleton width={80} height={32} /> : angka.followup_1 || "0 / 0"}
                                 </Text>
                             </Box>
                         </GridItem>
                         <GridItem>
                             <Box className="kpi-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
-                                <Text fontSize="sm" color="gray.600" mb={2}>Follow Up 2</Text>
-                                <Text fontSize="2xl" fontWeight="bold" color="brand.accent">
-                                    {isLoading ? <Skeleton width={60} /> : angka.followup_2 || "0 / 0"}
+                                <Text fontSize="sm" color="gray.600" mb={2}>
+                                    {isLoading ? <Skeleton width={100} height={16} /> : "Follow Up 2"}
+                                </Text>
+                                <Text fontSize="2xl" fontWeight="bold" color="#FE7743">
+                                    {isLoading ? <Skeleton width={80} height={32} /> : angka.followup_2 || "0 / 0"}
                                 </Text>
                             </Box>
                         </GridItem>
                         <GridItem>
                             <Box className="kpi-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
-                                <Text fontSize="sm" color="gray.600" mb={2}>Follow Up 3</Text>
-                                <Text fontSize="2xl" fontWeight="bold" color="brand.accent">
-                                    {isLoading ? <Skeleton width={60} /> : angka.followup_3 || "0 / 0"}
+                                <Text fontSize="sm" color="gray.600" mb={2}>
+                                    {isLoading ? <Skeleton width={100} height={16} /> : "Follow Up 3"}
+                                </Text>
+                                <Text fontSize="2xl" fontWeight="bold" color="#FE7743">
+                                    {isLoading ? <Skeleton width={80} height={32} /> : angka.followup_3 || "0 / 0"}
                                 </Text>
                             </Box>
                         </GridItem>
