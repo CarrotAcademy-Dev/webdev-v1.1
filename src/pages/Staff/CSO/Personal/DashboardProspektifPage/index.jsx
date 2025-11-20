@@ -178,10 +178,10 @@ function DashboardProspektifPage() {
             <Box className="table-section" mb={8}>
                 <Flex justify="space-between" align="center" mb={4}>
                     <Text fontSize="xl" fontWeight="bold" color="brand.primary">
-                        {title}
+                        {isLoading ? <Skeleton width={200} height={28} /> : title}
                     </Text>
                     <Text fontSize="lg" fontWeight="bold" color="brand.accent">
-                        {angkaText}
+                        {isLoading ? <Skeleton width={80} height={24} /> : angkaText}
                     </Text>
                 </Flex>
                 <Box className="table-container" overflowX="auto">
@@ -259,10 +259,10 @@ function DashboardProspektifPage() {
             <Box className="table-section" mb={8}>
                 <Flex justify="space-between" align="center" mb={4}>
                     <Text fontSize="xl" fontWeight="bold" color="brand.primary">
-                        {title}
+                        {isLoading ? <Skeleton width={200} height={28} /> : title}
                     </Text>
                     <Text fontSize="lg" fontWeight="bold" color="brand.accent">
-                        {count}
+                        {isLoading ? <Skeleton width={60} height={24} /> : count}
                     </Text>
                 </Flex>
                 <Box className="table-container" overflowX="auto">
