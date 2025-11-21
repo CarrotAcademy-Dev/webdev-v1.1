@@ -7,7 +7,6 @@ import { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { auth } from "@/utils/storage";
 
 function DashboardProspektifPage() {
     const currentDate = new Date();
@@ -20,7 +19,6 @@ function DashboardProspektifPage() {
 
     const [selectedDate, setSelectedDate] = useState(formatDateForInput(currentDate));
     const toast = useToast();
-    const user = auth.getUser();
 
     // Pagination states
     const [trialClassPage, setTrialClassPage] = useState(1);
@@ -29,6 +27,9 @@ function DashboardProspektifPage() {
     const [fu2Page, setFu2Page] = useState(1);
     const [fu3Page, setFu3Page] = useState(1);
     const itemsPerPage = 5;
+
+    // Track checked items locally per tanggal
+    const [checkedItems, setCheckedItems] = useState({});
 
     // Fetch dashboard data
     const { data: dashboardData, isLoading, refetch } = useQuery({
@@ -62,21 +63,23 @@ function DashboardProspektifPage() {
     });
 
     const handleChecklist = async (target, psid) => {
-        if (!user?.name) {
-            toast({
-                title: "Error",
-                description: "User tidak ditemukan",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            });
-            return;
-        }
+        const itemKey = `${target}-${psid}`;
+        
+        // Tambahkan ke checkedItems untuk tanggal ini
+        setCheckedItems(prev => {
+            const dateChecked = prev[selectedDate] || new Set();
+            const newDateChecked = new Set(dateChecked);
+            newDateChecked.add(itemKey);
+            
+            return {
+                ...prev,
+                [selectedDate]: newDateChecked
+            };
+        });
 
         await checklistMutation.mutateAsync({
             target,
-            psid: psid.toString(),
-            pic: user.name
+            psid: psid.toString()
         });
     };
 
@@ -197,6 +200,9 @@ function DashboardProspektifPage() {
                                     const [tanggal, psid, nama, nomorSiswa, nomorOrtu] = row;
                                     const nomorHP = nomorSiswa || nomorOrtu || '-';
                                     const rowNumber = startIndex + idx + 1;
+                                    const itemKey = `${targetType}-${psid}`;
+                                    const dateChecked = checkedItems[selectedDate] || new Set();
+                                    const isChecked = dateChecked.has(itemKey);
                                     
                                     return (
                                         <Box as="tr" key={idx} _hover={{ bg: "gray.50" }}>
@@ -208,7 +214,8 @@ function DashboardProspektifPage() {
                                             <TableCell textAlign="center">
                                                 <Checkbox
                                                     colorScheme="green"
-                                                    isDisabled={checklistMutation.isPending}
+                                                    isChecked={isChecked}
+                                                    isDisabled={checklistMutation.isPending || isChecked}
                                                     onChange={() => handleChecklist(targetType, psid)}
                                                 />
                                             </TableCell>
@@ -278,6 +285,9 @@ function DashboardProspektifPage() {
                                     const [psid, nama, tanggal, nomorSiswa, nomorOrtu] = row;
                                     const nomorHP = nomorSiswa || nomorOrtu || '-';
                                     const rowNumber = startIndex + idx + 1;
+                                    const itemKey = `${targetType}-${psid}`;
+                                    const dateChecked = checkedItems[selectedDate] || new Set();
+                                    const isChecked = dateChecked.has(itemKey);
                                     
                                     return (
                                         <Box as="tr" key={idx} _hover={{ bg: "gray.50" }}>
@@ -289,7 +299,8 @@ function DashboardProspektifPage() {
                                             <TableCell textAlign="center">
                                                 <Checkbox
                                                     colorScheme="green"
-                                                    isDisabled={checklistMutation.isPending}
+                                                    isChecked={isChecked}
+                                                    isDisabled={checklistMutation.isPending || isChecked}
                                                     onChange={() => handleChecklist(targetType, psid)}
                                                 />
                                             </TableCell>

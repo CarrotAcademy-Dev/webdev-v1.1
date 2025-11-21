@@ -1072,18 +1072,22 @@ export const getDashboardProspektifPersonal = async (dateFilter) => {
 
 export const ceklisDashboardProspektif = async ({ target, psid }) => {
     try {
-        const formData = new FormData();
-        
         // Ambil codeName dari user yang login
         const userData = auth.getUser();
-        const pic = userData?.codeName || 'Unknown';
+        const pic = userData?.codeName || userData?.name || 'Unknown';
 
-        formData.append('action', 'ceklis-dashbord-prospektif');
-        formData.append('target', target);
-        formData.append('psid', psid);
-        formData.append('pic', pic);
+        // Google Apps Script POST harus menggunakan URLSearchParams
+        const params = new URLSearchParams();
+        params.append('action', 'ceklis-dashboard-prospektif');
+        params.append('target', target);
+        params.append('psid', psid);
+        params.append('pic', pic);
 
-        const response = await apiClient.post(ENDPOINT.csoPersonal, formData);
+        const response = await apiClient.post(ENDPOINT.csoPersonal, params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
 
         const result = response.data;
         if (result.status === 'success') {
@@ -1096,3 +1100,116 @@ export const ceklisDashboardProspektif = async ({ target, psid }) => {
         throw error;
     }
 };
+
+export const getReminderFoundationNaikModul = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: { 
+                action: 'get-dashboard-reminder',
+                target: 'foundation-naik-modul',
+                bulan_tahun: dataFilter
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder foundation naik modul data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder foundation naik modul data:", error);
+        throw error;
+    }
+}
+
+export const getReminderSiswaCuti = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: 'data-cuti',
+                buln_tahun: dataFilter
+            }
+        });
+
+        const result = response.data;
+        
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder siswa cuti data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder siswa cuti data:", error);
+        throw error;
+    }
+}
+
+export const getReminderChatFulltime = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: "reminder-chat-fulltime",
+                date: dataFilter
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder chat fulltime data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder chat fulltime data:", error);
+        throw error;
+    }
+}
+
+export const getReminderHargaFulltime = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: 'reminder-harga-fulltime',
+                date: dataFilter
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder harga fulltime data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder harga fulltime data:", error);
+        throw error;
+    }
+}
+
+export const getReminderHoliday = async () => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: 'reminder-holiday'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder holiday data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder holiday data:", error);
+        throw error;
+    }
+}
