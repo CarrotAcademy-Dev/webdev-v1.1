@@ -26,6 +26,7 @@ const PendaftaranLanjutanPage = lazy(() => import('./pages/Staff/CSO/Bersama/Pen
 const PartnershipPage = lazy(() => import('./pages/Staff/CSO/Bersama/PartnershipPage'));
 const DashboardSiswaAktifPage = lazy(() => import('./pages/Staff/CSO/Bersama/DashboardSiswaAktifPage'));
 const DashboardProspektifPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardProspektifPage'));
+const DashboardReminderPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardReminder'));
 
 function App() {
   return (
@@ -177,6 +178,13 @@ function App() {
         <ProtectedRoute>
           <Layout>
             <DashboardProspektifPage />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/my-tasks/dashboard-reminder" element={
+        <ProtectedRoute>
+          <Layout>
+            <DashboardReminderPage />
           </Layout>
         </ProtectedRoute>
       } />

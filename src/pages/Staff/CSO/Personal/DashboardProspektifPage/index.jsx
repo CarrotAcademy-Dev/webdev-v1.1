@@ -141,7 +141,6 @@ function DashboardProspektifPage() {
                         onClick={() => onPageChange(currentPage - 1)}
                         isDisabled={currentPage === 1}
                         aria-label="Previous page"
-                        colorScheme="brand"
                     />
                     <IconButton
                         icon={<FiChevronRight />}
@@ -149,7 +148,6 @@ function DashboardProspektifPage() {
                         onClick={() => onPageChange(currentPage + 1)}
                         isDisabled={currentPage === totalPages}
                         aria-label="Next page"
-                        colorScheme="brand"
                     />
                 </Flex>
             </Flex>

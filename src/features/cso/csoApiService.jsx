@@ -1129,7 +1129,7 @@ export const getReminderSiswaCuti = async (dataFilter) => {
             params: {
                 action: 'get-dashboard-reminder',
                 target: 'data-cuti',
-                buln_tahun: dataFilter
+                bulan_tahun: dataFilter
             }
         });
 
@@ -1182,7 +1182,12 @@ export const getReminderHargaFulltime = async (dataFilter) => {
         const result = response.data;
 
         if (result.status === 'success') {
-            return result.result || [];
+            return {
+                normal: result.result_normal || [],
+                promo: result.result_promo || [],
+                normalCount: result.result_normal_jumlah || 0,
+                promoCount: result.result_promo_jumlah || 0
+            };
         } else {
             throw new Error(result.message || 'Failed to fetch reminder harga fulltime data');
         }
@@ -1204,7 +1209,7 @@ export const getReminderHoliday = async () => {
         const result = response.data;
 
         if (result.status === 'success') {
-            return result.result || [];
+            return result.result?.reminder_holiday || {};
         } else {
             throw new Error(result.message || 'Failed to fetch reminder holiday data');
         }
@@ -1213,3 +1218,4 @@ export const getReminderHoliday = async () => {
         throw error;
     }
 }
+
