@@ -2,6 +2,7 @@ import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { API_CONFIG } from '@/config/api.config';
 import { logError, ApiError } from '@/utils/errorHandler';
+import { auth } from '@/utils/storage';
 
 const apiClient = axios.create({
     baseURL: API_CONFIG.baseURL,
@@ -17,6 +18,7 @@ const apiClient = axios.create({
 
 const ENDPOINT = {
     'csoBersama': API_CONFIG.endpoints.csoBersama,
+    'csoPersonal': API_CONFIG.endpoints.csoPersonal
 }
 
 // Helper function untuk parsing dan sorting timestamp
@@ -197,8 +199,7 @@ export const postDataKirimMerch = async (rowData) => {
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         const params = new URLSearchParams({
@@ -263,8 +264,7 @@ export const getDailyStoryData = async () => {
 
 export const markStoryAsDone = async (date) => {
     // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
     const params = new URLSearchParams();
@@ -433,8 +433,7 @@ export const postPendaftaranFD = async (rowData) => {
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         // Convert boolean to TRUE/FALSE string for backend
@@ -514,8 +513,7 @@ export const getLostnFound = async () => {
 
 export const postLostNFound = async (rowData) => {
     // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
     const params = new URLSearchParams({
@@ -586,8 +584,7 @@ export const postProspektifDariMarcom = async ({ rowData }) => {
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         // Coba dengan GET method karena backend GAS tidak return ContentService dengan benar
@@ -873,8 +870,7 @@ export const postTanggalKirimPendaftaran = async ({ rowData, tanggalKirim }) => 
         }
 
         // Ambil codeName dari user yang login
-        const userDataString = localStorage.getItem('user');
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userData = auth.getUser();
         const pic = userData?.codeName || 'Unknown';
 
         const response = await apiClient.post(ENDPOINT.csoBersama, null, {
@@ -1050,3 +1046,297 @@ export const getDashboardSiswaAktifTahunan = async (tahunFilter) => {
         throw error;
     }
 };
+
+// ==================== CSO PERSONAL ====================
+
+export const getDashboardProspektifPersonal = async (dateFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashbord-prospektif',
+                date_req: dateFilter
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || {};
+        } else {
+            throw new Error(result.message || 'Failed to fetch dashboard prospektif');
+        }
+    } catch (error) {
+        console.error("Error fetching dashboard prospektif personal:", error);
+        throw error;
+    }
+};
+
+export const ceklisDashboardProspektif = async ({ target, psid }) => {
+    try {
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        // Google Apps Script POST harus menggunakan URLSearchParams
+        const params = new URLSearchParams();
+        params.append('action', 'ceklis-dashboard-prospektif');
+        params.append('target', target);
+        params.append('psid', psid);
+        params.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.message || 'Berhasil di update';
+        } else {
+            throw new Error(result.message || 'Failed to update checklist');
+        }
+    } catch (error) {
+        console.error("Error updating checklist dashboard prospektif:", error);
+        throw error;
+    }
+};
+
+export const getReminderFoundationNaikModul = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: { 
+                action: 'get-dashboard-reminder',
+                target: 'foundation-naik-modul',
+                bulan_tahun: dataFilter
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder foundation naik modul data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder foundation naik modul data:", error);
+        throw error;
+    }
+}
+
+export const getReminderSiswaCuti = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: 'data-cuti',
+                bulan_tahun: dataFilter
+            }
+        });
+
+        const result = response.data;
+        
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder siswa cuti data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder siswa cuti data:", error);
+        throw error;
+    }
+}
+
+export const getReminderChatFulltime = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: "reminder-chat-fulltime",
+                date: dataFilter
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder chat fulltime data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder chat fulltime data:", error);
+        throw error;
+    }
+}
+
+export const getReminderHargaFulltime = async (dataFilter) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: 'reminder-harga-fulltime',
+                date: dataFilter
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return {
+                normal: result.result_normal || [],
+                promo: result.result_promo || [],
+                normalCount: result.result_normal_jumlah || 0,
+                promoCount: result.result_promo_jumlah || 0
+            };
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder harga fulltime data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder harga fulltime data:", error);
+        throw error;
+    }
+}
+
+export const getReminderHoliday = async () => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-reminder',
+                target: 'reminder-holiday'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result?.reminder_holiday || {};
+        } else {
+            throw new Error(result.message || 'Failed to fetch reminder holiday data');
+        }
+    } catch (error) {
+        console.error("Error fetching reminder holiday data:", error);
+        throw error;
+    }
+}
+
+export const getTicketingInternal = async () => {
+    try {
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+        const role = userData?.role || 'Unknown';
+        const kode = (`${role} - ${pic}`).toUpperCase();
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'ticketing-internal',
+                kode_nama: kode
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch ticketing internal data');
+        }
+    } catch (error) {
+        console.error("Error fetching ticketing internal data:", error);
+        throw error;
+    }
+}
+
+export const postCeklisTicketingInternal = async ({ id_ticket, result, notes }) => {
+    try {
+        if (!id_ticket || !result || !notes) {
+            throw new Error('ID Ticket, Result, dan Notes wajib diisi');
+        }
+
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        console.log('Submitting ticketing internal:', { id_ticket, result, notes, pic });
+
+        // POST dengan URLSearchParams sebagai body + Content-Type header
+        const params = new URLSearchParams();
+        params.append('action', 'ceklis-ticketing-internal');
+        params.append('id_ticket', id_ticket);
+        params.append('result', result);
+        params.append('notes', notes);
+        params.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const responseData = response.data;
+
+        if (responseData.status === 'success') {
+            return responseData;
+        } else {
+            throw new Error(responseData.message || 'Failed to submit ticketing internal');
+        }
+    } catch (error) {
+        console.error("Error submitting ticketing internal:", error);
+        // Jika axios error, log detail lebih lengkap
+        if (error.response) {
+            console.error('Response error:', error.response.data);
+            console.error('Response status:', error.response.status);
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+        }
+        throw error;
+    }
+}
+
+export const getFdIdentity = async () => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-fd-identity'
+            }
+        });
+
+        const result = response.data
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch FD identity data');
+        }
+    } catch (error) {
+        console.error("Error fetching FD identity data:", error);
+        throw error;
+    }
+}
+
+export const getTrackTicketFme = async () => {
+    try {
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const kode = userData?.codeName || userData?.name || 'Unknown';
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'track-ticket-fme',
+                kode_nama: kode
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch track ticket From Me data');
+        }
+    } catch (error) {
+        console.error("Error fetching track ticket From Me data:", error);
+        throw error;
+    }
+}
+

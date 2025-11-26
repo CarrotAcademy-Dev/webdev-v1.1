@@ -574,28 +574,41 @@ function DashboardSiswaAktifPage() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {paginatedSiswaData.map((siswa, index) => (
-                                        <tr key={index}>
-                                            <td>{siswa.nama}</td>
-                                            <td>{siswa.modul}</td>
-                                            <td>
-                                                <span className={`status-badge ${siswa.status?.toLowerCase() || ''}`}>
-                                                    {siswa.status || '-'}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className={`class-badge ${siswa.kelas?.toLowerCase() || ''}`}>
-                                                    {siswa.kelas}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {paginatedSiswaData.length === 0 && (
-                                        <tr>
-                                            <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>
-                                                {searchQuery ? 'No matching data found' : 'No data available'}
-                                            </td>
-                                        </tr>
+                                    {isLoading ? (
+                                        Array.from({ length: 5 }).map((_, idx) => (
+                                            <tr key={idx}>
+                                                <td><Skeleton height="20px" /></td>
+                                                <td><Skeleton height="20px" /></td>
+                                                <td><Skeleton height="20px" width="80px" /></td>
+                                                <td><Skeleton height="20px" width="80px" /></td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <>
+                                            {paginatedSiswaData.map((siswa, index) => (
+                                                <tr key={index}>
+                                                    <td>{siswa.nama}</td>
+                                                    <td>{siswa.modul}</td>
+                                                    <td>
+                                                        <span className={`status-badge ${siswa.status?.toLowerCase() || ''}`}>
+                                                            {siswa.status || '-'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span className={`class-badge ${siswa.kelas?.toLowerCase() || ''}`}>
+                                                            {siswa.kelas}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {paginatedSiswaData.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>
+                                                        {searchQuery ? 'No matching data found' : 'No data available'}
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </>
                                     )}
                                 </tbody>
                             </table>
@@ -685,7 +698,7 @@ function DashboardSiswaAktifPage() {
                         {dashboardTahunan.rec_trend_program_siswa && (
                             <Box className="table-section" mb={6}>
                                 <h2 className="section-title">TABEL TREND PROGRAM SISWA {selectedYear}</h2>
-                                <TrendProgramTable data={dashboardTahunan.rec_trend_program_siswa} />
+                                <TrendProgramTable data={dashboardTahunan.rec_trend_program_siswa} isLoading={isLoadingTahunan} />
                             </Box>
                         )}
 
@@ -696,7 +709,7 @@ function DashboardSiswaAktifPage() {
                                 <GridItem minW={0} overflow="hidden">
                                     <Box className="table-section">
                                         <h2 className="section-title">TABEL SISWA AKTIF ONLINE</h2>
-                                        <TrendProgramTable data={dashboardTahunan.rec_trend_program_siswa_online} />
+                                        <TrendProgramTable data={dashboardTahunan.rec_trend_program_siswa_online} isLoading={isLoadingTahunan} />
                                     </Box>
                                 </GridItem>
                             )}
@@ -706,7 +719,7 @@ function DashboardSiswaAktifPage() {
                                 <GridItem minW={0} overflow="hidden">
                                     <Box className="table-section">
                                         <h2 className="section-title">TABEL SISWA AKTIF OFFLINE</h2>
-                                        <TrendProgramTable data={dashboardTahunan.rec_trend_program_siswa_offline} />
+                                        <TrendProgramTable data={dashboardTahunan.rec_trend_program_siswa_offline} isLoading={isLoadingTahunan} />
                                     </Box>
                                 </GridItem>
                             )}
@@ -810,7 +823,7 @@ function DashboardSiswaAktifPage() {
 }
 
 // Helper Components untuk Tabel-tabel
-const TrendProgramTable = ({ data }) => {
+const TrendProgramTable = ({ data, isLoading }) => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     
     return (
@@ -834,23 +847,43 @@ const TrendProgramTable = ({ data }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {monthNames.map((month, index) => (
-                        <tr key={index}>
-                            <td><strong>{month}</strong></td>
-                            <td>{data.fulltime?.[index]?.[0] || 0}</td>
-                            <td>{data.foundation?.[index]?.[0] || 0}</td>
-                            <td>{data.drawing?.[index]?.[0] || 0}</td>
-                            <td>{data.painting?.[index]?.[0] || 0}</td>
-                            <td>{data.digital?.[index]?.[0] || 0}</td>
-                            <td>{data.portfolio?.[index]?.[0] || 0}</td>
-                            <td>{data.bootcamp?.[index]?.[0] || 0}</td>
-                            <td>{data.trial?.[index]?.[0] || 0}</td>
-                            <td>{data.cuti?.[index]?.[0] || 0}</td>
-                            <td>{data.new_student?.[index]?.[0] || 0}</td>
-                            <td>{data.retention?.[index]?.[0] || 0}</td>
-                            <td><strong>{data.total_active_student?.[index]?.[0] || 0}</strong></td>
-                        </tr>
-                    ))}
+                    {isLoading ? (
+                        Array.from({ length: 3 }).map((_, idx) => (
+                            <tr key={idx}>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                                <td><Skeleton height="20px" /></td>
+                            </tr>
+                        ))
+                    ) : (
+                        monthNames.map((month, index) => (
+                            <tr key={index}>
+                                <td><strong>{month}</strong></td>
+                                <td>{data.fulltime?.[index]?.[0] || 0}</td>
+                                <td>{data.foundation?.[index]?.[0] || 0}</td>
+                                <td>{data.drawing?.[index]?.[0] || 0}</td>
+                                <td>{data.painting?.[index]?.[0] || 0}</td>
+                                <td>{data.digital?.[index]?.[0] || 0}</td>
+                                <td>{data.portfolio?.[index]?.[0] || 0}</td>
+                                <td>{data.bootcamp?.[index]?.[0] || 0}</td>
+                                <td>{data.trial?.[index]?.[0] || 0}</td>
+                                <td>{data.cuti?.[index]?.[0] || 0}</td>
+                                <td>{data.new_student?.[index]?.[0] || 0}</td>
+                                <td>{data.retention?.[index]?.[0] || 0}</td>
+                                <td><strong>{data.total_active_student?.[index]?.[0] || 0}</strong></td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>
