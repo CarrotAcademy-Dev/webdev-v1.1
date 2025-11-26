@@ -26,6 +26,12 @@ export const prefetchRoute = (path) => {
     case '/my-tasks/dashboard-siswa-aktif':
       import('../pages/Staff/CSO/Bersama/DashboardSiswaAktifPage');
       break;
+    case '/my-tasks/dashboard-prospektif':
+      import('../pages/Staff/CSO/Personal/DashboardProspektifPage');
+      break;
+    case '/my-tasks/track-ticket-fme':
+      import('../pages/Staff/CSO/Personal/TrackTicketFmePage');
+      break;
     // Add more routes as needed
     default:
       break;

@@ -27,168 +27,192 @@ const PartnershipPage = lazy(() => import('./pages/Staff/CSO/Bersama/Partnership
 const DashboardSiswaAktifPage = lazy(() => import('./pages/Staff/CSO/Bersama/DashboardSiswaAktifPage'));
 const DashboardProspektifPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardProspektifPage'));
 const DashboardReminderPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardReminder'));
+const TicketingInternalPage = lazy(() => import('./pages/Staff/CSO/Personal/TicketingInternal'));
+const FdStudentIdentityPage = lazy(() => import('./pages/Staff/CSO/Personal/FdStudenIdentityPage'));
+const TrackTicketFmePage = lazy(() => import('./pages/Staff/CSO/Personal/TrackTicketFmePage'));
 
 function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-      <Route path="/" element={<Login />} />
-      <Route 
-        path="/home" 
-        element={
+        <Route path="/" element={<Login />} />
+        <Route 
+          path="/home" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <OverviewPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/home/kpi" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <KpiDetailsPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/my-tasks/prospective" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ProspectivePage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/my-tasks/daftar-kirim-merch" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <DaftarKirimMerchPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/my-tasks/daftar-siswa-trial" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <DaftarSiswaTrialPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route path='/my-tasks/daily-story' element={
           <ProtectedRoute>
             <Layout>
-              <OverviewPage />
+              <DailyStoryPage />
             </Layout>
           </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/home/kpi" 
-        element={
+        } />
+        <Route path='/my-tasks/daftar-offboarding' element={
           <ProtectedRoute>
             <Layout>
-              <KpiDetailsPage />
+              <DaftarOffboardingPage />
             </Layout>
           </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/my-tasks/prospective" 
-        element={
+        } />
+        <Route path='/my-tasks/pendaftaranfd-course' element={
           <ProtectedRoute>
             <Layout>
-              <ProspectivePage />
+              <PendaftaranFdPage />
             </Layout>
           </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/my-tasks/daftar-kirim-merch" 
-        element={
+        } />
+        <Route path='/my-tasks/lostnfound' element={
           <ProtectedRoute>
             <Layout>
-              <DaftarKirimMerchPage />
+              <LostNFoundPage />
             </Layout>
           </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/my-tasks/daftar-siswa-trial" 
-        element={
+        } />
+        <Route path='/my-tasks/prospektif-dari-marcom' element={
           <ProtectedRoute>
             <Layout>
-              <DaftarSiswaTrialPage />
+              <ProspektifMarcomPage />
             </Layout>
           </ProtectedRoute>
-        } 
-      />
-      <Route path='/my-tasks/daily-story' element={
-        <ProtectedRoute>
-          <Layout>
-            <DailyStoryPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path='/my-tasks/daftar-offboarding' element={
-        <ProtectedRoute>
-          <Layout>
-            <DaftarOffboardingPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path='/my-tasks/pendaftaranfd-course' element={
-        <ProtectedRoute>
-          <Layout>
-            <PendaftaranFdPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path='/my-tasks/lostnfound' element={
-        <ProtectedRoute>
-          <Layout>
-            <LostNFoundPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path='/my-tasks/prospektif-dari-marcom' element={
-        <ProtectedRoute>
-          <Layout>
-            <ProspektifMarcomPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/daftar-kelas-tersedia" element={
-        <ProtectedRoute>
-          <Layout>
-            <DaftarKelasTersediaPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/rekap-jadwal-mentor" element={
-        <ProtectedRoute>
-          <Layout>
-            <RekapJadwalMentorPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/statistik-prospektif" element={
-        <ProtectedRoute>
-          <Layout>
-            <StatistikProspektifPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/janji-temu" element={
-        <ProtectedRoute>
-          <Layout>
-            <JanjiTemuPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/ticket-external" element={
-        <ProtectedRoute>
-          <Layout>
-            <TicketExternalPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/pendaftaran-lanjutan" element={
-        <ProtectedRoute>
-          <Layout>
-            <PendaftaranLanjutanPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/partnership" element={
-        <ProtectedRoute>
-          <Layout>
-            <PartnershipPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/dashboard-siswa-aktif" element={
-        <ProtectedRoute>
-          <Layout>
-            <DashboardSiswaAktifPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/dashboard-prospektif" element={
-        <ProtectedRoute>
-          <Layout>
-            <DashboardProspektifPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/my-tasks/dashboard-reminder" element={
-        <ProtectedRoute>
-          <Layout>
-            <DashboardReminderPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="*" element={<NotFoundPage />} />
+        } />
+        <Route path="/my-tasks/daftar-kelas-tersedia" element={
+          <ProtectedRoute>
+            <Layout>
+              <DaftarKelasTersediaPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/rekap-jadwal-mentor" element={
+          <ProtectedRoute>
+            <Layout>
+              <RekapJadwalMentorPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/statistik-prospektif" element={
+          <ProtectedRoute>
+            <Layout>
+              <StatistikProspektifPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/janji-temu" element={
+          <ProtectedRoute>
+            <Layout>
+              <JanjiTemuPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/ticket-external" element={
+          <ProtectedRoute>
+            <Layout>
+              <TicketExternalPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/pendaftaran-lanjutan" element={
+          <ProtectedRoute>
+            <Layout>
+              <PendaftaranLanjutanPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/partnership" element={
+          <ProtectedRoute>
+            <Layout>
+              <PartnershipPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-siswa-aktif" element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardSiswaAktifPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-prospektif" element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardProspektifPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-reminder" element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardReminderPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/ticketing-internal" element={
+          <ProtectedRoute>
+            <Layout>
+              <TicketingInternalPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="my-tasks/fd-student-identity" element={
+          <ProtectedRoute>
+            <Layout>
+              <FdStudentIdentityPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="my-tasks/track-ticket-fme" element={
+          <ProtectedRoute>
+            <Layout>
+              <TrackTicketFmePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );

@@ -1219,3 +1219,124 @@ export const getReminderHoliday = async () => {
     }
 }
 
+export const getTicketingInternal = async () => {
+    try {
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+        const role = userData?.role || 'Unknown';
+        const kode = (`${role} - ${pic}`).toUpperCase();
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'ticketing-internal',
+                kode_nama: kode
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch ticketing internal data');
+        }
+    } catch (error) {
+        console.error("Error fetching ticketing internal data:", error);
+        throw error;
+    }
+}
+
+export const postCeklisTicketingInternal = async ({ id_ticket, result, notes }) => {
+    try {
+        if (!id_ticket || !result || !notes) {
+            throw new Error('ID Ticket, Result, dan Notes wajib diisi');
+        }
+
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        console.log('Submitting ticketing internal:', { id_ticket, result, notes, pic });
+
+        // POST dengan URLSearchParams sebagai body + Content-Type header
+        const params = new URLSearchParams();
+        params.append('action', 'ceklis-ticketing-internal');
+        params.append('id_ticket', id_ticket);
+        params.append('result', result);
+        params.append('notes', notes);
+        params.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const responseData = response.data;
+
+        if (responseData.status === 'success') {
+            return responseData;
+        } else {
+            throw new Error(responseData.message || 'Failed to submit ticketing internal');
+        }
+    } catch (error) {
+        console.error("Error submitting ticketing internal:", error);
+        // Jika axios error, log detail lebih lengkap
+        if (error.response) {
+            console.error('Response error:', error.response.data);
+            console.error('Response status:', error.response.status);
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+        }
+        throw error;
+    }
+}
+
+export const getFdIdentity = async () => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-fd-identity'
+            }
+        });
+
+        const result = response.data
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch FD identity data');
+        }
+    } catch (error) {
+        console.error("Error fetching FD identity data:", error);
+        throw error;
+    }
+}
+
+export const getTrackTicketFme = async () => {
+    try {
+        // Ambil codeName dari user yang login
+        const userData = auth.getUser();
+        const kode = userData?.codeName || userData?.name || 'Unknown';
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'track-ticket-fme',
+                kode_nama: kode
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch track ticket From Me data');
+        }
+    } catch (error) {
+        console.error("Error fetching track ticket From Me data:", error);
+        throw error;
+    }
+}
+

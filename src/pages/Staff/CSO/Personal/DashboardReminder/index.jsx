@@ -88,14 +88,25 @@ function DashboardReminder() {
         staleTime: 5 * 60 * 1000,
     });
 
-    // Helper untuk sorting
+    // Helper untuk sorting dengan handling tanggal
     const sortData = (data, sortConfig) => {
         if (!sortConfig.key || !data) return data;
         
         return [...data].sort((a, b) => {
             const aVal = a[sortConfig.key] || '';
             const bVal = b[sortConfig.key] || '';
+
+            // Handling kolom dengan format tanggal
+            if (sortConfig.key === 'tanggal_kelas_terdekat' || sortConfig.key === 'tanggal_kelas_terakhir' || sortConfig.key === 'tanggal' || sortConfig.key === 'pembayaran_terakhir') {
+                const aDate = aVal ? new Date(aVal).getTime() : 0;
+                const bDate = bVal ? new Date(bVal).getTime() : 0;
+
+                return sortConfig.direction === 'asc'
+                    ? aDate - bDate
+                    : bDate - aDate;
+            }
             
+            // Default string comparison untuk kolom lainnya
             if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
             if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;

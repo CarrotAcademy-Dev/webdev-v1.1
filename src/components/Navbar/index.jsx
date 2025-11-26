@@ -51,7 +51,10 @@ function Navbar() {
             items: [
               { label: "Dashboard Prospektif", path: "/my-tasks/dashboard-prospektif" },
               { label: "Dashboard Reminder", path: "/my-tasks/dashboard-reminder" },
+              { label: "Ticketing Internal", path: "/my-tasks/ticketing-internal" },
+              { label: "Track Ticket From Me", path: "/my-tasks/track-ticket-fme" },
               { label: "Prospective", path: "/my-tasks/prospective" },
+              { label: "FD Student Identity", path: "/my-tasks/fd-student-identity" }
             ]
           }
         ],
