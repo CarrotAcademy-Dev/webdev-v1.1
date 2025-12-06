@@ -166,7 +166,7 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
-        <Route path="/shared-tasks/dashboard-siswa-aktif" element={
+        <Route path="/my-tasks/dashboard-siswa-aktif" element={
           <ProtectedRoute>
             <Layout>
               <DashboardSiswaAktifPage />
