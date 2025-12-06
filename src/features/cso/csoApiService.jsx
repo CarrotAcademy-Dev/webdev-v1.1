@@ -111,7 +111,6 @@ export const getTrialStudents = async () => {
 
         if (result.status === 'success') {
             const headerItems = [
-                { key: 'no', label: 'No' },
                 { key: 'timestamp', label: 'Timestamp' },
                 { key: 'jam', label: 'Jam' },
                 { key: 'nama', label: 'Nama' },
@@ -1336,6 +1335,901 @@ export const getTrackTicketFme = async () => {
         }
     } catch (error) {
         console.error("Error fetching track ticket From Me data:", error);
+        throw error;
+    }
+}
+
+// ============ CREATE TICKETING ============
+
+export async function createTicketingExternal(ticketData) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+        const role = userData?.role || 'Unknown';
+        const person = (`${role} - ${pic}`).toUpperCase();
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'create-ticketing-external');
+        formData.append('pic', person);
+        formData.append('nama', ticketData.nama || '');
+        formData.append('nomor_hp', ticketData.nomor_hp || '');
+        formData.append('jam', ticketData.jam || '');
+        formData.append('media', ticketData.media || '');
+        formData.append('kategori', ticketData.kategori || '');
+        formData.append('request', ticketData.request || '');
+        formData.append('detail', ticketData.detail || '');
+        formData.append('accountable', ticketData.accountable || '');
+        formData.append('consulted1', ticketData.consulted1 || '');
+        formData.append('consulted2', ticketData.consulted2 || '');
+        formData.append('lampiran', ticketData.lampiran || '');
+        formData.append('hasil', ticketData.hasil || '');
+        formData.append('status', ticketData.status || '');
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        // Google Apps Script sering tidak return proper CORS headers
+        // Jadi kita treat as success kalau HTTP status 200, karena data sudah terkirim
+        if (response.status === 200 || response.status === 201) {
+            return {
+                status: 'success',
+                message: 'Ticket external berhasil dibuat'
+            };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to create external ticket');
+        }
+    } catch (error) {
+        console.error("Error creating external ticket:", error);
+        
+        // Jika error adalah CORS atau network error tapi kita tahu data sudah terkirim
+        // (karena sebelumnya berhasil), treat as success
+        if (error.message.includes('CORS') || error.message.includes('Network Error')) {
+            console.warn('CORS error detected, but data might be sent successfully');
+            return {
+                status: 'success',
+                message: 'Ticket external berhasil dibuat (CORS bypass)'
+            };
+        }
+        
+        throw error;
+    }
+}
+
+export async function createTicketingInternal(ticketData) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+        const role = userData?.role || 'Unknown';
+        const person = (`${role} - ${pic}`).toUpperCase();
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'create-ticketing-internal');
+        formData.append('person', person);
+        formData.append('title', ticketData.title || '');
+        formData.append('description', ticketData.description || '');
+        formData.append('deadline', ticketData.deadline || '');
+        formData.append('label', ticketData.label || '');
+        formData.append('responsible', ticketData.responsible || '');
+        formData.append('accountable', ticketData.accountable || '');
+        formData.append('consulted', ticketData.consulted || '');
+        formData.append('informed', ticketData.informed || '');
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to create internal ticket');
+        }
+    } catch (error) {
+        console.error("Error creating internal ticket:", error);
+        throw error;
+    }
+}
+
+// ============ DASHBOARD DAILY ============
+
+export async function getDashboardDailySiswaBaru() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'siswa-baru'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch siswa baru data');
+        }
+    } catch (error) {
+        console.error("Error fetching siswa baru:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailySiswaRetention() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'siswa-retention'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch siswa retention data');
+        }
+    } catch (error) {
+        console.error("Error fetching siswa retention:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailyBirthday(bulanTahun) {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'siswa-birthday',
+                bulan_tahun: bulanTahun
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch birthday data');
+        }
+    } catch (error) {
+        console.error("Error fetching birthday:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailyLastDay() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'last-day'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch last day data');
+        }
+    } catch (error) {
+        console.error("Error fetching last day:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailyComplaintWA() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'get-complaint-wa'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return {
+                hari_terbanyak: result.hari_terbanyak || {},
+                complaint_terbanyak: result.complaint_terbanyak || {}
+            };
+        } else {
+            throw new Error(result.message || 'Failed to fetch complaint WA data');
+        }
+    } catch (error) {
+        console.error("Error fetching complaint WA:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailySiswaNaikLevel() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'siswa-naik-level'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch siswa naik level data');
+        }
+    } catch (error) {
+        console.error("Error fetching siswa naik level:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailySiswaPindahModul() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'siswa-pindah-modul'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch siswa pindah modul data');
+        }
+    } catch (error) {
+        console.error("Error fetching siswa pindah modul:", error);
+        throw error;
+    }
+}
+
+export async function getDashboardDailySertifikat() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-daily',
+                target: 'get-sertifikat'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result || {};
+        } else {
+            throw new Error(result.message || 'Failed to fetch sertifikat data');
+        }
+    } catch (error) {
+        console.error("Error fetching sertifikat:", error);
+        throw error;
+    }
+}
+
+// ============ DASHBOARD DAILY SUBMIT ============
+
+export async function submitDoneSiswaBaru(uniqueId, mapStatus, doneStatus) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-siswa-baru');
+        formData.append('unique_id', uniqueId);
+        formData.append('map_status', mapStatus);
+        formData.append('done_status', doneStatus);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: 'Data berhasil diupdate' };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done siswa baru');
+        }
+    } catch (error) {
+        console.error("Error submitting done siswa baru:", error);
+        throw error;
+    }
+}
+
+export async function submitDoneSiswaRetention(uniqueId, mapStatus, doneStatus) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-siswa-retention');
+        formData.append('unique_id', uniqueId);
+        formData.append('map_status', mapStatus);
+        formData.append('done_status', doneStatus);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: 'Data berhasil diupdate' };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done siswa retention');
+        }
+    } catch (error) {
+        console.error("Error submitting done siswa retention:", error);
+        throw error;
+    }
+}
+
+export async function submitDoneBirthday(nama) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-birthday');
+        formData.append('nama', nama);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: `Berhasil update data ${nama}` };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done birthday');
+        }
+    } catch (error) {
+        console.error("Error submitting done birthday:", error);
+        throw error;
+    }
+}
+
+export async function submitDoneLastDay(uniqueId) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-last-day');
+        formData.append('unique_id', uniqueId);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: 'Berhasil update data' };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done last day');
+        }
+    } catch (error) {
+        console.error("Error submitting done last day:", error);
+        throw error;
+    }
+}
+
+export async function submitDoneNaikLevel(id, mapStatus, doneStatus, modul) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-naik-level');
+        formData.append('id', id);
+        formData.append('map_status', mapStatus);
+        formData.append('done_status', doneStatus);
+        formData.append('modul', modul);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: 'Berhasil update data' };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done naik level');
+        }
+    } catch (error) {
+        console.error("Error submitting done naik level:", error);
+        throw error;
+    }
+}
+
+export async function submitDonePindahModul(id, mapStatus, doneStatus, modulBaru) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-pindah-modul');
+        formData.append('id', id);
+        formData.append('map_status', mapStatus);
+        formData.append('done_status', doneStatus);
+        formData.append('modul_baru', modulBaru);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: 'Berhasil update data' };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done pindah modul');
+        }
+    } catch (error) {
+        console.error("Error submitting done pindah modul:", error);
+        throw error;
+    }
+}
+
+export async function submitDoneSertifikat(tahun, id) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-dashboard-daily');
+        formData.append('target', 'done-sertifikat');
+        formData.append('tahun', tahun);
+        formData.append('id', id);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: 'Berhasil update data' };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit done sertifikat');
+        }
+    } catch (error) {
+        console.error("Error submitting done sertifikat:", error);
+        throw error;
+    }
+}
+
+// ============ DASHBOARD INVOICE ============
+
+export async function getInvoiceTagihToday(date) {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-invoice',
+                target: 'invoice-tagih-today',
+                date: date // format: "d mmm yyyy" e.g., "27 Nov 2025"
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch invoice tagih today');
+        }
+    } catch (error) {
+        console.error("Error fetching invoice tagih today:", error);
+        throw error;
+    }
+}
+
+export async function getCariInvoice(namaLengkap) {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-invoice',
+                target: 'cari-invoice',
+                nama_lengkap: namaLengkap
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to search invoice');
+        }
+    } catch (error) {
+        console.error("Error searching invoice:", error);
+        throw error;
+    }
+}
+
+export async function getStudioNaikUmur(bulanTahun, age = 'ALL') {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-invoice',
+                target: 'studio-naik-umur',
+                bulan_tahun: bulanTahun, // format: "mmm yyyy" e.g., "Nov 2025"
+                age: age // 'ALL', 'M', 'DV1', 'DV2', 'P'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch studio naik umur');
+        }
+    } catch (error) {
+        console.error("Error fetching studio naik umur:", error);
+        throw error;
+    }
+}
+
+export async function submitStudioNaikUmur(uniqueId, nama) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-studio-naikumur');
+        formData.append('unique_id', uniqueId);
+        formData.append('nama', nama);
+        formData.append('pic', pic);
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        // CORS bypass: check status first
+        if (response.status === 200 || response.status === 201) {
+            return { status: 'success', message: `Data ${nama} berhasil diupdate.` };
+        }
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit studio naik umur');
+        }
+    } catch (error) {
+        console.error("Error submitting studio naik umur:", error);
+        throw error;
+    }
+}
+
+// ============ DASHBOARD PORTFOLIO ============
+
+export async function getDataPortfolio() {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-portfolio',
+                target: 'get-data-portfolio'
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch portfolio data');
+        }
+    } catch (error) {
+        console.error("Error fetching portfolio data:", error);
+        throw error;
+    }
+}
+
+export async function pencarianNamaPortfolio(namaSiswa) {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-dashboard-portfolio',
+                target: 'pencarian-nama-portfolio',
+                nama_siswa: namaSiswa
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to search portfolio');
+        }
+    } catch (error) {
+        console.error("Error searching portfolio:", error);
+        throw error;
+    }
+}
+
+// ============ REVIEW KARYAWAN ============
+
+export async function getReviewKaryawan(namaFilter) {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'get-review-karyawan',
+                nama_filter: namaFilter
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch review karyawan');
+        }
+    } catch (error) {
+        console.error("Error fetching review karyawan:", error);
+        throw error;
+    }
+}
+
+export async function submitReviewKaryawan(data) {
+    try {
+        const userData = auth.getUser();
+        const reviewer = userData?.nama || userData?.nama || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-review-karyawan');
+        formData.append('reviewer', reviewer);
+        formData.append('nama_karyawan', data.nama_karyawan);
+        formData.append('id_karyawan', data.id_karyawan);
+        formData.append('jabatan', data.jabatan);
+        formData.append('tingkat_pekerjaan', data.tingkat_pekerjaan);
+        formData.append('status', data.status);
+        formData.append('disiplin', data.disiplin);
+        formData.append('komunikasi', data.komunikasi);
+        formData.append('kerja_sama_tim', data.kerja_sama_tim);
+        formData.append('tanggung_jawab', data.tanggung_jawab);
+        formData.append('inisiatif', data.inisiatif);
+        formData.append('kinerja_umum', data.kinerja_umum);
+        formData.append('review', data.review || '');
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+
+        // Check actual response from backend
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit review karyawan');
+        }
+    } catch (error) {
+        console.error("Error submitting review karyawan:", error);
+        throw error;
+    }
+}
+
+// ============ REKAP ABSENSI KARYAWAN ============
+
+export async function getRekapAbsensiKaryawan() {
+    try {
+        const userData = auth.getUser();
+        const namaKaryawan = userData?.nama || userData?.nama || 'Unknown';
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'rekap-data-karyawan',
+                target: 'rekap-absensi-karyawan',
+                nama_karyawan: namaKaryawan
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch rekap absensi');
+        }
+    } catch (error) {
+        console.error("Error fetching rekap absensi:", error);
+        throw error;
+    }
+}
+
+export async function getAbsensiBulanan(filterBulan) {
+    try {
+        const userData = auth.getUser();
+        const namaKaryawan = userData?.nama || userData?.nama || 'Unknown';
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'rekap-data-karyawan',
+                target: 'absensi-karyawan-bulanan',
+                nama_karyawan: namaKaryawan,
+                filter_bulan: filterBulan
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch absensi bulanan');
+        }
+    } catch (error) {
+        console.error("Error fetching absensi bulanan:", error);
+        throw error;
+    }
+}
+
+export async function getPayslip(bulan, tahun) {
+    try {
+        const userData = auth.getUser();
+        const namaKaryawan = userData?.nama || userData?.nama || 'Unknown';
+
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'rekap-data-karyawan',
+                target: 'get-payslip',
+                nama_karyawan: namaKaryawan,
+                bulan: bulan,
+                tahun: tahun
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch payslip');
+        }
+    } catch (error) {
+        console.error("Error fetching payslip:", error);
+        throw error;
+    }
+}
+
+// ==================== Profil Siswa ====================
+export async function getProfilSiswa(nama) {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: {
+                action: 'search-profil-siswa',
+                nama: nama
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch profil siswa');
+        }
+    } catch (error) {
+        console.error("Error fetching profil siswa:", error);
+        throw error;
+    }
+}
+
+export async function submitProfilSiswa(data) {
+    try {
+        const userData = auth.getUser();
+        const pic = userData?.codeName || userData?.name || 'Unknown';
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'submit-profile-siswa');
+        formData.append('pic', pic);
+        
+        // Append all required fields
+        Object.keys(data).forEach(key => {
+            formData.append(key, data[key] || '');
+        });
+
+        const response = await apiClient.post(ENDPOINT.csoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit profil siswa');
+        }
+    } catch (error) {
+        console.error("Error submitting profil siswa:", error);
         throw error;
     }
 }

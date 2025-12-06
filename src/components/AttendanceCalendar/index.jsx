@@ -1,16 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
-import { isSameDay, isToday, addDays, subDays } from 'date-fns';
+import { isSameDay, isToday, addDays, subDays, format } from 'date-fns';
 import StyledCalendarWrapper from './AttendanceCalendar.Styled';
-
-// --- DUMMY DATA --
-const attendanceDates = [ new Date(2025, 5, 2), new Date(2025, 5, 4), new Date(2025, 5, 5), new Date(2025, 5, 6), new Date(2025, 5, 7), new Date(2025, 5, 9), new Date(2025, 5, 10), new Date(2025, 5, 11), new Date(2025, 5, 12), new Date(2025, 5, 13), new Date(2025, 5, 14), new Date(2025, 5, 16), new Date(2025, 5, 17), new Date(2025, 5, 18) ];
+import { useQuery } from '@tanstack/react-query';
+import { getAbsensiBulanan } from '@/features/cso/csoApiService';
+import { AuthContext } from '@/context/AuthContext';
 
 function AttendanceCalendar() {
+    const { currentUser } = useContext(AuthContext);
     const [value, setValue] = useState(new Date());
     const [holidays, setHolidays] = useState([]);
     const [isloading, setIsLoading] = useState(true);
     const [selectedDayInfo, setSelectedDayInfo] = useState('');
+    const [attendanceDates, setAttendanceDates] = useState([]);
+
+    // Fetch attendance data for current displayed month
+    const currentMonth = format(value, 'MMM yyyy');
+    
+    const { data: attendanceData, isLoading: isLoadingAttendance } = useQuery({
+        queryKey: ['absensiBulanan', currentUser?.nama, currentMonth],
+        queryFn: () => getAbsensiBulanan(currentMonth),
+        enabled: !!currentUser?.nama,
+        staleTime: 1000 * 60 * 5
+    });
+
+    // Convert attendance data to dates array
+    useEffect(() => {
+        if (attendanceData?.result) {
+            const dates = attendanceData.result
+                .filter(item => item.attendance === 'Hadir')
+                .map(item => {
+                    const monthNumber = getMonthNumber(item.month);
+                    return new Date(item.year, monthNumber, item.dayNum);
+                });
+            setAttendanceDates(dates);
+        }
+    }, [attendanceData]);
+
+    const getMonthNumber = (monthName) => {
+        const months = {
+            'January': 0, 'February': 1, 'March': 2, 'April': 3,
+            'May': 4, 'June': 5, 'July': 6, 'August': 7,
+            'September': 8, 'October': 9, 'November': 10, 'December': 11
+        };
+        return months[monthName] || 0;
+    };
 
     useEffect(() => {
          const fetchHolidays = async () => {
@@ -87,7 +121,7 @@ function AttendanceCalendar() {
         return classes.join(' ');
     }
 
-    if (isloading) {
+    if (isloading || isLoadingAttendance) {
         return <p>Loading calendar...</p>;
     }
 

@@ -51,10 +51,16 @@ function Navbar() {
             items: [
               { label: "Dashboard Prospektif", path: "/my-tasks/dashboard-prospektif" },
               { label: "Dashboard Reminder", path: "/my-tasks/dashboard-reminder" },
+              { label: "Dashboard Daily", path: "/my-tasks/dashboard-daily" },
+              { label: "Dashboard Invoice", path: "/my-tasks/dashboard-invoice" },
+              { label: "Dashboard Portfolio", path: "/my-tasks/dashboard-portfolio" },
+              { label: "FD Student Identity", path: "/my-tasks/fd-student-identity" },
+              { label: "Profil Siswa", path: "/my-tasks/profil-siswa" },
+              { label: "Create Ticketing", path: "/my-tasks/create-ticketing" },
               { label: "Ticketing Internal", path: "/my-tasks/ticketing-internal" },
               { label: "Track Ticket From Me", path: "/my-tasks/track-ticket-fme" },
-              { label: "Prospective", path: "/my-tasks/prospective" },
-              { label: "FD Student Identity", path: "/my-tasks/fd-student-identity" }
+              { label: "Review Karyawan", path: "/my-tasks/review-karyawan" },
+              { label: "Dashboard Karyawan", path: "/my-tasks/dashboard-karyawan" },
             ]
           }
         ],

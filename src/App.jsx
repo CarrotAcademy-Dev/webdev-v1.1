@@ -9,7 +9,6 @@ const Login = lazy(() => import('./components/Login'));
 const OverviewPage = lazy(() => import('./pages/Staff/OverviewPage'));
 const KpiDetailsPage = lazy(() => import('./pages/Staff/KpiDetailsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFound'));
-const ProspectivePage = lazy(() => import('./pages/Staff/CSO/Personal/ProspectivePage'));
 const DaftarKirimMerchPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarKirimMerchPage'));
 const DaftarSiswaTrialPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarSiswaTrialPage'));
 const DailyStoryPage = lazy(() => import('./pages/Staff/CSO/Bersama/DailyStoryPage'));
@@ -25,8 +24,15 @@ const TicketExternalPage = lazy(() => import('./pages/Staff/CSO/Bersama/TicketEx
 const PendaftaranLanjutanPage = lazy(() => import('./pages/Staff/CSO/Bersama/PendaftaranLanjutanPage'));
 const PartnershipPage = lazy(() => import('./pages/Staff/CSO/Bersama/PartnershipPage'));
 const DashboardSiswaAktifPage = lazy(() => import('./pages/Staff/CSO/Bersama/DashboardSiswaAktifPage'));
+const DashboardDailyPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardDailyPage'));
+const DashboardInvoicePage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardInvoicePage'));
+const DashboardPortfolioPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardPortfolioPage'));
+const ReviewKaryawanPage = lazy(() => import('./pages/Staff/CSO/Personal/ReviewKaryawanPage'));
+const RekapAbsensiPage = lazy(() => import('./pages/Staff/CSO/Personal/RekapAbsensiPage'));
+const ProfilSiswaPage = lazy(() => import('./pages/Staff/CSO/Personal/ProfilSiswaPage'));
 const DashboardProspektifPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardProspektifPage'));
 const DashboardReminderPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardReminder'));
+const CreateTicketingPage = lazy(() => import('./pages/Staff/CSO/Personal/CreateTicketingPage'));
 const TicketingInternalPage = lazy(() => import('./pages/Staff/CSO/Personal/TicketingInternal'));
 const FdStudentIdentityPage = lazy(() => import('./pages/Staff/CSO/Personal/FdStudenIdentityPage'));
 const TrackTicketFmePage = lazy(() => import('./pages/Staff/CSO/Personal/TrackTicketFmePage'));
@@ -52,16 +58,6 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <KpiDetailsPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/my-tasks/prospective" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <ProspectivePage />
               </Layout>
             </ProtectedRoute>
           } 
@@ -170,7 +166,7 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
-        <Route path="/my-tasks/dashboard-siswa-aktif" element={
+        <Route path="/shared-tasks/dashboard-siswa-aktif" element={
           <ProtectedRoute>
             <Layout>
               <DashboardSiswaAktifPage />
@@ -188,6 +184,55 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <DashboardReminderPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-daily" element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardDailyPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-invoice" element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardInvoicePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-portfolio" element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardPortfolioPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/review-karyawan" element={
+          <ProtectedRoute>
+            <Layout>
+              <ReviewKaryawanPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/dashboard-karyawan" element={
+          <ProtectedRoute>
+            <Layout>
+              <RekapAbsensiPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/profil-siswa" element={
+          <ProtectedRoute>
+            <Layout>
+              <ProfilSiswaPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/create-ticketing" element={
+          <ProtectedRoute>
+            <Layout>
+              <CreateTicketingPage />
             </Layout>
           </ProtectedRoute>
         } />

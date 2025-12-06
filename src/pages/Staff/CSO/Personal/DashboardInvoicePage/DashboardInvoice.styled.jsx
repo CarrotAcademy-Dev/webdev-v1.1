@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledDashboardProspektifPage = styled.div`
+export const StyledDashboardInvoice = styled.div`
     width: 100%;
     padding: 2rem;
 
@@ -20,7 +20,7 @@ export const StyledDashboardProspektifPage = styled.div`
         margin-bottom: 1.5rem;
     }
 
-    .stats-grid-prospective {
+    .stats-grid-invoice {
         display: grid;
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -31,14 +31,14 @@ export const StyledDashboardProspektifPage = styled.div`
     }
 
     @media (min-width: 769px) {
-        .stats-grid-prospective {
-            grid-template-columns: repeat(3, 1fr);
+        .stats-grid-invoice {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (min-width: 1200px) {
-        .stats-grid-prospective {
-            grid-template-columns: repeat(5, 1fr);
+        .stats-grid-invoice {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
