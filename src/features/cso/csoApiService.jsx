@@ -511,9 +511,9 @@ export const getLostnFound = async () => {
 };
 
 export const postLostNFound = async (rowData) => {
-    // Ambil codeName dari user yang login
-        const userData = auth.getUser();
-        const pic = userData?.codeName || 'Unknown';
+    // Ambil nama dari user yang login
+    const userData = auth.getUser();
+    const pic = userData?.codeName || 'Unknown';
 
     const params = new URLSearchParams({
         action: 'done-lostnfound',

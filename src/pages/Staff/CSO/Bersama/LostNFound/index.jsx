@@ -8,6 +8,8 @@ import { getLostnFound, postLostNFound } from "@/features/cso/csoApiService";
 import { StyledLostNFoundPage } from "./LostNFound.styled";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useContext } from 'react';
+import { AuthContext } from '@/context/AuthContext';
 
 const tabItems = [
     {key: 'dataOpen', label: 'Ticket Open'},
@@ -15,11 +17,12 @@ const tabItems = [
 ];
 
 function LostNFoundPage() {
+    const { currentUser } = useContext(AuthContext);
     const queryClient = useQueryClient();
     const toast = useToast();
 
     const { data: lostnfound, isLoading, isError, error } = useQuery({
-        queryKey: ['lostFound'],
+        queryKey: ['lostNFound'],
         queryFn: getLostnFound,
         placeholderData: { dataOpen: [], dataClose: [] }
     });
@@ -31,15 +34,21 @@ function LostNFoundPage() {
 
             const previousLostNFoundData = queryClient.getQueryData(['lostNFound']);
 
+            // First update: Show checkbox as checked
             queryClient.setQueryData(['lostNFound'], (oldData) => {
                 if (!oldData) return { dataOpen: [], dataClose: [] };
-                const newUndone = oldData.dataOpen.map(item => {
-                    if (item.id === updatedRow.id) {
-                        return { ...item, done: true };
+                
+                const newDataOpen = oldData.dataOpen.map(item => {
+                    if (item.idTicket === updatedRow.idTicket) {
+                        return { ...item, done: true, pic: currentUser?.nama || '' };
                     }
                     return item;
                 });
-                return { ...oldData, dataOpen: newUndone };
+                
+                return { 
+                    ...oldData,
+                    dataOpen: newDataOpen
+                };
             });
             return { previousLostNFoundData };
         },
@@ -55,7 +64,7 @@ function LostNFoundPage() {
                 isClosable: true
             });
         },
-        onSuccess: () => {
+        onSuccess: (data, updatedRow) => {
             toast({
                 title: 'Update Sukses!',
                 status: 'success',
@@ -63,9 +72,31 @@ function LostNFoundPage() {
                 isClosable: true
             });
 
+            // Wait 1 second before moving the item to Close tab
+            setTimeout(() => {
+                queryClient.setQueryData(['lostNFound'], (oldData) => {
+                    if (!oldData) return { dataOpen: [], dataClose: [] };
+                    
+                    // Find and remove from dataOpen
+                    const itemToMove = oldData.dataOpen.find(item => item.idTicket === updatedRow.idTicket);
+                    const newDataOpen = oldData.dataOpen.filter(item => item.idTicket !== updatedRow.idTicket);
+                    
+                    // Add to dataClose
+                    const newDataClose = itemToMove 
+                        ? [itemToMove, ...oldData.dataClose]
+                        : oldData.dataClose;
+                    
+                    return { 
+                        dataOpen: newDataOpen,
+                        dataClose: newDataClose
+                    };
+                });
+            }, 1000);
+
+            // Refresh data after transition
             setTimeout(() => {
                 queryClient.invalidateQueries({ queryKey: ['lostNFound'] });
-            }, 500);
+            }, 1500);
         },
     });
 
