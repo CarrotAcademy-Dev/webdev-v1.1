@@ -2,11 +2,12 @@ import ContainerCarrot from "@/components/Container";
 import { StyledDailyStoryPage } from "./DailyStoryPage.styled";
 import InfoCard from "@/components/InfoCard";
 import { useMemo } from "react";
-import Loading from "@/components/Loading";
 import { LuCloudOff, LuCloudUpload} from "react-icons/lu";
 import ProgressBarChart from "@/components/ProgressBarChart";
 import SistemTabs from "@/components/SistemTabs";
 import { Checkbox, useToast } from "@chakra-ui/react";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { endOfWeek, format, parse, startOfWeek } from "date-fns";
 import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
 import { getDailyStoryData, markStoryAsDone } from "@/features/cso/csoApiService";
@@ -23,7 +24,7 @@ function DailyStoryPage() {
     const { data: story, isLoading, isError, error } = useQuery({
         queryKey: ['dailyStory'],
         queryFn: getDailyStoryData,
-        initialData: { undone: [], done: [] }
+        placeholderData: { undone: [], done: [] }
     });
 
     const { mutate: markDoneMutation } = useMutation({
@@ -108,6 +109,42 @@ function DailyStoryPage() {
         }
     ];
 
+    const parseTimestamp = (timestamp) => {
+        if (!timestamp || timestamp === '-') return null;
+        
+        try {
+            // Format 1: M/d/yyyy HH:mm:ss (old format from sheet)
+            // Example: 8/8/2025 11:08:53
+            const parsed = parse(timestamp, 'M/d/yyyy HH:mm:ss', new Date());
+            if (!isNaN(parsed.getTime())) return parsed;
+        } catch {
+            // Format 1 failed, try next
+        }
+
+        try {
+            // Format 2: JavaScript Date toString() format (new format from backend)
+            // Example: "timestamp Wed Nov 19 2025 11:45:01 GMT+0700\n pic : CM"
+            // Need to extract only the date part before newline
+            let cleanedTimestamp = timestamp;
+            
+            // Remove "timestamp " prefix
+            cleanedTimestamp = cleanedTimestamp.replace(/^timestamp\s+/, '');
+            
+            // Extract only the date portion (before any newline or "pic:")
+            const dateMatch = cleanedTimestamp.match(/^([^\n]+)/);
+            if (dateMatch) {
+                cleanedTimestamp = dateMatch[1].trim();
+            }
+            
+            const parsed = new Date(cleanedTimestamp);
+            if (!isNaN(parsed.getTime())) return parsed;
+        } catch (err) {
+            console.error("Failed to parse timestamp:", timestamp, err);
+        }
+
+        return null;
+    };
+
     const weeklyProgressData = useMemo(() => {
         const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         let weekData = daysOfWeek.map(day => ({day, progress: 0}));
@@ -120,20 +157,14 @@ function DailyStoryPage() {
         const endOfThisWeek = endOfWeek(now, { weekStartsOn: 1 });
 
         const tasksInThisWeek = doneTasks.filter(task => {
-            if (!task.timestamp) return false;
-
-            try {
-                const taskDate = parse(task.timestamp, 'M/d/yyyy HH:mm:ss', new Date());
-                return taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
-            } catch (e) {
-                console.error("Invalid date format in task:", e, task);
-                return false;
-            }
+            const taskDate = parseTimestamp(task.timestamp);
+            if (!taskDate) return false;
+            return taskDate >= startOfThisWeek && taskDate <= endOfThisWeek;
         });
 
         tasksInThisWeek.forEach(task => {
-            if (task.timestamp) {
-                const taskDate = parse(task.timestamp, 'M/d/yyyy HH:mm:ss', new Date());
+            const taskDate = parseTimestamp(task.timestamp);
+            if (taskDate) {
                 const dayName = format(taskDate, 'EEE');
                 const dayIndex = weekData.findIndex(d => d.day.startsWith(dayName));
                 if (dayIndex !== -1) {
@@ -151,7 +182,6 @@ function DailyStoryPage() {
         return weekData;
     }, [story?.done])
 
-    if (isLoading) return <Loading />
     if (isError) return <div>Error: {error.message}</div>;
     const todayDay = format(new Date(), 'EEE');
 
@@ -162,8 +192,24 @@ function DailyStoryPage() {
                     <div className="hero-section__left">
                         <h1 className="page-title">Daily Story - Overview</h1>
                         <div className="stats-grid-prospective">
-                            <InfoCard><LuCloudOff size="30px" /> <p>Total yang belum diupload</p> <p className="card__points">{story.undone.length}</p></InfoCard>
-                            <InfoCard><LuCloudUpload size="30px" /> <p>Total yang sudah diupload</p> <p className="card__points">{story.done.length}</p></InfoCard>
+                            <InfoCard>
+                                <LuCloudOff size="30px" /> 
+                                <p>Total yang belum diupload</p> 
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{story.undone.length}</p>
+                                )}
+                            </InfoCard>
+                            <InfoCard>
+                                <LuCloudUpload size="30px" /> 
+                                <p>Total yang sudah diupload</p> 
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{story.done.length}</p>
+                                )}
+                            </InfoCard>
                         </div>
                     </div>
                     <div className="hero-section__right">
@@ -175,7 +221,7 @@ function DailyStoryPage() {
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={story} headerItems={headerItems} />
+                    <SistemTabs tabItems={tabItems} tableData={story} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledDailyStoryPage>

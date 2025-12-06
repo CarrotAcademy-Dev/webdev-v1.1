@@ -1,14 +1,15 @@
 import ContainerCarrot from "@/components/Container";
-import Loading from "@/components/Loading";
 import InfoCard from "@/components/InfoCard";
 import { useQuery } from "@tanstack/react-query";
 import { getRekapJadwalMentor } from "@/features/cso/csoApiService";
 import { StyledRekapJadwalMentorPage } from "./RekapJadwalMentor.styled";
 import { LuUsers, LuClock, LuCalendar } from "react-icons/lu";
 import React from "react";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function RekapJadwalMentorPage() {
-    const { data, isLoading, isError, error } = useQuery({
+    const { data = [], isLoading, isError, error } = useQuery({
         queryKey: ['rekapJadwalMentor'],
         queryFn: getRekapJadwalMentor,
     });
@@ -35,10 +36,9 @@ function RekapJadwalMentorPage() {
 
     const totals = calculateTotals();
 
-    if (isLoading) return <Loading />;
     if (isError) return <div>Error: {error.message}</div>;
 
-    const mentorNames = data[0].filter(name => name !== "");
+    const mentorNames = data[0]?.filter(name => name !== "") || [];
 
     const getCellClassName = (hari, colIndex) => {
         const isKosongCol = colIndex % 3 === 0;
@@ -68,17 +68,17 @@ function RekapJadwalMentorPage() {
                             <InfoCard>
                                 <LuClock size="30px" />
                                 <p>Total Jam Kosong</p>
-                                <p className="card__points">{totals.totalKosong}</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{totals.totalKosong}</p>}
                             </InfoCard>
                             <InfoCard>
                                 <LuCalendar size="30px" />
                                 <p>Total Sesi</p>
-                                <p className="card__points">{totals.totalSesi}</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{totals.totalSesi}</p>}
                             </InfoCard>
                             <InfoCard>
                                 <LuUsers size="30px" />
                                 <p>Total Siswa</p>
-                                <p className="card__points">{totals.totalSiswa}</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{totals.totalSiswa}</p>}
                             </InfoCard>
                         </div>
                     </div>

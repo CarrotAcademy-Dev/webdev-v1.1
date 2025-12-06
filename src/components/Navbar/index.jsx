@@ -1,6 +1,6 @@
 import Logo from "../../assets/images/logo1.svg?react";
 import StyledNavbar from "./Navbar.Styled";
-import { Container, IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack } from "@chakra-ui/react";
+import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack } from "@chakra-ui/react"
 import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu } from "react-icons/fi";
 import { PiSuitcaseBold } from "react-icons/pi";
 import NavbarMenu from "../Menu";
@@ -49,7 +49,18 @@ function Navbar() {
           {
             category: "Personal",
             items: [
-              { label: "Prospective", path: "/my-tasks/prospective" },
+              { label: "Dashboard Prospektif", path: "/my-tasks/dashboard-prospektif" },
+              { label: "Dashboard Reminder", path: "/my-tasks/dashboard-reminder" },
+              { label: "Dashboard Daily", path: "/my-tasks/dashboard-daily" },
+              { label: "Dashboard Invoice", path: "/my-tasks/dashboard-invoice" },
+              { label: "Dashboard Portfolio", path: "/my-tasks/dashboard-portfolio" },
+              { label: "FD Student Identity", path: "/my-tasks/fd-student-identity" },
+              { label: "Profil Siswa", path: "/my-tasks/profil-siswa" },
+              { label: "Create Ticketing", path: "/my-tasks/create-ticketing" },
+              { label: "Ticketing Internal", path: "/my-tasks/ticketing-internal" },
+              { label: "Track Ticket From Me", path: "/my-tasks/track-ticket-fme" },
+              { label: "Review Karyawan", path: "/my-tasks/review-karyawan" },
+              { label: "Dashboard Karyawan", path: "/my-tasks/dashboard-karyawan" },
             ]
           }
         ],

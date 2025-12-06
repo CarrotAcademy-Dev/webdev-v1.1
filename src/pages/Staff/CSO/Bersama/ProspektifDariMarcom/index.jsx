@@ -1,12 +1,13 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
-import Loading from "@/components/Loading";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
 import { Checkbox, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery, } from "@tanstack/react-query";
 import { getProspektifDariMarcom, postProspektifDariMarcom} from "@/features/cso/csoApiService";
 import { StyledProspektifDariMarcomPage } from "./ProspektifDariMarcom.styled";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const tabItems = [
     {key: 'dataOpen', label: 'Ticket Open'},
@@ -20,7 +21,7 @@ function ProspektifMarcomPage() {
     const { data: prosMarcom, isLoading, isError, error } = useQuery({
         queryKey: ['prosMarcom'],
         queryFn: getProspektifDariMarcom,
-        initialData: { dataOpen: [], dataClose: [] }
+        placeholderData: { dataOpen: [], dataClose: [] }
     });
 
     const { mutate: markDoneMutation } = useMutation({
@@ -146,7 +147,6 @@ function ProspektifMarcomPage() {
         }
     ];
 
-    if (isLoading) return <Loading />
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
@@ -156,15 +156,23 @@ function ProspektifMarcomPage() {
                     <div className="hero-section__left">
                         <h1 className="page-title">Prospektif Dari Marcom - Overview</h1>
                         <div className="stats-grid-prospective">
-                            <InfoCard><LuTicket size="30px" /> <p>Total ticket yang masih Open</p> <p className="card__points">{prosMarcom.dataOpen.length}</p></InfoCard>
-                            <InfoCard><LuTicketCheck size="30px" /> <p>Total ticket yang sudah closed</p> <p className="card__points">{prosMarcom.dataClose.length}</p></InfoCard>
+                            <InfoCard>
+                                <LuTicket size="30px" />
+                                <p>Total prospek yang masih Open</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{prosMarcom.dataOpen.length}</p>}
+                            </InfoCard>
+                            <InfoCard>
+                                <LuTicketCheck size="30px" />
+                                <p>Total prospek yang sudah closed</p>
+                                {isLoading ? <Skeleton height="40px" width="60px" /> : <p className="card__points">{prosMarcom.dataClose.length}</p>}
+                            </InfoCard>
                         </div>
                     </div>
                 </div>
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={prosMarcom} headerItems={headerItems} />
+                    <SistemTabs tabItems={tabItems} tableData={prosMarcom} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledProspektifDariMarcomPage>

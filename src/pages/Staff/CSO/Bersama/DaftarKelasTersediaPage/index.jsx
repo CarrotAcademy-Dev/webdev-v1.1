@@ -1,9 +1,10 @@
 import ContainerCarrot from "@/components/Container";
-import Loading from "@/components/Loading";
 import { useQuery } from "@tanstack/react-query";
 import { getDaftarKelasTersedia } from "@/features/cso/csoApiService";
 import { StyledDaftarKelasTersediaPage } from "./DaftarKelasTersedia.styled";
 import { HEADER_CONFIG, TOTAL_COLUMNS } from "./DaftarKelas.config";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const HARI = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
@@ -13,7 +14,6 @@ function DaftarKelasTersediaPage() {
         queryFn: getDaftarKelasTersedia,
     });
 
-    if (isLoading) return <Loading />;
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
@@ -42,20 +42,33 @@ function DaftarKelasTersediaPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {HARI.map((hari, rowIndex) => (
-                                <tr key={hari}>
-                                    <td className="fixed-column">{hari}</td>
-                                    {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (
-                                        <td key={colIndex}>
-                                            {data?.[rowIndex]?.[colIndex] && data[rowIndex][colIndex] !== '-' ? (
-                                                data[rowIndex][colIndex].split(', ').map((jam, i) => (
-                                                    <div key={i} className="jadwal-item">{jam}</div>
-                                                ))
-                                            ) : '-'}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
+                            {isLoading ? (
+                                HARI.map((hari) => (
+                                    <tr key={hari}>
+                                        <td className="fixed-column">{hari}</td>
+                                        {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (
+                                            <td key={colIndex}>
+                                                <Skeleton height="20px" width="80%" />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            ) : (
+                                HARI.map((hari, rowIndex) => (
+                                    <tr key={hari}>
+                                        <td className="fixed-column">{hari}</td>
+                                        {Array.from({ length: TOTAL_COLUMNS }).map((_, colIndex) => (
+                                            <td key={colIndex}>
+                                                {data?.[rowIndex]?.[colIndex] && data[rowIndex][colIndex] !== '-' ? (
+                                                    data[rowIndex][colIndex].split(', ').map((jam, i) => (
+                                                        <div key={i} className="jadwal-item">{jam}</div>
+                                                    ))
+                                                ) : '-'}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

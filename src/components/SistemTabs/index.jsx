@@ -3,12 +3,20 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, useBreakpointValue, Butto
 import DataTableComponent from '../Table';
 import { FiChevronDown } from 'react-icons/fi';
 
-function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange }) {
+function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange, isLoading, getHeaderItemsForTab }) {
     const [tabIndex, setTabIndex] = useState(0);
 
     const isDesktop = useBreakpointValue({ base: false, md: true });
     const handleTabChange = (index) => {
         setTabIndex(index);
+    };
+
+    // Helper untuk mendapatkan header items yang tepat untuk tab
+    const getHeaderForTab = (tabKey) => {
+        if (getHeaderItemsForTab) {
+            return getHeaderItemsForTab(tabKey);
+        }
+        return headerItems;
     };
 
     return (
@@ -67,7 +75,13 @@ function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange }
                 <TabPanels mt={6}>
                     {tabItems.map(tabName => (
                         <TabPanel key={`${tabName.key}-panel`} p={0}>
-                            <DataTableComponent tableData={tableData[tabName.key] || []} headerItems={headerItems} onAction={onAction} onCellChange={onCellChange} />
+                            <DataTableComponent 
+                                tableData={tableData[tabName.key] || []} 
+                                headerItems={getHeaderForTab(tabName.key)} 
+                                onAction={onAction} 
+                                onCellChange={onCellChange}
+                                isLoading={isLoading}
+                            />
                         </TabPanel>
                     ))}
                 </TabPanels>
