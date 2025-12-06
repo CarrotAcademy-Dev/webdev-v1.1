@@ -1,4 +1,4 @@
-import loading from '../../assets/images/loading-pana.svg';
+import loading from '../../assets/images/Loading-pana.svg';
 import ContainerCarrot from '../Container';
 import { LoadingContainer } from './Loading.styled';
 
