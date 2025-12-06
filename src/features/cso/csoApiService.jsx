@@ -205,7 +205,7 @@ export const postDataKirimMerch = async (rowData) => {
             action: 'update-kirim-merchandise',
             nis: rowData.nis,
             jenisPaket: rowData.jenisPaket,
-            pic: pic // codeName dari user yang login
+            pic: pic
         });
 
         const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
@@ -706,9 +706,14 @@ export const getJanjiTemu = async () => {
 };
 
 export const postJanjiTemu = async ({ rowData }) => {
+    // Ambil codeName dari user yang login
+    const userData = auth.getUser();
+    const pic = userData?.codeName || 'Unknown';
+
     const params = new URLSearchParams({
         action: 'done-janjitemu',
-        id_ticket: rowData.idTicket
+        id_ticket: rowData.idTicket,
+        pic: pic,
     });
 
     try {
@@ -806,9 +811,14 @@ export const getTicketExternal = async () => {
 };
 
 export const postTicketExternal = async ({ rowData }) => {
+    // Ambil codeName dari user yang login
+    const userData = auth.getUser();
+    const pic = userData?.codeName || userData?.name || 'Unknown';
+
     const params = new URLSearchParams({
         action: 'done-ticketexternal',
-        id_ticket: rowData.idTicket
+        id_ticket: rowData.idTicket,
+        pic: pic,
     });
 
     try {
@@ -1339,8 +1349,6 @@ export const getTrackTicketFme = async () => {
     }
 }
 
-// ============ CREATE TICKETING ============
-
 export async function createTicketingExternal(ticketData) {
     try {
         const userData = auth.getUser();
@@ -1441,8 +1449,6 @@ export async function createTicketingInternal(ticketData) {
         throw error;
     }
 }
-
-// ============ DASHBOARD DAILY ============
 
 export async function getDashboardDailySiswaBaru() {
     try {
@@ -1623,8 +1629,6 @@ export async function getDashboardDailySertifikat() {
         throw error;
     }
 }
-
-// ============ DASHBOARD DAILY SUBMIT ============
 
 export async function submitDoneSiswaBaru(uniqueId, mapStatus, doneStatus) {
     try {
@@ -1875,8 +1879,6 @@ export async function submitDoneSertifikat(tahun, id) {
     }
 }
 
-// ============ DASHBOARD INVOICE ============
-
 export async function getInvoiceTagihToday(date) {
     try {
         const response = await apiClient.get(ENDPOINT.csoPersonal, {
@@ -1982,8 +1984,6 @@ export async function submitStudioNaikUmur(uniqueId, nama) {
     }
 }
 
-// ============ DASHBOARD PORTFOLIO ============
-
 export async function getDataPortfolio() {
     try {
         const response = await apiClient.get(ENDPOINT.csoPersonal, {
@@ -2028,8 +2028,6 @@ export async function pencarianNamaPortfolio(namaSiswa) {
         throw error;
     }
 }
-
-// ============ REVIEW KARYAWAN ============
 
 export async function getReviewKaryawan(namaFilter) {
     try {
@@ -2093,8 +2091,6 @@ export async function submitReviewKaryawan(data) {
         throw error;
     }
 }
-
-// ============ REKAP ABSENSI KARYAWAN ============
 
 export async function getRekapAbsensiKaryawan() {
     try {
@@ -2178,7 +2174,6 @@ export async function getPayslip(bulan, tahun) {
     }
 }
 
-// ==================== Profil Siswa ====================
 export async function getProfilSiswa(nama) {
     try {
         const response = await apiClient.get(ENDPOINT.csoPersonal, {
