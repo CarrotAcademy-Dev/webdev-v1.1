@@ -2229,3 +2229,155 @@ export async function submitProfilSiswa(data) {
     }
 }
 
+// ==================== PROSPEKTIF FORM FUNCTIONS ====================
+
+export const getDataProspektif = async (psid) => {
+    try {
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: { 
+                action: 'get-data-prospektif',
+                psid: psid
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Failed to fetch prospektif data');
+        }
+    } catch (error) {
+        console.error("Error fetching prospektif data:", error);
+        throw error;
+    }
+};
+
+export const submitProspektifForm = async (formData) => {
+    const userData = auth.getUser();
+    const pic = userData?.nama || 'Unknown';
+
+    const params = new URLSearchParams({
+        action: 'submit-prospektf',
+        pic: pic,
+        full_name: formData.full_name || '',
+        phone_number: formData.phone_number || '',
+        age: formData.age || '',
+        gender: formData.gender || '',
+        parent_name: formData.parent_name || '',
+        parent_phone: formData.parent_phone || '',
+        first_contact_date: formData.first_contact_date || '',
+        media_contact: formData.media_contact || '',
+        tahu_carrot_darimana: formData.tahu_carrot_darimana || '',
+        referral: formData.referral || '',
+        schedule_request: formData.schedule_request || '',
+        program: formData.program || '',
+        trial_date: formData.trial_date || '',
+        first_class_date: formData.first_class_date || '',
+        goals: formData.goals || '',
+        notes: formData.notes || '',
+        fu1_date: formData.fu1_date || '',
+        fu1_ceklis: formData.fu1_ceklis || '',
+        notes_fu1: formData.notes_fu1 || '',
+        fu2_date: formData.fu2_date || '',
+        fu2_ceklis: formData.fu2_ceklis || '',
+        notes_fu2: formData.notes_fu2 || '',
+        fu3_date: formData.fu3_date || '',
+        fu3_ceklis: formData.fu3_ceklis || '',
+        notes_fu3: formData.notes_fu3 || '',
+        retention: formData.retention || '',
+        program_explained: formData.program_explained || '',
+        pricelist_explained: formData.pricelist_explained || '',
+        trial_ceklis: formData.trial_ceklis || '',
+        target: formData.target || '',
+        registration: formData.registration || '',
+        predrawing: formData.predrawing || '',
+        invoice: formData.invoice || '',
+        onboarding: formData.onboarding || '',
+        class_email: formData.class_email || '',
+        photo: formData.photo || '',
+        qrcode_presence: formData.qrcode_presence || '',
+        reminder: formData.reminder || '',
+        merchandise: formData.merchandise || ''
+    });
+
+    try {
+        const response = await apiClient.post(`${ENDPOINT.csoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success' || result.status === 'sucess') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to submit prospektif form');
+        }
+    } catch (error) {
+        console.error("Error submitting prospektif form:", error);
+        throw error;
+    }
+};
+
+export const editDataProspektif = async (formData) => {
+    const userData = auth.getUser();
+    const pic = userData?.nama || 'Unknown';
+
+    const params = new URLSearchParams({
+        action: 'edit-prospektif',
+        timestamp: formData.timestamp || '',
+        psid: formData.psid || '',
+        pic: pic,
+        full_name: formData.full_name || '',
+        phone_number: formData.phone_number || '',
+        age: formData.age || '',
+        gender: formData.gender || '',
+        parent_name: formData.parent_name || '',
+        parent_phone: formData.parent_phone || '',
+        first_contact_date: formData.first_contact_date || '',
+        media_contact: formData.media_contact || '',
+        tahu_carrot_darimana: formData.tahu_carrot_darimana || '',
+        referral: formData.referral || '',
+        schedule_request: formData.schedule_request || '',
+        program: formData.program || '',
+        trial_date: formData.trial_date || '',
+        first_class_date: formData.first_class_date || '',
+        goals: formData.goals || '',
+        notes: formData.notes || '',
+        fu1_date: formData.fu1_date || '',
+        fu1_ceklis: formData.fu1_ceklis || '',
+        notes_fu1: formData.notes_fu1 || '',
+        fu2_date: formData.fu2_date || '',
+        fu2_ceklis: formData.fu2_ceklis || '',
+        notes_fu2: formData.notes_fu2 || '',
+        fu3_date: formData.fu3_date || '',
+        fu3_ceklis: formData.fu3_ceklis || '',
+        notes_fu3: formData.notes_fu3 || '',
+        retention: formData.retention || '',
+        program_explained: formData.program_explained || '',
+        pricelist_explained: formData.pricelist_explained || '',
+        trial_ceklis: formData.trial_ceklis || '',
+        target: formData.target || '',
+        registration: formData.registration || '',
+        predrawing: formData.predrawing || '',
+        invoice: formData.invoice || '',
+        onboarding: formData.onboarding || '',
+        class_email: formData.class_email || '',
+        photo: formData.photo || '',
+        qrcode_presence: formData.qrcode_presence || '',
+        reminder: formData.reminder || '',
+        merchandise: formData.merchandise || ''
+    });
+
+    try {
+        const response = await apiClient.post(`${ENDPOINT.csoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success' || result.status === 'no_change') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to edit prospektif data');
+        }
+    } catch (error) {
+        console.error("Error editing prospektif data:", error);
+        throw error;
+    }
+};
+

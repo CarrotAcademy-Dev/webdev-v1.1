@@ -49,6 +49,7 @@ function Navbar() {
           {
             category: "Personal",
             items: [
+              { label: "Prospektif Form", path: "/my-tasks/prospektif-form" },
               { label: "Dashboard Prospektif", path: "/my-tasks/dashboard-prospektif" },
               { label: "Dashboard Reminder", path: "/my-tasks/dashboard-reminder" },
               { label: "Dashboard Daily", path: "/my-tasks/dashboard-daily" },
