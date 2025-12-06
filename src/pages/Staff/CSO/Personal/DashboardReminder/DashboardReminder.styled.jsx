@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const StyledDashboardReminder = styled.div`
     padding: 2rem 0;
 
-    .page-header {
+    .hero-section {
         margin-bottom: 2rem;
     }
 
@@ -17,84 +17,11 @@ export const StyledDashboardReminder = styled.div`
         }
     }
 
-    .filter-section {
+    .main-content-section {
         background: white;
         padding: 1.5rem;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-bottom: 1.5rem;
-    }
-
-    .holiday-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-bottom: 1.5rem;
-        border-left: 4px solid;
-    }
-
-    .table-section {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-bottom: 1.5rem;
-        height: fit-content;
-    }
-
-    .table-container {
-        overflow-x: auto;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-
-        &::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        &::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 8px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 8px;
-
-            &:hover {
-                background: #a0aec0;
-            }
-        }
-    }
-
-    .data-table {
-        border-collapse: collapse;
-        
-        thead {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        tbody tr {
-            transition: background-color 0.2s;
-            cursor: pointer;
-
-            &:hover {
-                background-color: #f8fafeff;
-            }
-        }
-
-        th {
-            white-space: nowrap;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-        }
-
-        td {
-            font-size: 0.875rem;
-        }
     }
 
     .react-datepicker-wrapper {
@@ -162,15 +89,11 @@ export const StyledDashboardReminder = styled.div`
     @media (max-width: 768px) {
         padding: 1rem 0;
 
-        .page-header {
+        .hero-section {
             margin-bottom: 1.5rem;
         }
 
-        .table-section {
-            padding: 1rem;
-        }
-
-        .filter-section {
+        .main-content-section {
             padding: 1rem;
         }
     }

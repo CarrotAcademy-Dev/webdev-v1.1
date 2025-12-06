@@ -11,10 +11,81 @@ import HeroLayout from "@/components/HeroLayout";
 import ContainerCarrot from "@/components/Container";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { getAbsensiBulanan } from "@/features/cso/csoApiService";
+import { format } from "date-fns";
 
 
 function OverviewPage() {
     const { currentUser } = useContext(AuthContext);
+
+    // Fetch attendance data for current month
+    const currentDate = new Date();
+    const currentMonth = format(currentDate, 'MMM yyyy');
+    
+    const { data: attendanceData } = useQuery({
+        queryKey: ['absensiBulanan', currentUser?.nama, currentMonth],
+        queryFn: () => getAbsensiBulanan(currentMonth),
+        enabled: !!currentUser?.nama,
+        staleTime: 1000 * 60 * 5
+    });
+
+    // Get today's attendance
+    const today = new Date();
+    const todayDate = `${today.getDate()} ${format(today, 'MMMM')} ${today.getFullYear()}`;
+    const todayAttendance = attendanceData?.result?.find(item => item.date === todayDate) || null;
+
+    // Calculate attendance streak
+    const calculateStreak = () => {
+        if (!attendanceData?.result || attendanceData.result.length === 0) return 0;
+
+        const sortedAttendance = [...attendanceData.result].sort((a, b) => {
+            const dateA = new Date(a.year, getMonthNumber(a.month), a.dayNum);
+            const dateB = new Date(b.year, getMonthNumber(b.month), b.dayNum);
+            return dateB - dateA; // Sort descending (newest first)
+        });
+
+        let streak = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < sortedAttendance.length; i++) {
+            const attendance = sortedAttendance[i];
+            const attendanceDate = new Date(attendance.year, getMonthNumber(attendance.month), attendance.dayNum);
+            attendanceDate.setHours(0, 0, 0, 0);
+
+            // Calculate expected date based on streak
+            const expectedDate = new Date(today);
+            expectedDate.setDate(today.getDate() - streak);
+
+            // Check if this attendance date matches the expected date
+            if (attendanceDate.getTime() === expectedDate.getTime()) {
+                // Check if attended (Hadir)
+                if (attendance.attendance === 'Hadir') {
+                    streak++;
+                } else {
+                    // If not attended, break the streak
+                    break;
+                }
+            } else if (attendanceDate < expectedDate) {
+                // If date is before expected, streak is broken
+                break;
+            }
+        }
+
+        return streak;
+    };
+
+    const getMonthNumber = (monthName) => {
+        const months = {
+            'January': 0, 'February': 1, 'March': 2, 'April': 3,
+            'May': 4, 'June': 5, 'July': 6, 'August': 7,
+            'September': 8, 'October': 9, 'November': 10, 'December': 11
+        };
+        return months[monthName] || 0;
+    };
+
+    const attendanceStreak = calculateStreak();
 
     if (!currentUser) {
         return <div>Loading...</div>;
@@ -31,8 +102,8 @@ function OverviewPage() {
                 </InfoCard>
                 <InfoCard>
                     <FiClock size="30px" color="#FE7743" />
-                    <p className="card__text">You clocked in at <strong>8.59 AM</strong></p>
-                    <p className="card__subtext__sub">You reached a <span>13 day streak!</span></p>
+                    <p className="card__text">You clocked in at <strong>{todayAttendance?.check_in || '-'}</strong></p>
+                    <p className="card__subtext__sub">You reached a <span>{attendanceStreak} day streak!</span></p>
                 </InfoCard>
                 <InfoCard>
                     <FiStar size="30px" color="#FE7743" style={{ fill: '#FE7743' }} />

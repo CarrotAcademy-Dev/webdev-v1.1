@@ -14,9 +14,6 @@ export const prefetchRoute = (path) => {
     case '/home/kpi':
       import('../pages/Staff/KpiDetailsPage');
       break;
-    case '/my-tasks/prospective':
-      import('../pages/Staff/CSO/Personal/ProspectivePage');
-      break;
     case '/my-tasks/daftar-kirim-merch':
       import('../pages/Staff/CSO/Bersama/DaftarKirimMerchPage');
       break;

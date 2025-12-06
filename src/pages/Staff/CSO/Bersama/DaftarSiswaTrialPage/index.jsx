@@ -1,9 +1,11 @@
 import StyledDaftarSiswaTrialPage from "./DaftarSiswaTrial.style";
 import DataTableComponent from "@/components/Table";
-import { Heading } from "@chakra-ui/react";
 import ContainerCarrot from "@/components/Container";
+import InfoCard from "@/components/InfoCard";
 import { useQuery } from "@tanstack/react-query";
 import { getTrialStudents } from "@/features/cso/csoApiService";
+import { FiUsers, FiCalendar } from "react-icons/fi";
+import { useMemo } from "react";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -31,14 +33,53 @@ function DaftarSiswaTrialPage() {
         queryFn: getTrialStudents,
     });
 
+    // Get today's date for comparison
+    const todayStudents = useMemo(() => {
+        const today = new Date().toLocaleDateString('id-ID');
+        return students.filter(student => {
+            const studentDate = new Date(student.timestamp).toLocaleDateString('id-ID');
+            return studentDate === today;
+        });
+    }, [students]);
+
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
         <StyledDaftarSiswaTrialPage>
+            <ContainerCarrot>
+                <div className="hero-section">
+                    <div className="hero-section__left">
+                        <h1 className="page-title">Daftar Siswa Trial - Overview</h1>
+                        <div className="stats-grid-prospective">
+                            <InfoCard>
+                                <FiUsers size="30px" color="#FE7743" />
+                                <p>Total Siswa Trial</p>
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{students.length}</p>
+                                )}
+                            </InfoCard>
+                            <InfoCard>
+                                <FiCalendar size="30px" color="#FE7743" />
+                                <p>Trial Hari Ini</p>
+                                {isLoading ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{todayStudents.length}</p>
+                                )}
+                            </InfoCard>
+                        </div>
+                    </div>
+                </div>
+            </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <Heading mb="2rem">Daftar Siswa Trial</Heading>
-                    <DataTableComponent tableData={students} headerItems={headerItems} isLoading={isLoading} />
+                    <DataTableComponent 
+                        tableData={students} 
+                        headerItems={headerItems} 
+                        isLoading={isLoading} 
+                    />
                 </ContainerCarrot>
             </div>
         </StyledDaftarSiswaTrialPage>
