@@ -7,7 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { FiClock, FiAlertCircle, FiTag, FiChevronLeft, FiChevronRight, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
 import { getTrackTicketFme } from '@/features/cso/csoApiService';
-import { StyledTrackTicketFme } from './TrackTicketFme.Styled';
+import { StyledTrackTicketFme } from './TrackTicketFme.styled';
 
 function TrackTicketFmePage() {
     //Pagiation
