@@ -30,6 +30,7 @@ const DashboardPortfolioPage = lazy(() => import('./pages/Staff/CSO/Personal/Das
 const ReviewKaryawanPage = lazy(() => import('./pages/Staff/CSO/Personal/ReviewKaryawanPage'));
 const RekapAbsensiPage = lazy(() => import('./pages/Staff/CSO/Personal/RekapAbsensiPage'));
 const ProfilSiswaPage = lazy(() => import('./pages/Staff/CSO/Personal/ProfilSiswaPage'));
+const ProspektifFormPage = lazy(() => import('./pages/Staff/CSO/Personal/ProspektifFormPage'));
 const DashboardProspektifPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardProspektifPage'));
 const DashboardReminderPage = lazy(() => import('./pages/Staff/CSO/Personal/DashboardReminder'));
 const CreateTicketingPage = lazy(() => import('./pages/Staff/CSO/Personal/CreateTicketingPage'));
@@ -226,6 +227,13 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <ProfilSiswaPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-tasks/prospektif-form" element={
+          <ProtectedRoute>
+            <Layout>
+              <ProspektifFormPage />
             </Layout>
           </ProtectedRoute>
         } />
