@@ -1,19 +1,64 @@
 import Logo from "../../assets/images/logo1.svg?react";
 import StyledNavbar from "./Navbar.Styled";
-import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack } from "@chakra-ui/react"
-import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu } from "react-icons/fi";
+import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack, Text, Tooltip, Badge } from "@chakra-ui/react"
+import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu, FiShield, FiClock } from "react-icons/fi";
 import { PiSuitcaseBold } from "react-icons/pi";
 import NavbarMenu from "../Menu";
 import { useLocation } from "react-router-dom";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { JABATAN } from "@/utils/constants/accessControl";
 
 function Navbar() {
     const location = useLocation();
-    const { logout } = useContext(AuthContext);
+    const { logout, currentUser, getSessionTimeRemaining } = useContext(AuthContext);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [sessionTime, setSessionTime] = useState(0);
 
-    const menuData = useMemo(() => [
+    // Check if user is admin or super_admin
+    const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
+    // Check if user is CSO
+    const isCSO = currentUser?.jabatan === JABATAN.CSO;
+    // Show CSO menu if user is CSO or Admin
+    const showCSOMenu = isCSO || isAdmin;
+    
+    // Update session time every minute
+    useEffect(() => {
+        if (!currentUser) return;
+        
+        const updateTime = () => {
+            const remaining = getSessionTimeRemaining();
+            setSessionTime(remaining);
+        };
+        
+        updateTime();
+        const interval = setInterval(updateTime, 60 * 1000); // Update every minute
+        
+        return () => clearInterval(interval);
+    }, [currentUser, getSessionTimeRemaining]);
+    
+    // Format session time untuk display
+    const formatSessionTime = (minutes) => {
+        if (minutes === Infinity || minutes > 480) return '∞';
+        if (minutes >= 60) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours}j ${mins}m`;
+        }
+        return `${minutes}m`;
+    };
+    
+    // Color untuk badge berdasarkan waktu tersisa
+    const getSessionColor = (minutes) => {
+        if (minutes === Infinity || minutes > 480) return 'gray';
+        if (minutes <= 10) return 'red';
+        if (minutes <= 30) return 'orange';
+        if (minutes <= 120) return 'yellow';
+        return 'green';
+    };
+
+    const menuData = useMemo(() => {
+      const baseMenu = [
       {
         mainIcon: <FiHome />,
         items: [
@@ -24,6 +69,24 @@ function Navbar() {
         ],
       },
       {
+        mainIcon: <FiUser />,
+        items: [
+          { label: "Profile", path: "/profile" },
+          { label: "Payment", path: "/payment" },
+          { label: "Settings", path: "/settings" },
+        ],
+      },
+      {
+        mainIcon: <FiLogOut />,
+        items: [
+            { label: "Logout", onClick: logout }
+        ],
+      },
+    ];
+
+    // Add CSO menu only for CSO jabatan or Admin
+    if (showCSOMenu) {
+      baseMenu.splice(1, 0, {
         mainIcon: <PiSuitcaseBold />,
         items: [
           {
@@ -65,22 +128,26 @@ function Navbar() {
             ]
           }
         ],
-      },
-      {
-        mainIcon: <FiUser />,
+      });
+    }
+
+    // Add Admin menu only for admin/super_admin
+    if (isAdmin) {
+      baseMenu.splice(showCSOMenu ? 2 : 1, 0, {
+        mainIcon: <FiShield />,
         items: [
-          { label: "Profile", path: "/profile" },
-          { label: "Payment", path: "/payment" },
-          { label: "Settings", path: "/settings" },
+          {
+            category: "Admin",
+            items: [
+              { label: "Register User", path: "/admin/register-user" },
+            ]
+          }
         ],
-      },
-      {
-        mainIcon: <FiLogOut />,
-        items: [
-            { label: "Logout", onClick: logout }
-        ],
-      },
-    ], [logout]);
+      });
+    }
+
+    return baseMenu;
+  }, [logout, isAdmin, showCSOMenu]);
 
     return (
       <StyledNavbar>
@@ -88,6 +155,31 @@ function Navbar() {
           <div className="navbar__left">
             <h1 className="navbar__brand"><Logo className="brandLogo" /></h1>
           </div>
+          
+          {/* Session Timer Badge */}
+          {currentUser && (
+            <div className="navbar__session">
+              <Tooltip 
+                content={`Sesi akan berakhir dalam ${formatSessionTime(sessionTime)}`}
+                positioning={{ placement: 'bottom' }}
+              >
+                <Badge 
+                  colorScheme={getSessionColor(sessionTime)}
+                  variant="subtle"
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  px={2}
+                  py={1}
+                  borderRadius="md"
+                  fontSize="xs"
+                >
+                  <FiClock />
+                  <Text fontSize="xs">{formatSessionTime(sessionTime)}</Text>
+                </Badge>
+              </Tooltip>
+            </div>
+          )}
                   
           {/* Desktop Menu */}
           <div className="navbar__desktop">

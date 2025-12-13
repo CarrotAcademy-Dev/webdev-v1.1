@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import Layout from './Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loading from './components/Loading';
+import { ACCESS_GROUPS } from './utils/constants/accessControl';
 
 // Lazy load pages for better performance
 const Login = lazy(() => import('./components/Login'));
@@ -37,6 +38,8 @@ const CreateTicketingPage = lazy(() => import('./pages/Staff/CSO/Personal/Create
 const TicketingInternalPage = lazy(() => import('./pages/Staff/CSO/Personal/TicketingInternal'));
 const FdStudentIdentityPage = lazy(() => import('./pages/Staff/CSO/Personal/FdStudenIdentityPage'));
 const TrackTicketFmePage = lazy(() => import('./pages/Staff/CSO/Personal/TrackTicketFmePage'));
+const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
+const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
 function App() {
   return (
@@ -66,7 +69,7 @@ function App() {
         <Route 
           path="/my-tasks/daftar-kirim-merch" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
               <Layout>
                 <DaftarKirimMerchPage />
               </Layout>
@@ -76,7 +79,7 @@ function App() {
         <Route 
           path="/my-tasks/daftar-siswa-trial" 
           element={
-            <ProtectedRoute>
+            <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
               <Layout>
                 <DaftarSiswaTrialPage />
               </Layout>
@@ -84,187 +87,195 @@ function App() {
           } 
         />
         <Route path='/my-tasks/daily-story' element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DailyStoryPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path='/my-tasks/daftar-offboarding' element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DaftarOffboardingPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path='/my-tasks/pendaftaranfd-course' element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <PendaftaranFdPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path='/my-tasks/lostnfound' element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <LostNFoundPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path='/my-tasks/prospektif-dari-marcom' element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <ProspektifMarcomPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/daftar-kelas-tersedia" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DaftarKelasTersediaPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/rekap-jadwal-mentor" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <RekapJadwalMentorPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/statistik-prospektif" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <StatistikProspektifPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/janji-temu" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <JanjiTemuPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/ticket-external" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <TicketExternalPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/pendaftaran-lanjutan" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <PendaftaranLanjutanPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/partnership" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <PartnershipPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-siswa-aktif" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DashboardSiswaAktifPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-prospektif" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DashboardProspektifPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-reminder" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DashboardReminderPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-daily" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DashboardDailyPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-invoice" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DashboardInvoicePage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-portfolio" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <DashboardPortfolioPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/review-karyawan" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <ReviewKaryawanPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/dashboard-karyawan" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <RekapAbsensiPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/profil-siswa" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <ProfilSiswaPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/prospektif-form" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <ProspektifFormPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/create-ticketing" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <CreateTicketingPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="/my-tasks/ticketing-internal" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <TicketingInternalPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="my-tasks/fd-student-identity" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <FdStudentIdentityPage />
             </Layout>
           </ProtectedRoute>
         } />
         <Route path="my-tasks/track-ticket-fme" element={
-          <ProtectedRoute>
+          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <TrackTicketFmePage />
             </Layout>
           </ProtectedRoute>
         } />
+        <Route path="/admin/register-user" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
+            <Layout>
+              <RegisterUserPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/access-denied" element={<AccessDenied />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

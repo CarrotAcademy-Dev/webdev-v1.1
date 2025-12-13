@@ -1,6 +1,6 @@
 # Git Workflow - CarrotAcademy v1.1
 
-## 🌿 Branch Structure
+## Branch Structure
 
 ```
 main (production)
@@ -11,7 +11,7 @@ main (production)
   └── hotfix/emergency-fix (if needed)
 ```
 
-## 📋 Branch Descriptions
+## Branch Descriptions
 
 ### `main`
 - **Purpose**: Production-ready code
@@ -41,7 +41,7 @@ main (production)
 - **Created from**: `main`
 - **Merge to**: Both `main` AND `develop`
 
-## 🔄 Workflow Steps
+## Workflow Steps
 
 ### 1. Starting New Feature
 
@@ -106,7 +106,7 @@ git push -u origin hotfix/critical-bug-fix
 # After merge, delete hotfix branch
 ```
 
-## 📝 Commit Message Convention
+## Commit Message Convention
 
 Use conventional commits format:
 
@@ -135,13 +135,13 @@ git commit -m "docs: update API documentation"
 git commit -m "refactor: optimize data fetching logic"
 ```
 
-## 🚀 Current Status
+## Current Status
 
-- ✅ **main**: Production branch (protected)
-- ✅ **develop**: Integration branch (created)
-- ✅ **feature/nested-navbar-menu**: First feature (pushed)
+- **main**: Production branch (protected)
+- **develop**: Integration branch (created)
+- **feature/nested-navbar-menu**: First feature (pushed)
 
-## 📌 Best Practices
+## Best Practices
 
 1. **Never commit directly to `main` or `develop`**
 2. **Always create feature branches for new work**
@@ -152,12 +152,12 @@ git commit -m "refactor: optimize data fetching logic"
 7. **Delete merged feature branches**
 8. **Pull latest changes before starting new work**
 
-## 🔗 Quick Links
+## Quick Links
 
 - **Create PR**: https://github.com/CarrotAcademy-Dev/webdev-v1.1/pulls
 - **Feature Branch**: https://github.com/CarrotAcademy-Dev/webdev-v1.1/pull/new/feature/nested-navbar-menu
 
-## 👥 Team Workflow
+## Team Workflow
 
 1. **Developer**: Create feature branch → Code → Commit → Push → Create PR
 2. **Reviewer**: Review PR → Request changes / Approve

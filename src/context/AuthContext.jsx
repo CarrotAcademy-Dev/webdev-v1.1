@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { auth as storageAuth } from '@/utils/storage';
 import { API_CONFIG } from '@/config/api.config';
+import { toaster } from '@/components/ui/toaster';
 
 export const AuthContext = createContext();
 
@@ -9,6 +10,38 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Check token expiry dan auto-logout jika expired
+    const checkTokenExpiry = useCallback(() => {
+        const storedUser = storageAuth.getUser();
+        
+        // Jika user ada di storage tapi getUser return null, berarti expired
+        if (!storedUser && currentUser) {
+            toaster.create({
+                title: 'Sesi Berakhir',
+                description: 'Sesi login Anda telah berakhir. Silakan login kembali.',
+                type: 'warning',
+                duration: 5000,
+            });
+            setCurrentUser(null);
+            storageAuth.logout();
+            return false;
+        }
+        
+        // Warning jika token akan expired dalam 15 menit
+        if (storedUser && storageAuth.isTokenExpiringSoon()) {
+            const remainingTime = storageAuth.getTokenRemainingTime();
+            toaster.create({
+                title: 'Sesi Akan Berakhir',
+                description: `Sesi Anda akan berakhir dalam ${remainingTime} menit. Simpan pekerjaan Anda.`,
+                type: 'info',
+                duration: 10000,
+            });
+        }
+        
+        return true;
+    }, [currentUser]);
+
+    // Initial load
     useEffect(() => {
         const storedUser = storageAuth.getUser();
         if (storedUser) {
@@ -16,6 +49,21 @@ export function AuthProvider({ children }) {
         }
         setLoading(false);
     }, []);
+    
+    // Check expiry setiap 5 menit
+    useEffect(() => {
+        if (!currentUser) return;
+        
+        // Check immediately
+        checkTokenExpiry();
+        
+        // Then check every 5 minutes
+        const interval = setInterval(() => {
+            checkTokenExpiry();
+        }, 5 * 60 * 1000); // 5 menit
+        
+        return () => clearInterval(interval);
+    }, [currentUser, checkTokenExpiry]);
 
     const login = async (email, password) => {
         const apiUrl = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.auth}`;
@@ -40,11 +88,33 @@ export function AuthProvider({ children }) {
         setCurrentUser(null);
         storageAuth.logout();
     };
+    
+    // Extend session untuk user yang masih aktif
+    const extendSession = () => {
+        if (currentUser) {
+            const extended = storageAuth.extendToken(480); // Extend 8 jam
+            if (extended) {
+                toaster.create({
+                    title: 'Sesi Diperpanjang',
+                    description: 'Sesi login Anda telah diperpanjang 8 jam.',
+                    type: 'success',
+                    duration: 3000,
+                });
+            }
+        }
+    };
+    
+    // Get remaining session time
+    const getSessionTimeRemaining = () => {
+        return storageAuth.getTokenRemainingTime();
+    };
 
     const value = {
         currentUser,
         login,
-        logout
+        logout,
+        extendSession,
+        getSessionTimeRemaining,
     };
 
     return (

@@ -6,26 +6,30 @@ Ini merupakan dokumentasi resmi untuk project Internal Carrot Academy. Dokumen i
 
 ## 1. Tentang Proyek
 
-Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun menggunakan **React (Vite)** dan **Chakra UI**. Tujuannya adalah untuk menyediakan *dashboard* internal bagi tim Carrot Academy untuk memonitor dan mengelola berbagai data operasional, mulai dari data siswa, jadwal, hingga logistik seperti pengiriman *merchandise* dan *lost & found*.
+Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun menggunakan React (Vite) dan Chakra UI. Tujuannya adalah untuk menyediakan dashboard internal bagi tim Carrot Academy untuk memonitor dan mengelola berbagai data operasional, mulai dari data siswa, jadwal, hingga logistik seperti pengiriman merchandise dan lost & found.
 
 ## 2. Tech Stack Utama
 
-Berikut adalah teknologi dan *library* utama yang menjadi tulang punggung aplikasi ini:
+Berikut adalah teknologi dan library utama yang menjadi tulang punggung aplikasi ini:
 
 * **Framework**: [React](https://react.dev/) via [Vite](https://vitejs.dev/) - Untuk UI yang cepat dan modern.
 * **Styling**:
-    * [Chakra UI](https://chakra-ui.com/): Pustaka komponen UI utama untuk layout, tombol, form, dll.
-    * [Styled Components](https://styled-components.com/): Digunakan untuk komponen-komponen dengan *style* yang sangat spesifik dan *custom*.
+    * [Chakra UI](https://chakra-ui.com/): Library komponen UI utama untuk layout, tombol, form, dll.
+    * [Styled Components](https://styled-components.com/): Digunakan untuk komponen-komponen dengan style yang sangat spesifik dan custom.
     * [React Icons](https://react-icons.github.io/react-icons/): Untuk semua kebutuhan ikonografi.
 * **Data Fetching & State Management**:
     * [TanStack Query (React Query)](https://tanstack.com/query/latest): Sebagai "manajer" utama untuk semua data dari server (*server state*). Meng-handle *fetching, caching, dan updating* data API.
-    * [Axios](https://axios-http.com/): "Kurir" untuk melakukan panggilan HTTP (GET, POST) ke API.
-    * **React Context API**: Digunakan khusus untuk *state* global yang jarang berubah, seperti data otentikasi user (`AuthContext`).
+    * [Axios](https://axios-http.com/): HTTP Client untuk melakukan panggilan HTTP (GET, POST) ke API.
+    * **React Context API**: Digunakan khusus untuk state global yang jarang berubah, seperti data otentikasi user (`AuthContext`).
 * **Routing**: [React Router DOM](https://reactrouter.com/) - Untuk navigasi antar halaman di dalam SPA.
+* **Security**: 
+    * **Token Expiry Management**: Auto-logout dengan session monitoring
+    * **Role-Based Access Control (RBAC)**: Route & component level protection
+    * **localStorage with Expiry**: Secure client-side storage
 * **Utilities**:
     * [date-fns](https://date-fns.org/): Untuk semua manipulasi dan format tanggal & waktu.
-    * [nanoid](https://github.com/ai/nanoid): Untuk membuat ID unik di sisi *frontend*.
-* **Backend**: [Google Apps Script (GAS)](https://developers.google.com/apps-script) - Bertindak sebagai *backend* dan *database* (via Google Sheets) saat ini.
+    * [nanoid](https://github.com/ai/nanoid): Untuk membuat ID unik di sisi frontend.
+* **Backend**: [Google Apps Script (GAS)](https://developers.google.com/apps-script) - Bertindak sebagai backend dan database (via Google Sheets) saat ini (Diharapkan bisa migrasi ke proper relational database untuk future improvements).
 
 ## 3. Instalasi & Menjalankan di Lokal
 
@@ -61,7 +65,7 @@ Untuk menjalankan project ini di mesin lokal, ikutin langkah-langkah berikut:
 
 ## 4. Arsitektur & Struktur Folder
 
-Arsitektur project ini didesain agar *scalable* dan mudah di-*maintain* dengan menerapkan prinsip *Separation of Concerns*.
+Arsitektur project ini didesain agar scalable dan mudah di-maintain dengan menerapkan prinsip *Separation of Concerns*.
 
 ```
 src/
@@ -103,7 +107,7 @@ src/
     * Menyiapkan *handler* (misal: `handleDoneClick`).
     * Merakit dan mengirim *props* ke komponen-komponen UI.
 4.  **API Service (`/features/**`)**: Bertindak sebagai "Dapur".
-    * Satu-satunya bagian yang "ngobrol" langsung dengan *backend* via `axios`.
+    * Satu-satunya bagian yang berkomunikasi langsung dengan backend via `axios`.
     * Tugasnya hanya mengambil data mentah atau mengirim data. **Tidak boleh ada logika transformasi UI di sini.**
 5.  **Komponen UI (`/components`)**: "Component yang bisa digunakan berulang-ulang"
     * Menerima data dan fungsi lewat `props`.
@@ -116,26 +120,58 @@ Project ini dibangun dengan fondasi yang kuat, namun ada beberapa area yang bisa
 
 ### Tahap 1: Migrasi Backend dari Google Apps Script (GAS)
 
-Saat ini, GAS berfungsi dengan baik sebagai *backend* sederhana. Namun, untuk fitur yang lebih kompleks, *real-time*, dan performa yang lebih tinggi, kita perlu migrasi.
+Saat ini, GAS berfungsi dengan baik sebagai *backend* sederhana. Namun, untuk fitur yang lebih kompleks, real-time, dan performa yang lebih tinggi, kita perlu migrasi.
 
-* **Rencana**: Membangun *backend* baru menggunakan **Node.js** dengan framework **Express.js** atau **NestJS**.
-* **Database**: Migrasi dari Google Sheets ke *database* yang lebih *robust* seperti **PostgreSQL** (untuk data relasional) atau **MongoDB** (untuk data fleksibel).
+* **Rencana**: Membangun *backend* baru menggunakan Node.js dengan framework Express.js atau NestJS.
+* **Database**: Migrasi dari Google Sheets ke database yang lebih *robust* seperti PostgreSQL (untuk data relasional) atau MongoDB (untuk data fleksibel).
 * **Keuntungan**:
     * Kontrol penuh atas API.
     * Performa jauh lebih cepat.
     * Tidak ada lagi masalah CORS yang rumit karena bisa di-setting penuh.
-    * Kemampuan untuk membangun fitur *real-time* dengan WebSocket.
+    * Kemampuan untuk membangun fitur real-time dengan WebSocket.
 
 ### Tahap 2: Implementasi State Management Lanjutan
 
 Seiring aplikasi membesar, *state* di sisi UI (*client state*) juga akan makin kompleks.
 
-* **Rencana**: Saat ini, kita hanya butuh `useState`. Jika ada satu halaman yang punya logika *state* sangat rumit, kita bisa adopsi **`useReducer`**. Jika ada **state global** yang perlu diakses dan diubah oleh BANYAK komponen (di luar *auth* dan data server), baru kita pertimbangkan **Redux Toolkit**.
-* **Penting**: **React Query** akan tetap menjadi andalan kita untuk *server state*. Redux tidak akan kita gunakan untuk menggantikan React Query.
+* **Rencana**: Saat ini, kita hanya butuh `useState`. Jika ada satu halaman yang punya logika *state* sangat rumit, kita bisa adopsi `useReducer`. Jika ada state global yang perlu diakses dan diubah oleh banyak komponen (di luar *auth* dan data server), baru kita pertimbangkan Redux Toolkit.
+* **Penting**: React Query akan tetap menjadi andalan kita untuk *server state*. Redux tidak akan kita gunakan untuk menggantikan React Query.
 
 ### Tahap 3: Otentikasi Profesional
 
-* **Rencana**: Mengganti sistem login berbasis API custom dengan layanan otentikasi profesional seperti **Firebase Authentication**, **Auth0**, atau implementasi **JWT (JSON Web Token)** di *backend* baru kita.
-* **Keuntungan**: Keamanan yang jauh lebih terjamin, fitur *social login* (Google, Facebook), *password reset*, dll.
+* **Status**: Sebagian Selesai - Token expiry & session management sudah diimplementasikan (lihat `TOKEN_EXPIRY_GUIDE.md`)
+* **Yang Sudah Ada**:
+    * Auto-logout saat token expired (8 jam)
+    * Session monitoring dengan warning notification
+    * Real-time session timer di Navbar
+    * Manual session extension capability
+* **Rencana Lanjutan**: Mengganti sistem login berbasis API custom dengan layanan otentikasi profesional seperti Firebase Authentication, Auth0, atau implementasi JWT (JSON Web Token) di *backend* baru kita.
+* **Keuntungan**: Keamanan yang jauh lebih terjamin, fitur social login (Google, Facebook), password reset, dll.
+
+## 6. Security & Access Control
+
+Project ini sudah dilengkapi dengan sistem keamanan multi-layer:
+
+### Role-Based Access Control (RBAC)
+* **3 Roles**: Staff, Admin, Super Admin
+* **12 Jabatan**: CSO, ESO, Finance, IT, Marcom, Mentor, dll.
+* **Route Protection**: Protected berdasarkan role dan jabatan
+* **Menu Visibility**: Dynamic menu rendering sesuai permission
+* Dokumentasi lengkap: `RBAC_GUIDE.md`
+
+### Token Expiry & Session Management
+* **Auto-logout**: Token expired otomatis logout setelah 8 jam
+* **Warning System**: Toast notification 15 menit sebelum expired
+* **Session Extension**: User bisa perpanjang sesi manual
+* **Real-time Badge**: Timer di Navbar dengan color coding
+* Dokumentasi lengkap: `TOKEN_EXPIRY_GUIDE.md`
+
+### Storage Security
+* **Prefix isolation**: `carrot_academy_` prefix untuk semua keys
+* **Expiry check**: Otomatis hapus expired data
+* **Safe wrappers**: Error handling untuk semua localStorage operations
+* **No sensitive data**: Password tidak pernah disimpan di client
+
+**Catatan Penting**: Client-side security adalah UX layer. Backend validation tetap WAJIB untuk security sesungguhnya.
 
 Dokumentasi ini adalah dokumen hidup. Selalu perbarui seiring dengan perkembangan project.
