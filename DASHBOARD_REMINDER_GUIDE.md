@@ -28,7 +28,7 @@ Dashboard Reminder adalah halaman untuk menampilkan berbagai reminder yang perlu
 
 ### Base URL
 ```
-https://script.google.com/macros/s/AKfycby89UyE4OF71-PruxKQR4xc3_FaKpHr-kPJhzZe22WyVNDpAD1SsuayWl0X4OXdtbiz/exec
+https://script.google.com/macros/s/AKfycb...../exec
 ```
 
 ### 1. Foundation Naik Modul
@@ -462,17 +462,17 @@ const TableSkeleton = ({ columns = 3 }) => (
 - **Date Picker:** Styled with border transition on focus
 
 ### Features
-1. ✅ **5 independent data fetches** - each section loads separately
-2. ✅ **Single Date Picker** - One unified date filter that auto-converts to both formats (mmm yyyy & d mmm yyyy)
-3. ✅ **Overview Cards** - 6 summary cards with icons matching spreadsheet design
-4. ✅ **Consistent Styling** - Styled components matching Dashboard Prospektif
-5. ✅ **Pagination** - 5 items per page for each table
-6. ✅ **Skeleton loading** - per-table loading states
-7. ✅ **Responsive tables** - horizontal scroll on small screens with custom scrollbar
-8. ✅ **Total counts** - displayed next to section titles
-9. ✅ **Empty state** - "Tidak ada data" message
-10. ✅ **Beige/Cream headers** - Matching Dashboard Prospektif color scheme (#fcf7ecff)
-11. ✅ **Smart Format Conversion** - Single date auto-formats for different API endpoints
+1. **5 independent data fetches** - each section loads separately
+2. **Single Date Picker** - One unified date filter that auto-converts to both formats (mmm yyyy & d mmm yyyy)
+3. **Overview Cards** - 6 summary cards with icons matching spreadsheet design
+4. **Consistent Styling** - Styled components matching Dashboard Prospektif
+5. **Pagination** - 5 items per page for each table
+6. **Skeleton loading** - per-table loading states
+7. **Responsive tables** - horizontal scroll on small screens with custom scrollbar
+8. **Total counts** - displayed next to section titles
+9. **Empty state** - "Tidak ada data" message
+10. **Beige/Cream headers** - Matching Dashboard Prospektif color scheme (#fcf7ecff)
+11. **Smart Format Conversion** - Single date auto-formats for different API endpoints
 
 ### Route & Navigation
 - **Route:** `/my-tasks/dashboard-reminder`
@@ -562,24 +562,24 @@ Component slices cached data for new page (no refetch)
 ## Recent Updates
 
 ### Version 1.2 (2025-11-24)
-- ✅ **Single Date Filter** - Unified to 1 date picker at top (auto-converts to both formats)
-- ✅ **Smart Format Conversion** - One date → two formats (mmm yyyy & d mmm yyyy)
-- ✅ **Better UX** - Cleaner UI with filter next to page title
-- ✅ **Z-index Fix** - DatePicker popup no longer hidden by table headers
+- **Single Date Filter** - Unified to 1 date picker at top (auto-converts to both formats)
+- **Smart Format Conversion** - One date → two formats (mmm yyyy & d mmm yyyy)
+- **Better UX** - Cleaner UI with filter next to page title
+- **Z-index Fix** - DatePicker popup no longer hidden by table headers
 
 ### Version 1.1 (2025-11-24)
-- ✅ **Added Date Pickers** - Replaced text inputs with react-datepicker
-- ✅ **Added Overview Cards** - 6 summary cards with icons (2x3 grid)
-- ✅ **Consistent Styling** - Created styled component file matching Dashboard Prospektif
-- ✅ **Updated Colors** - Table headers now use beige/cream (#fcf7ecff) instead of orange
-- ✅ **Icon Integration** - Added react-icons for overview cards (FiTrendingUp, FiMessageSquare, etc.)
-- ✅ **Hover Effects** - Cards animate on hover for better UX
-- ✅ **Custom Scrollbar** - Styled scrollbar for tables
+- **Added Date Pickers** - Replaced text inputs with react-datepicker
+- **Added Overview Cards** - 6 summary cards with icons (2x3 grid)
+- **Consistent Styling** - Created styled component file matching Dashboard Prospektif
+- **Updated Colors** - Table headers now use beige/cream (#fcf7ecff) instead of orange
+- **Icon Integration** - Added react-icons for overview cards (FiTrendingUp, FiMessageSquare, etc.)
+- **Hover Effects** - Cards animate on hover for better UX
+- **Custom Scrollbar** - Styled scrollbar for tables
 
 ## Future Enhancements
 
-1. ✅ ~~**Date pickers** instead of text inputs for better UX~~ **DONE**
-2. ✅ ~~**Dashboard overview** card showing total counts for all sections~~ **DONE**
+1. ~~**Date pickers** instead of text inputs for better UX~~ **DONE**
+2. ~~**Dashboard overview** card showing total counts for all sections~~ **DONE**
 3. **Export to Excel** functionality for each table
 4. **Search/filter** within tables
 5. **Sort** by column headers
@@ -591,4 +591,4 @@ Component slices cached data for new page (no refetch)
 **Created:** 2025-11-24  
 **Last Updated:** 2025-11-24  
 **Version:** 1.1  
-**Status:** ✅ Complete & Enhanced
+**Status:** Complete & Enhanced

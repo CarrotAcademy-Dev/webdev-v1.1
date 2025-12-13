@@ -21,6 +21,7 @@ const StyledNavbar = styled.div`
         padding: 0.75rem 1rem;
         max-width: 100%;
         margin: 0 auto;
+        gap: 0.5rem;
     }
 
     .navbar__left {
@@ -35,6 +36,13 @@ const StyledNavbar = styled.div`
     .navbar__brand .brandLogo {
         width: 120px;
         height: auto;
+    }
+    
+    /* Session timer badge */
+    .navbar__session {
+        display: flex;
+        align-items: center;
+        margin: 0 auto 0 0.5rem;
     }
 
     /* Desktop menu - hidden on mobile */
@@ -66,6 +74,11 @@ const StyledNavbar = styled.div`
     @media (min-width: 768px) {
         .navbar {
             padding: 1rem 1.5rem;
+            gap: 1rem;
+        }
+        
+        .navbar__session {
+            margin: 0 auto 0 1rem;
         }
 
         /* Show desktop menu */
