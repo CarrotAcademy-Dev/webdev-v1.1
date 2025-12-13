@@ -129,7 +129,8 @@ export const STORAGE_KEYS = {
  * Specialized functions untuk common operations
  */
 export const auth = {
-    setUser: (user) => setItem(STORAGE_KEYS.USER, user),
+    // Set user dengan expiry 8 jam (480 menit)
+    setUser: (user, expiryInMinutes = 480) => setItem(STORAGE_KEYS.USER, user, expiryInMinutes),
     getUser: () => getItem(STORAGE_KEYS.USER),
     removeUser: () => removeItem(STORAGE_KEYS.USER),
     
@@ -139,8 +140,53 @@ export const auth = {
     
     isAuthenticated: () => {
         const user = getItem(STORAGE_KEYS.USER);
-        const token = getItem(STORAGE_KEYS.AUTH_TOKEN);
-        return !!(user && token);
+        return !!user; // getItem sudah check expiry secara otomatis
+    },
+    
+    // Check apakah token akan expired dalam waktu dekat (15 menit)
+    isTokenExpiringSoon: () => {
+        try {
+            const prefixedKey = STORAGE_PREFIX + STORAGE_KEYS.USER;
+            const item = localStorage.getItem(prefixedKey);
+            if (!item) return false;
+            
+            const data = JSON.parse(item);
+            if (!data.expiry) return false;
+            
+            const timeLeft = data.expiry - Date.now();
+            const fifteenMinutes = 15 * 60 * 1000;
+            
+            return timeLeft > 0 && timeLeft < fifteenMinutes;
+        } catch {
+            return false;
+        }
+    },
+    
+    // Get remaining time in minutes
+    getTokenRemainingTime: () => {
+        try {
+            const prefixedKey = STORAGE_PREFIX + STORAGE_KEYS.USER;
+            const item = localStorage.getItem(prefixedKey);
+            if (!item) return 0;
+            
+            const data = JSON.parse(item);
+            if (!data.expiry) return Infinity; // No expiry set
+            
+            const timeLeft = data.expiry - Date.now();
+            return Math.max(0, Math.floor(timeLeft / (60 * 1000)));
+        } catch {
+            return 0;
+        }
+    },
+    
+    // Extend token expiry (refresh session)
+    extendToken: (additionalMinutes = 1440) => {
+        const user = getItem(STORAGE_KEYS.USER);
+        if (user) {
+            setItem(STORAGE_KEYS.USER, user, additionalMinutes);
+            return true;
+        }
+        return false;
     },
     
     logout: () => {

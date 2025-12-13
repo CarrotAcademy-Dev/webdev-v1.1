@@ -1,6 +1,6 @@
-# 🚀 Deployment Guide - CarrotAcademy v1.1
+# Deployment Guide - CarrotAcademy v1.1
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 18+ installed
 - Vercel account (https://vercel.com)
@@ -9,9 +9,9 @@
 
 ---
 
-## 🌐 Deploy to Vercel (Recommended)
+## Deploy to Vercel (Recommended)
 
-### Method 1: Via Vercel Dashboard (Easiest)
+### Method 1: Via Vercel Dashboard
 
 #### Step 1: Import Project
 1. Go to https://vercel.com/dashboard
@@ -32,9 +32,9 @@ Click **"Environment Variables"** and add:
 
 ```env
 VITE_API_BASE_URL=https://script.google.com/macros/s
-VITE_API_CSO_BERSAMA_ENDPOINT=https://script.google.com/macros/s/AKfycbyDTye9Z2GFj2NuXi8ik0FiazXhK56J0zNKyEEvmUcC-V_U_kn1NvwsMy1zgu_HUBqMjg/exec
-VITE_API_CSO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfycby89UyE4OF71-PruxKQR4xc3_FaKpHr-kPJhzZe22WyVNDpAD1SsuayWl0X4OXdtbiz/exec
-VITE_API_AUTH_ENDPOINT=/AKfycbzaQqdmBXWstfEkDm3lMpC7DFeselitztz7zsxIYVWeOmVoDAxFQPiAqkm0EWrDpMFl2A/exec
+VITE_API_CSO_BERSAMA_ENDPOINT=https://script.google.com/macros/s/AKfyc...../exec
+VITE_API_CSO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfy.../exec
+VITE_API_AUTH_ENDPOINT=/AKfycbzaQq......./exec
 VITE_APP_NAME=CarrotAcademy Dashboard
 VITE_APP_VERSION=1.1.0
 VITE_ENABLE_DEBUG_MODE=false
@@ -43,7 +43,7 @@ VITE_ENABLE_ANALYTICS=false
 
 **Important:** 
 - Apply to: **Production, Preview, and Development**
-- Or just select **"Preview"** for develop branch testing
+- Or just select "Preview" for develop branch testing
 
 #### Step 4: Configure Branch Settings
 1. After project is created, go to **Settings** → **Git**
@@ -51,7 +51,7 @@ VITE_ENABLE_ANALYTICS=false
 3. **Preview Branches**: Enable for `develop` and feature branches
 
 #### Step 5: Deploy
-1. Click **"Deploy"**
+1. Click "Deploy"
 2. Wait for build to complete (~2-3 minutes)
 3. You'll get URLs:
    - **Production**: `https://your-project.vercel.app` (from `main` branch)
@@ -95,7 +95,7 @@ vercel --prod
 
 ---
 
-## 🔧 Post-Deployment Configuration
+## Post-Deployment Configuration
 
 ### 1. Custom Domain (Optional)
 1. Go to **Settings** → **Domains**
@@ -120,15 +120,15 @@ vercel --prod
 
 ---
 
-## 🌿 Branch Deployment Strategy
+## Branch Deployment Strategy
 
 ### Automatic Deployments:
 
 | Branch | Environment | URL | Auto Deploy |
 |--------|-------------|-----|-------------|
-| `main` | Production | `https://carrotacademy-v1-1.vercel.app` | ✅ Yes |
-| `develop` | Preview/Staging | `https://carrotacademy-v1-1-git-develop.vercel.app` | ✅ Yes |
-| `feature/*` | Preview | `https://carrotacademy-v1-1-git-feature-*.vercel.app` | ✅ Yes |
+| `main` | Production | `https://carrotacademy-v1-1.vercel.app` | Yes |
+| `develop` | Preview/Staging | `https://carrotacademy-v1-1-git-develop.vercel.app` | Yes |
+| `feature/*` | Preview | `https://carrotacademy-v1-1-git-feature-*.vercel.app` | Yes |
 
 ### Workflow:
 1. **Development**: Work on `feature/*` branches
@@ -145,7 +145,7 @@ vercel --prod
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Build Fails
 **Error**: `Module not found` or dependency issues
@@ -192,7 +192,7 @@ export default defineConfig({
 
 ---
 
-## 📊 Monitoring & Analytics
+## Monitoring & Analytics
 
 ### Vercel Analytics (Optional)
 1. Go to **Analytics** tab
@@ -228,25 +228,25 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 
 ---
 
-## ✅ Deployment Checklist
+## Deployment Checklist
 
 Before deploying to production:
 
-- [ ] All environment variables configured
-- [ ] Build succeeds locally (`npm run build`)
-- [ ] Preview deployment tested
-- [ ] All features working on preview
-- [ ] API endpoints accessible
-- [ ] Authentication working
-- [ ] No console errors
-- [ ] Performance optimized
-- [ ] Mobile responsive
-- [ ] Cross-browser tested
+- [x] All environment variables configured
+- [x] Build succeeds locally (`npm run build`)
+- [x] Preview deployment tested
+- [x] All features working on preview
+- [x] API endpoints accessible
+- [x] Authentication working
+- [x] No console errors
+- [x] Performance optimized
+- [x] Mobile responsive
+- [x] Cross-browser tested
 - [ ] Team reviewed changes
 
 ---
 
-## 🔄 Rollback Strategy
+## Rollback Strategy
 
 If production has issues:
 
@@ -268,7 +268,7 @@ git push -f origin main
 
 ---
 
-## 📞 Support
+## Support
 
 - **Vercel Docs**: https://vercel.com/docs
 - **Vite Docs**: https://vitejs.dev/guide/

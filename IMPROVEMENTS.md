@@ -1,48 +1,72 @@
 # Perbaikan Sistem - Dokumentasi
 
-### 1. **Configuration Management** ✅
-- ✅ Buat `.env` untuk environment variables
-- ✅ Buat `src/config/api.config.js` untuk centralized config
-- ✅ Pisahkan API URLs dari kode
+### 1. **Configuration Management**
+- Buat `.env` untuk environment variables
+- Buat `src/config/api.config.js` untuk centralized config
+- Pisahkan API URLs dari kode
 
-### 2. **Error Handling** ✅
-- ✅ Buat `src/utils/errorHandler.js`
-- ✅ Custom error classes (ApiError, ValidationError, NetworkError)
-- ✅ Centralized error logging
-- ✅ User-friendly error messages
-- ✅ Retry mechanism
+### 2. **Error Handling**
+- Buat `src/utils/errorHandler.js`
+- Custom error classes (ApiError, ValidationError, NetworkError)
+- Centralized error logging
+- User-friendly error messages
+- Retry mechanism
 
-### 3. **Input Validation** ✅
-- ✅ Buat `src/utils/validation.js`
-- ✅ Validators untuk email, phone, date, etc
-- ✅ Form validation helper
-- ✅ Input sanitization
+### 3. **Input Validation**
+- Buat `src/utils/validation.js`
+- Validators untuk email, phone, date, etc
+- Form validation helper
+- Input sanitization
 
-### 4. **Loading State Management** ✅
-- ✅ Buat `src/hooks/useLoadingState.js`
-- ✅ Multiple loading states support
-- ✅ Async operation helper
+### 4. **Loading State Management**
+- Buat `src/hooks/useLoadingState.js`
+- Multiple loading states support
+- Async operation helper
 
-### 5. **Data Formatting** ✅
-- ✅ Buat `src/utils/formatters.js`
-- ✅ Date formatting (berbagai format)
-- ✅ Currency, number, phone formatting
-- ✅ Text utilities (truncate, capitalize, etc)
+### 5. **Data Formatting**
+- Buat `src/utils/formatters.js`
+- Date formatting (berbagai format)
+- Currency, number, phone formatting
+- Text utilities (truncate, capitalize, etc)
 
-### 6. **Storage Management** ✅
-- ✅ Buat `src/utils/storage.js`
-- ✅ Safe localStorage wrapper
-- ✅ Expiry support
-- ✅ Auth helpers
+### 6. **Storage Management** ENHANCED
+- Buat `src/utils/storage.js`
+- Safe localStorage wrapper
+- Expiry support
+- Auth helpers
+- Token expiry with auto-cleanup (Dec 2025)
+- Session monitoring methods
+- isTokenExpiringSoon(), getTokenRemainingTime(), extendToken()
 
-### 7. **Custom Hooks** ✅
-- ✅ `useDebounce` - untuk search/filter
-- ✅ `usePagination` - untuk pagination logic
-- ✅ `useLocalStorage` - sync state dengan localStorage
+### 7. **Custom Hooks**
+- `useDebounce` - untuk search/filter
+- `usePagination` - untuk pagination logic
+- `useLocalStorage` - sync state dengan localStorage
+
+### 8. **Security & Access Control** NEW (Dec 2025)
+- Token expiry & session management system
+- Auto-logout on token expiry (8 hours)
+- Session timeout warning dialog
+- Real-time session timer badge in Navbar
+- Role-Based Access Control (RBAC)
+- 3 Roles: Staff, Admin, Super Admin
+- 12 Jabatan types with access groups
+- Enhanced ProtectedRoute component
+- Multi-layer access control (route, menu, component)
+- Access denied page
+
+### 9. **New Pages & Features** (Dec 2025)
+- Prospektif Form Page (42 fields, CRUD, search by PSID)
+- Register User Page (admin-only, password validation)
+- Password strength meter
+- SessionTimeout component with modal dialog
+- LostNFound bug fixes (checkbox, data movement, PIC field)
+- Attendance Calendar API integration
+- Attendance streak calculation
 
 ---
 
-## 🚀 Yang Perlu Dilakukan Selanjutnya
+## Yang Perlu Dilakukan Selanjutnya
 
 ### **Priority 1: Implementasi Utilities ke Existing Code**
 
@@ -92,8 +116,13 @@ const storedUser = localStorage.getItem('user');
 // Sesudah:
 import { auth } from '@/utils/storage';
 
-auth.setUser(result);
+auth.setUser(result, 448); // 8 jam expiry
 const storedUser = auth.getUser();
+
+// New features (Dec 2025):
+const { extendSession, getSessionTimeRemaining } = useContext(AuthContext);
+const remaining = getSessionTimeRemaining(); // Get minutes remaining
+extendSession(); // Extend by 8 hours
 ```
 
 #### 1.4 Update PendaftaranLanjutanPage
@@ -125,6 +154,25 @@ onError: (error) => {
 
 // Date formatting
 <td>{formatDate.toShortDate(item.tanggalKirim)}</td>
+```
+
+#### 1.5 Implement RBAC System
+```jsx
+// App.jsx - Route protection
+import { ACCESS_GROUPS } from '@/utils/constants/accessControl';
+
+<ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+  <Layout><ProspektifFormPage /></Layout>
+</ProtectedRoute>
+
+<ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
+  <Layout><RegisterUserPage /></Layout>
+</ProtectedRoute>
+
+// Navbar.jsx - Menu visibility
+const isCSO = currentUser?.jabatan === JABATAN.CSO;
+const isAdmin = currentUser?.role === 'admin';
+const showCSOMenu = isCSO || isAdmin;
 ```
 
 ---
@@ -240,19 +288,26 @@ export const getPendaftaranLanjutan = async () => {
 
 ---
 
-## 📋 Checklist Implementasi
+## Checklist Implementasi
 
 ### Immediate (Hari Ini)
-- [ ] Copy file `.env.example` ke `.env` dan isi nilai yang sesuai
-- [ ] Update `csoApiService.jsx` gunakan config dari `api.config.js`
-- [ ] Update `AuthContext.jsx` gunakan `storage.js`
-- [ ] Test error handling di development
+- [x] Copy file `.env.example` ke `.env` dan isi nilai yang sesuai
+- [x] Update `csoApiService.jsx` gunakan config dari `api.config.js`
+- [x] Update `AuthContext.jsx` gunakan `storage.js`
+- [x] Test error handling di development
+- [x] Implement token expiry system
+- [x] Implement RBAC system
+- [x] Create Prospektif Form page
+- [x] Create Register User page
 
 ### This Week
-- [ ] Update semua pages gunakan utilities yang baru
-- [ ] Implement `usePagination` hook di semua table
-- [ ] Add validation di semua form inputs
+- [x] Update semua pages gunakan utilities yang baru
+- [x] Implement `usePagination` hook di semua table
+- [x] Add validation di semua form inputs (RegisterUser, ProspektifForm)
 - [ ] Test di berbagai browser
+- [x] Session management with warnings
+- [x] Protected routes for CSO & Admin
+- [x] Password validation with strength meter
 
 ### This Month
 - [ ] Add unit tests untuk utilities
@@ -262,18 +317,24 @@ export const getPendaftaranLanjutan = async () => {
 
 ---
 
-## 🔒 Security Checklist
+## Security Checklist
 
 - [x] API URLs di environment variables
-- [ ] Add input sanitization di semua forms
+- [x] Token expiry & auto-logout (8 hours)
+- [x] Session monitoring & warnings
+- [x] Role-Based Access Control (RBAC)
+- [x] Multi-layer access protection
+- [x] Password validation (8-20 chars, complexity rules)
+- [x] Add input sanitization di semua forms (validation utility)
 - [ ] Implement CSRF protection
 - [ ] Add rate limiting di backend
 - [ ] Audit dependencies (`npm audit`)
+- [ ] Backend token validation (REQUIRED)
 - [ ] Add Content Security Policy headers
 
 ---
 
-## 📱 Accessibility Checklist
+## Accessibility Checklist
 
 - [ ] Add proper ARIA labels
 - [ ] Keyboard navigation support
@@ -284,7 +345,7 @@ export const getPendaftaranLanjutan = async () => {
 
 ---
 
-## 🎯 Performance Targets
+## Performance Targets
 
 - [ ] First Contentful Paint < 1.5s
 - [ ] Time to Interactive < 3.0s
@@ -293,7 +354,7 @@ export const getPendaftaranLanjutan = async () => {
 
 ---
 
-## 📖 Resources untuk Junior Developer
+## Resources untuk next Developer
 
 ### Wajib Baca
 1. React Query Documentation: https://tanstack.com/query/latest
@@ -308,7 +369,7 @@ export const getPendaftaranLanjutan = async () => {
 
 ---
 
-## 🆘 Troubleshooting Common Issues
+## Troubleshooting Common Issues
 
 ### Issue: "Cannot read property of undefined"
 **Solution**: Check data structure dari API, tambah optional chaining (`?.`)
@@ -324,7 +385,7 @@ export const getPendaftaranLanjutan = async () => {
 
 ---
 
-## 📞 Contact
+## Contact
 
 Jika ada pertanyaan atau butuh help:
 1. Check dokumentasi ini dulu
@@ -334,5 +395,15 @@ Jika ada pertanyaan atau butuh help:
 
 ---
 
-**Last Updated**: October 29, 2025
-**Version**: 1.1.0
+## Additional Documentation
+
+- **Token Expiry Guide**: `TOKEN_EXPIRY_GUIDE.md`
+- **Implementation Status**: `IMPLEMENTATION_STATUS.md`
+- **Dashboard Guides**: `DASHBOARD_PROSPEKTIF_GUIDE.md`, `DASHBOARD_REMINDER_GUIDE.md`
+- **Git Workflow**: `GIT_WORKFLOW.md`
+
+---
+
+**Last Updated**: December 13, 2025
+**Version**: 1.2.0
+**Major Updates**: Token Expiry System, RBAC Implementation, New Pages (Prospektif Form, Register User)
