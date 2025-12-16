@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { LuCloudOff, LuCloudUpload} from "react-icons/lu";
 import ProgressBarChart from "@/components/ProgressBarChart";
 import SistemTabs from "@/components/SistemTabs";
-import { Checkbox, useToast } from "@chakra-ui/react";
+import { Checkbox, useToast, useColorMode, useColorModeValue } from "@chakra-ui/react";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { endOfWeek, format, parse, startOfWeek } from "date-fns";
@@ -18,6 +18,12 @@ const tabItems = [
 ];
 
 function DailyStoryPage() {
+    const { colorMode } = useColorMode();
+    const checkboxBg = useColorModeValue('white', 'gray.700');
+    const checkboxBorderColor = useColorModeValue('orange.200', 'orange.400');
+    const checkboxCheckedBg = useColorModeValue('#f9dbcfff', 'orange.700');
+    const checkboxCheckedHover = useColorModeValue('#FE7743', 'orange.600');
+    
     const queryClient = useQueryClient();
     const toast = useToast();
 
@@ -91,16 +97,16 @@ function DailyStoryPage() {
                     onChange={() => handleStoryDone(item)}
                     colorScheme="orange"
                     sx={{
-                        borderColor: 'orange.200', 
-                        bg: 'white',
+                        borderColor: checkboxBorderColor, 
+                        bg: checkboxBg,
                         '.chakra-checkbox__control': {
                             '&[data-checked]': {
-                                bg: '#f9dbcfff',
-                                borderColor: '#f9dbcfff',
+                                bg: checkboxCheckedBg,
+                                borderColor: checkboxCheckedBg,
                             },
                             '&[data-checked]:hover': {
-                                bg: '#FE7743',
-                                borderColor: '#FE7743',
+                                bg: checkboxCheckedHover,
+                                borderColor: checkboxCheckedHover,
                             }
                         }
                     }}
@@ -186,7 +192,7 @@ function DailyStoryPage() {
     const todayDay = format(new Date(), 'EEE');
 
     return (
-        <StyledDailyStoryPage>
+        <StyledDailyStoryPage data-theme={colorMode}>
             <ContainerCarrot>
                 <div className="hero-section">
                     <div className="hero-section__left">

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Box, Button, Input, Select, Textarea, useToast, Checkbox } from '@chakra-ui/react';
+import { Box, Button, Input, Select, Textarea, useToast, Checkbox, useColorMode } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getDataProspektif, submitProspektifForm, editDataProspektif } from '@/features/cso/csoApiService';
 import ContainerCarrot from '@/components/Container';
 import { StyledProspektifFormPage } from './ProspektifForm.styled';
 
 function ProspektifFormPage() {
+    const { colorMode } = useColorMode();
     const [searchPsid, setSearchPsid] = useState('');
     const [currentPsid, setCurrentPsid] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
@@ -280,7 +281,7 @@ function ProspektifFormPage() {
 
     return (
         <ContainerCarrot>
-            <StyledProspektifFormPage>
+            <StyledProspektifFormPage data-theme={colorMode}>
                 <h1 className="page-title">Prospektif Form</h1>
 
                 <div className="form-container">
@@ -299,10 +300,13 @@ function ProspektifFormPage() {
                             </Box>
                         </div>
                         <Button
-                            colorScheme="orange"
+                            colorScheme="blue"
                             onClick={handleSearch}
                             size="lg"
                             isDisabled={isNewMode}
+                            bg="blue.500"
+                            _hover={{ bg: 'blue.600' }}
+                            color="white"
                         >
                             Cari
                         </Button>
@@ -311,6 +315,9 @@ function ProspektifFormPage() {
                             onClick={handleNewForm}
                             size="lg"
                             isDisabled={isNewMode}
+                            bg="green.500"
+                            _hover={{ bg: 'green.600' }}
+                            color="white"
                         >
                             Form Baru
                         </Button>
@@ -320,7 +327,7 @@ function ProspektifFormPage() {
                         <>
                             <div className="button-group">
                                 {!isNewMode && !isEditMode && (
-                                    <Button colorScheme="blue" onClick={handleEdit}>
+                                    <Button colorScheme="orange" onClick={handleEdit}>
                                         Edit Data
                                     </Button>
                                 )}
@@ -333,7 +340,7 @@ function ProspektifFormPage() {
                                         >
                                             {isNewMode ? 'Submit Form Baru' : 'Simpan Perubahan'}
                                         </Button>
-                                        <Button colorScheme="gray" onClick={handleCancel}>
+                                        <Button colorScheme="red" variant="outline" onClick={handleCancel}>
                                             Batal
                                         </Button>
                                     </>

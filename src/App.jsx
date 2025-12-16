@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+import { useColorMode } from '@chakra-ui/react';
 import Layout from './Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loading from './components/Loading';
@@ -42,12 +43,20 @@ const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
 function App() {
+  const { colorMode } = useColorMode();
+  
+  // Set data-theme attribute on root element for styled components
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-theme', colorMode);
+  }
+  
   return (
-    <Suspense fallback={<Loading />}>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route 
-          path="/home" 
+    <div data-theme={colorMode}>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route 
+            path="/home" 
           element={
             <ProtectedRoute>
               <Layout>
@@ -279,6 +288,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
+    </div>
   );
 }
 

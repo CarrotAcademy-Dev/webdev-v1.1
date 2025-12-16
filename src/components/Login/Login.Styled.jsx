@@ -11,7 +11,8 @@ const StyledLoginPage = styled.main`
         grid-template-columns: 1fr 1fr;
         width: 100%;
         max-width: 900px;
-        background-color: white;
+        background-color: var(--chakra-colors-chakra-body-bg);
+        transition: background-color 0.2s ease-in-out;
         border-radius: 24px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         overflow: hidden;

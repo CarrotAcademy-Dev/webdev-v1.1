@@ -14,10 +14,16 @@ import { AuthContext } from "@/context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAbsensiBulanan } from "@/features/cso/csoApiService";
 import { format } from "date-fns";
+import { useColorMode } from "@chakra-ui/react";
 
 
 function OverviewPage() {
     const { currentUser } = useContext(AuthContext);
+    const { colorMode } = useColorMode();
+    
+    // Icon color based on theme
+    const iconColor = colorMode === 'dark' ? '#FF9B7B' : '#FE7743';
+    const whiteIconColor = colorMode === 'dark' ? '#E2E8F0' : '#FFFFFF';
 
     // Fetch attendance data for current month
     const currentDate = new Date();
@@ -101,22 +107,22 @@ function OverviewPage() {
                     <p className="profile__name">{currentUser.nama}</p>
                 </InfoCard>
                 <InfoCard>
-                    <FiClock size="30px" color="#FE7743" />
+                    <FiClock size="30px" color={iconColor} />
                     <p className="card__text">You clocked in at <strong>{todayAttendance?.check_in || '-'}</strong></p>
                     <p className="card__subtext__sub">You reached a <span>{attendanceStreak} day streak!</span></p>
                 </InfoCard>
                 <InfoCard>
-                    <FiStar size="30px" color="#FE7743" style={{ fill: '#FE7743' }} />
+                    <FiStar size="30px" color={iconColor} style={{ fill: iconColor }} />
                     <p className="card__points">50 pts</p>
                     <p className="card__subtext">You're in #1 place</p>
                 </InfoCard>
             </div>
             <h3 className="section-title">Task Summary - Today</h3>
             <div className="task-summary-grid">
-                <InfoCard><LuClipboardPlus size="30px" color="#FE7743" /> <p>Assigned</p> <p className="card__points">50</p></InfoCard>
-                <InfoCard><LuClipboardCheck size="30px" color="#FE7743" /> <p>Completed</p> <p className="card__points">2</p></InfoCard>
-                <InfoCard><LuClipboardPenLine size="30px" color="#FE7743" /> <p>On Progress</p> <p className="card__points">18</p></InfoCard>
-                <InfoCard className="dark-card"><IoStatsChart size="30px" color="#FFFFFF"/><strong>10%</strong> <p>Completion</p></InfoCard>
+                <InfoCard><LuClipboardPlus size="30px" color={iconColor} /> <p>Assigned</p> <p className="card__points">50</p></InfoCard>
+                <InfoCard><LuClipboardCheck size="30px" color={iconColor} /> <p>Completed</p> <p className="card__points">2</p></InfoCard>
+                <InfoCard><LuClipboardPenLine size="30px" color={iconColor} /> <p>On Progress</p> <p className="card__points">18</p></InfoCard>
+                <InfoCard className="dark-card"><IoStatsChart size="30px" color={whiteIconColor}/><strong>10%</strong> <p>Completion</p></InfoCard>
             </div>
             <div className="tasks-completed-chart">
                 <TasksChart />

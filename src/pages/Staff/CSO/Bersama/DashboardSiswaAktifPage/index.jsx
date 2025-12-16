@@ -1,5 +1,5 @@
 import ContainerCarrot from "@/components/Container";
-import { Select, Box, Grid, GridItem, Input, InputGroup, InputLeftElement, Button, Flex, Text, IconButton } from "@chakra-ui/react";
+import { Select, Box, Grid, GridItem, Input, InputGroup, InputLeftElement, Button, Flex, Text, IconButton, useColorModeValue, useColorMode } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getDataSiswaAktifPerBulan, getDashboardSiswaAktifTahunan } from "@/features/cso/csoApiService";
 import { StyledDashboardSiswaAktifPage } from "./DashboardSiswaAktif.styled";
@@ -34,9 +34,13 @@ const monthNames = [
 ];
 
 function DashboardSiswaAktifPage() {
+    const { colorMode } = useColorMode();
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth(); // 0-11
+
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
 
     const [selectedYear, setSelectedYear] = useState(currentYear.toString());
     const [selectedMonth, setSelectedMonth] = useState(currentMonth.toString());
@@ -388,7 +392,7 @@ function DashboardSiswaAktifPage() {
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
-        <StyledDashboardSiswaAktifPage>
+        <StyledDashboardSiswaAktifPage data-theme={colorMode}>
             <ContainerCarrot>
                 <div className="hero-section">
                     <h1 className="page-title">CHART TREND PROGRAM SISWA</h1>
@@ -511,7 +515,7 @@ function DashboardSiswaAktifPage() {
                                     placeholder="Search across all columns..."
                                     value={searchQuery}
                                     onChange={handleSearch}
-                                    bg="white"
+                                    bg={cardBg}
                                     borderRadius="md"
                                 />
                             </InputGroup>
@@ -664,7 +668,7 @@ function DashboardSiswaAktifPage() {
                                             onChange={(e) => setChartStartMonth(e.target.value)}
                                             size="sm"
                                             maxW="150px"
-                                            bg="white"
+                                            bg={cardBg}
                                         >
                                             {monthNames.map((month, idx) => (
                                                 <option key={idx} value={idx}>{month}</option>
@@ -678,7 +682,7 @@ function DashboardSiswaAktifPage() {
                                             onChange={(e) => setChartEndMonth(e.target.value)}
                                             size="sm"
                                             maxW="150px"
-                                            bg="white"
+                                            bg={cardBg}
                                         >
                                             {monthNames.map((month, idx) => (
                                                 <option key={idx} value={idx}>{month}</option>

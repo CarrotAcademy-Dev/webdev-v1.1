@@ -5,7 +5,8 @@ import {
     Text, 
     Flex,
     Grid,
-    GridItem
+    GridItem,
+    useColorModeValue
 } from '@chakra-ui/react';
 import { FiTrendingUp, FiUserX, FiMessageSquare, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import DatePicker from 'react-datepicker';
@@ -24,6 +25,10 @@ import {
 } from '@/features/cso/csoApiService';
 
 function DashboardReminder() {
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
+    
     // Helper untuk format tanggal
     const formatToMonthYear = (date) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -157,13 +162,13 @@ function DashboardReminder() {
                     <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }} gap={4} mb={6}>
                         {/* Foundation Naik Modul */}
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiTrendingUp size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Foundation Naik Modul</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Foundation Naik Modul</Text>
                                         <Text fontSize="xs" color="gray.500">{monthYearFilter}</Text>
                                     </Box>
                                 </Flex>
@@ -179,13 +184,13 @@ function DashboardReminder() {
 
                         {/* Reminder Chat Full-Time */}
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiMessageSquare size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Reminder Chat Full-Time</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Reminder Chat Full-Time</Text>
                                         <Text fontSize="xs" color="gray.500">{dateFilter}</Text>
                                     </Box>
                                 </Flex>
@@ -201,13 +206,13 @@ function DashboardReminder() {
 
                         {/* Reminder Holiday */}
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiCalendar size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">{holidayData.keterangan || 'Hari Raya Natal'}</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">{holidayData.keterangan || 'Hari Raya Natal'}</Text>
                                         <Text fontSize="xs" color="gray.500">{holidayData.tanggal || '25 Dec 2025'}</Text>
                                     </Box>
                                 </Flex>
@@ -223,13 +228,13 @@ function DashboardReminder() {
 
                         {/* Reminder Bootcamp (placeholder - coming soon) */}
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiUserX size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Reminder Bootcamp</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Reminder Bootcamp</Text>
                                         <Text fontSize="xs" color="gray.500">Countdown</Text>
                                     </Box>
                                 </Flex>
@@ -241,13 +246,13 @@ function DashboardReminder() {
 
                         {/* Reminder Harga Promo Full-Time */}
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiDollarSign size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Reminder Harga Promo Full-Time</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Reminder Harga Promo Full-Time</Text>
                                         <Text fontSize="xs" color="gray.500">Total</Text>
                                     </Box>
                                 </Flex>
@@ -263,13 +268,13 @@ function DashboardReminder() {
 
                         {/* Reminder Harga Normal Full-Time */}
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiDollarSign size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Reminder Harga Normal Full-Time</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Reminder Harga Normal Full-Time</Text>
                                         <Text fontSize="xs" color="gray.500">Total</Text>
                                     </Box>
                                 </Flex>
@@ -286,15 +291,13 @@ function DashboardReminder() {
                 </Box>
 
                 {/* Tabs Section */}
-                <Box className="main-content-section">
-                    <SistemTabs
-                        tabItems={tabItems}
-                        tableData={tableData}
-                        headerItems={[]} 
-                        isLoading={isLoading}
-                        getHeaderItemsForTab={getHeaderItems}
-                    />
-                </Box>
+                <SistemTabs
+                    tabItems={tabItems}
+                    tableData={tableData}
+                    headerItems={[]} 
+                    isLoading={isLoading}
+                    getHeaderItemsForTab={getHeaderItems}
+                />
             </StyledDashboardReminder>
         </ContainerCarrot>
     );

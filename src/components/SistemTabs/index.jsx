@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, useBreakpointValue, Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { Tabs, TabList, Tab, TabPanels, TabPanel, Box, useBreakpointValue, Button, Menu, MenuButton, MenuList, MenuItem, useColorModeValue } from '@chakra-ui/react';
 import DataTableComponent from '../Table';
 import { FiChevronDown } from 'react-icons/fi';
 
 function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange, isLoading, getHeaderItemsForTab }) {
+    const boxBg = useColorModeValue('white', 'dark.bg.card');
+    const tabColor = useColorModeValue('gray.500', 'gray.400');
+    const tabSelectedBg = useColorModeValue('gray.800', 'orange.500');
+    const tabHoverBg = useColorModeValue('gray.100', 'dark.bg.hover');
+    
     const [tabIndex, setTabIndex] = useState(0);
 
     const isDesktop = useBreakpointValue({ base: false, md: true });
@@ -21,7 +26,7 @@ function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange, 
 
     return (
         <Box 
-            bg="white"
+            bg={boxBg}
             borderRadius="24px"
             p={6}
             boxShadow="0 4px 12px rgba(0, 0, 0, 0.08)"
@@ -40,15 +45,15 @@ function SistemTabs({ tabItems, tableData, headerItems, onAction, onCellChange, 
                                 px={5}
                                 py={2}
                                 fontWeight="semibold"
-                                color="gray.500"
+                                color={tabColor}
                                 borderRadius="full"
                                 _selected={{ 
                                     color: 'white', 
-                                    bg: 'gray.800', 
+                                    bg: tabSelectedBg, 
                                     boxShadow: 'md' 
                                 }}
                                 _hover={{
-                                    bg: 'gray.100'
+                                    bg: tabHoverBg
                                 }}
                             >
                                 {tabName.label}

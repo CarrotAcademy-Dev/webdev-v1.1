@@ -8,8 +8,9 @@ const StyledNavbar = styled.div`
     right: 0;
     width: 100%;
     z-index: 1000;
-    background-color: #ffffff;
+    background-color: var(--chakra-colors-chakra-body-bg);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background-color 0.2s ease-in-out;
 
     /* Small Screen */
     .navbar {
@@ -17,11 +18,12 @@ const StyledNavbar = styled.div`
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        background-color: #ffffff;
+        background-color: var(--chakra-colors-chakra-body-bg);
         padding: 0.75rem 1rem;
         max-width: 100%;
         margin: 0 auto;
         gap: 0.5rem;
+        transition: background-color 0.2s ease-in-out;
     }
 
     .navbar__left {
@@ -36,6 +38,8 @@ const StyledNavbar = styled.div`
     .navbar__brand .brandLogo {
         width: 120px;
         height: auto;
+        /* Logo filter for dark mode - invert colors */
+        filter: var(--chakra-colors-mode) === 'dark' ? brightness(0) invert(1) : none;
     }
     
     /* Session timer badge */

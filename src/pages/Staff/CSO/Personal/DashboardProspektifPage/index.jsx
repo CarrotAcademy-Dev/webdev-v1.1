@@ -1,7 +1,7 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import SistemTabs from "@/components/SistemTabs";
-import { Input, Flex, Text, Checkbox, useToast } from "@chakra-ui/react";
+import { Input, Flex, Text, Checkbox, useToast, useColorModeValue } from "@chakra-ui/react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getDashboardProspektifPersonal, ceklisDashboardProspektif } from "@/features/cso/csoApiService";
 import { StyledDashboardProspektifPage } from "./DashboardProspektif.styled";
@@ -11,6 +11,10 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 function DashboardProspektifPage() {
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
+    
     const currentDate = new Date();
     const formatDateForInput = (date) => {
         const year = date.getFullYear();
@@ -228,7 +232,7 @@ function DashboardProspektifPage() {
                                 value={selectedDate}
                                 onChange={handleDateChange}
                                 maxW="200px"
-                                bg="white"
+                                bg={cardBg}
                                 borderColor="gray.300"
                             />
                         </Flex>
