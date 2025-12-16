@@ -11,6 +11,9 @@ const StyledInfoCard = styled.div`
   padding: 1rem;
   justify-content: center;
   gap: 0.5rem;
+  background-color: var(--chakra-colors-chakra-body-bg);
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  
   img {
     width: 70px;  
     height: 70px;
@@ -18,7 +21,7 @@ const StyledInfoCard = styled.div`
   p {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #333;
+    color: var(--chakra-colors-chakra-body-text);
     text-align: center;
     line-height: 1.4;
     margin-top: 0.5rem;
@@ -44,15 +47,16 @@ const StyledInfoCard = styled.div`
     margin-top: 0.5rem;
   }
   &.dark-card {
-    border: 2px solid #1A202C;
-    background-color: #1A202C;
-    color: white;
+    border: 2px solid var(--chakra-colors-brand-500);
+    background-color: var(--chakra-colors-brand-500);
+    color: var(--chakra-colors-light-text-primary);
     p {
-        color: white;
+        color: var(--chakra-colors-light-text-primary);
     }
     strong {
       font-size: 1.75rem;
       font-weight: 800;
+      color: var(--chakra-colors-light-text-primary);
     }
   }
 `;

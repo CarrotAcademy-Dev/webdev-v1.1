@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { Box, Text, Flex, useToast, Tabs, TabList, Tab, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Box, Text, Flex, useToast, Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode } from '@chakra-ui/react';
 import ContainerCarrot from '@/components/Container';
 import { StyledCreateTicketing } from './CreateTicketing.styled';
 import { createTicketingExternal, createTicketingInternal } from '@/features/cso/csoApiService';
@@ -9,6 +9,7 @@ import { createTicketingExternal, createTicketingInternal } from '@/features/cso
 function CreateTicketingPage() {
     const navigate = useNavigate();
     const toast = useToast();
+    const { colorMode } = useColorMode();
 
     // ============ EXTERNAL FORM STATE ============
     const [externalForm, setExternalForm] = useState({
@@ -144,7 +145,7 @@ function CreateTicketingPage() {
 
     return (
         <ContainerCarrot>
-            <StyledCreateTicketing>
+            <StyledCreateTicketing data-theme={colorMode}>
                 <Box className="hero-section">
                     <Flex justify="space-between" align="center" mb={6}>
                         <Text fontSize="2xl" fontWeight="bold">

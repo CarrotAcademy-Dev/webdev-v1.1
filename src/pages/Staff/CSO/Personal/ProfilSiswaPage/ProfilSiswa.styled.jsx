@@ -8,11 +8,11 @@ export const StyledProfilSiswa = styled.div`
         font-size: 2rem;
         font-weight: 800;
         margin-bottom: 1.5rem;
-        color: #2D3748;
+        color: var(--chakra-colors-light-text-primary);
     }
 
     .search-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -30,7 +30,7 @@ export const StyledProfilSiswa = styled.div`
     }
 
     .profile-sidebar {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -40,7 +40,7 @@ export const StyledProfilSiswa = styled.div`
             width: 100%;
             aspect-ratio: 1;
             border-radius: 12px;
-            background: #F7FAFC;
+            background: var(--chakra-colors-light-bg-card);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -55,7 +55,7 @@ export const StyledProfilSiswa = styled.div`
 
             .placeholder {
                 font-size: 4rem;
-                color: #CBD5E0;
+                color: var(--chakra-colors-light-text-muted);
             }
         }
 
@@ -63,7 +63,7 @@ export const StyledProfilSiswa = styled.div`
             .info-item {
                 margin-bottom: 1rem;
                 padding-bottom: 1rem;
-                border-bottom: 1px solid #F7FAFC;
+                border-bottom: 1px solid var(--chakra-colors-light-bg-card);
 
                 &:last-child {
                     border-bottom: none;
@@ -74,14 +74,14 @@ export const StyledProfilSiswa = styled.div`
                 .info-label {
                     font-size: 0.75rem;
                     font-weight: 600;
-                    color: #718096;
+                    color: var(--chakra-colors-light-text-muted);
                     text-transform: uppercase;
                     margin-bottom: 0.25rem;
                 }
 
                 .info-value {
                     font-size: 0.875rem;
-                    color: #2D3748;
+                    color: var(--chakra-colors-light-text-primary);
                     font-weight: 500;
                 }
             }
@@ -89,7 +89,7 @@ export const StyledProfilSiswa = styled.div`
     }
 
     .profile-content {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -97,10 +97,10 @@ export const StyledProfilSiswa = styled.div`
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #2D3748;
+            color: var(--chakra-colors-light-text-primary);
             margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid #F7FAFC;
+            border-bottom: 2px solid var(--chakra-colors-light-bg-card);
         }
 
         .info-grid {
@@ -118,15 +118,15 @@ export const StyledProfilSiswa = styled.div`
             .field-label {
                 font-size: 0.875rem;
                 font-weight: 600;
-                color: #4A5568;
+                color: var(--chakra-colors-light-text-secondary);
                 margin-bottom: 0.5rem;
             }
 
             .field-value {
                 font-size: 0.875rem;
-                color: #2D3748;
+                color: var(--chakra-colors-light-text-primary);
                 padding: 0.75rem;
-                background: #F7FAFC;
+                background: var(--chakra-colors-light-bg-card);
                 border-radius: 6px;
                 border: 1px solid #E2E8F0;
             }
@@ -139,7 +139,7 @@ export const StyledProfilSiswa = styled.div`
         .course-section {
             margin-top: 2rem;
             padding-top: 2rem;
-            border-top: 2px solid #F7FAFC;
+            border-top: 2px solid var(--chakra-colors-light-bg-card);
         }
 
         .course-table {
@@ -148,14 +148,14 @@ export const StyledProfilSiswa = styled.div`
             margin-top: 1rem;
 
             thead {
-                background: #F7FAFC;
+                background: var(--chakra-colors-light-bg-card);
 
                 th {
                     padding: 12px;
                     text-align: left;
                     font-weight: 600;
                     font-size: 0.875rem;
-                    color: #2D3748;
+                    color: var(--chakra-colors-light-text-primary);
                     border-bottom: 2px solid #E2E8F0;
                 }
             }
@@ -165,13 +165,13 @@ export const StyledProfilSiswa = styled.div`
                     border-bottom: 1px solid #E2E8F0;
 
                     &:hover {
-                        background: #F7FAFC;
+                        background: var(--chakra-colors-light-bg-card);
                     }
 
                     td {
                         padding: 12px;
                         font-size: 0.875rem;
-                        color: #4A5568;
+                        color: var(--chakra-colors-light-text-secondary);
                     }
                 }
             }
@@ -180,7 +180,7 @@ export const StyledProfilSiswa = styled.div`
         .empty-state {
             text-align: center;
             padding: 3rem 1rem;
-            color: #A0AEC0;
+            color: var(--chakra-colors-light-text-muted);
             font-size: 0.875rem;
         }
     }
@@ -224,6 +224,90 @@ export const StyledProfilSiswa = styled.div`
             tbody td {
                 padding: 8px;
             }
+        }
+    }
+
+    &[data-theme='dark'] {
+        .page-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .search-section,
+        .profile-sidebar,
+        .profile-content {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .profile-photo {
+            background: var(--chakra-colors-dark-bg-card);
+
+            .placeholder {
+                color: var(--chakra-colors-dark-text-muted);
+            }
+        }
+
+        .student-info {
+            .info-item {
+                border-bottom-color: var(--chakra-colors-dark-bg-card);
+
+                .info-label {
+                    color: var(--chakra-colors-dark-text-muted);
+                }
+
+                .info-value {
+                    color: var(--chakra-colors-dark-text-primary);
+                }
+            }
+        }
+
+        .section-title {
+            color: var(--chakra-colors-dark-text-primary);
+            border-bottom-color: var(--chakra-colors-dark-bg-card);
+        }
+
+        .info-field {
+            .field-label {
+                color: var(--chakra-colors-dark-text-secondary);
+            }
+
+            .field-value {
+                color: var(--chakra-colors-dark-text-primary);
+                background: var(--chakra-colors-dark-bg-card);
+                border-color: var(--chakra-colors-dark-border);
+            }
+        }
+
+        .course-section {
+            border-top-color: var(--chakra-colors-dark-bg-card);
+        }
+
+        .course-table {
+            thead {
+                background: var(--chakra-colors-dark-bg-card);
+
+                th {
+                    color: var(--chakra-colors-dark-text-primary);
+                    border-bottom-color: var(--chakra-colors-dark-border);
+                }
+            }
+
+            tbody {
+                tr {
+                    border-bottom-color: var(--chakra-colors-dark-border);
+
+                    &:hover {
+                        background: var(--chakra-colors-dark-bg-card);
+                    }
+
+                    td {
+                        color: var(--chakra-colors-dark-text-secondary);
+                    }
+                }
+            }
+        }
+
+        .empty-state {
+            color: var(--chakra-colors-dark-text-muted);
         }
     }
 `;

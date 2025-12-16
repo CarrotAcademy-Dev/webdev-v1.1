@@ -5,10 +5,12 @@ import { StyledDaftarKelasTersediaPage } from "./DaftarKelasTersedia.styled";
 import { HEADER_CONFIG, TOTAL_COLUMNS } from "./DaftarKelas.config";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useColorMode } from "@chakra-ui/react";
 
 const HARI = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
 function DaftarKelasTersediaPage() {
+    const { colorMode } = useColorMode();
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ['daftarKelasTersedia'],
         queryFn: getDaftarKelasTersedia,
@@ -17,7 +19,7 @@ function DaftarKelasTersediaPage() {
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
-        <StyledDaftarKelasTersediaPage>
+        <StyledDaftarKelasTersediaPage data-theme={colorMode}>
             <ContainerCarrot>
                 <div className="hero-section">
                     <div className="hero-section__left">

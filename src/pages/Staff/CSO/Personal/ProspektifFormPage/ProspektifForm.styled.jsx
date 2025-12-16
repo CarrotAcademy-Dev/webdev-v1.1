@@ -4,12 +4,12 @@ export const StyledProspektifFormPage = styled.div`
     .page-title {
         font-size: 2rem;
         font-weight: 700;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         margin-bottom: 1.5rem;
     }
 
     .form-container {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -40,7 +40,7 @@ export const StyledProspektifFormPage = styled.div`
     .section-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #FE7743;
@@ -61,14 +61,14 @@ export const StyledProspektifFormPage = styled.div`
     .field-label {
         font-size: 0.9rem;
         font-weight: 500;
-        color: #555;
+        color: var(--chakra-colors-light-text-secondary);
     }
 
     .field-value {
         font-size: 1rem;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         padding: 0.5rem;
-        background: #f8f9fa;
+        background: var(--chakra-colors-light-bg-card);
         border-radius: 6px;
         min-height: 2.5rem;
         display: flex;
@@ -76,7 +76,7 @@ export const StyledProspektifFormPage = styled.div`
     }
 
     .field-value.empty {
-        color: #999;
+        color: var(--chakra-colors-light-text-muted);
         font-style: italic;
     }
 
@@ -100,7 +100,7 @@ export const StyledProspektifFormPage = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
 
         &.checked {
             background: #FE7743;
@@ -133,16 +133,17 @@ export const StyledProspektifFormPage = styled.div`
     .notes-value {
         min-height: 100px;
         padding: 0.75rem;
-        background: #f8f9fa;
+        background: var(--chakra-colors-light-bg-card);
         border-radius: 6px;
         white-space: pre-wrap;
         word-wrap: break-word;
+        color: var(--chakra-colors-light-text-primary);
     }
 
     .empty-state {
         text-align: center;
         padding: 3rem;
-        color: #999;
+        color: var(--chakra-colors-light-text-muted);
     }
 
     .error-state {
@@ -166,6 +167,47 @@ export const StyledProspektifFormPage = styled.div`
 
         .search-section {
             flex-direction: column;
+        }
+    }
+
+    &[data-theme='dark'] {
+        .page-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .form-container {
+            background: var(--chakra-colors-dark-bg-secondary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .field-label {
+            color: var(--chakra-colors-dark-text-secondary);
+        }
+
+        .field-value {
+            color: var(--chakra-colors-dark-text-primary);
+            background: var(--chakra-colors-dark-bg-card);
+        }
+
+        .field-value.empty {
+            color: var(--chakra-colors-dark-text-muted);
+        }
+
+        .readonly-checkbox {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .notes-value {
+            background: var(--chakra-colors-dark-bg-card);
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .empty-state {
+            color: var(--chakra-colors-dark-text-muted);
         }
     }
 `;

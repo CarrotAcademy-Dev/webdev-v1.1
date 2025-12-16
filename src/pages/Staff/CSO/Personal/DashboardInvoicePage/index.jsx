@@ -2,7 +2,7 @@ import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import SistemTabs from "@/components/SistemTabs";
 import DataTableComponent from "@/components/Table";
-import { Input, Flex, Text, Checkbox, useToast, Select, Button, Box } from "@chakra-ui/react";
+import { Input, Flex, Text, Checkbox, useToast, Select, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
     getInvoiceTagihToday,
@@ -20,6 +20,10 @@ import { AuthContext } from "@/context/AuthContext";
 function DashboardInvoicePage() {
     const currentDate = new Date();
     const { user } = useContext(AuthContext);
+    
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
     
     // Format date untuk backend: "d mmm yyyy" e.g., "1 Dec 2025"
     const formatDateForBackend = (date) => {
@@ -343,7 +347,7 @@ function DashboardInvoicePage() {
                                     value={selectedDate}
                                     onChange={handleDateChange}
                                     maxW="200px"
-                                    bg="white"
+                                    bg={cardBg}
                                     borderColor="gray.300"
                                 />
                             </Flex>
@@ -355,7 +359,7 @@ function DashboardInvoicePage() {
                                     value={selectedMonthYear}
                                     onChange={handleMonthYearChange}
                                     maxW="180px"
-                                    bg="white"
+                                    bg={cardBg}
                                     borderColor="gray.300"
                                 >
                                     {Array.from({ length: 12 }, (_, i) => {
@@ -372,12 +376,12 @@ function DashboardInvoicePage() {
 
                             {/* Filter Age untuk Studio */}
                             <Flex gap={2} align="center">
-                                <Text fontWeight="semibold" minW="80px">Age:</Text>
+                                <Text fontWeight="semibold" minW="120px">Filter Umur:</Text>
                                 <Select
                                     value={selectedAge}
                                     onChange={handleAgeChange}
-                                    maxW="120px"
-                                    bg="white"
+                                    maxW="150px"
+                                    bg={cardBg}
                                     borderColor="gray.300"
                                 >
                                     <option value="ALL">ALL</option>
@@ -439,7 +443,7 @@ function DashboardInvoicePage() {
             {/* Cari Invoice Section - Separate Container */}
             <div className="main-content-section" style={{ marginTop: '2rem' }}>
                 <ContainerCarrot>
-                    <Box bg="white" borderRadius="12px" p={6} boxShadow="0 2px 8px rgba(0, 0, 0, 0.05)">
+                    <Box bg={cardBg} borderRadius="12px" p={6} boxShadow="0 2px 8px rgba(0, 0, 0, 0.05)">
                         <Text fontSize="xl" fontWeight="bold" mb={4} color="#2D3748">
                             Cari Invoice Per Nama
                         </Text>
@@ -451,7 +455,7 @@ function DashboardInvoicePage() {
                                 value={searchName}
                                 onChange={(e) => setSearchName(e.target.value)}
                                 maxW="400px"
-                                bg="white"
+                                bg={cardBg}
                                 borderColor="gray.300"
                             />
                             <Button

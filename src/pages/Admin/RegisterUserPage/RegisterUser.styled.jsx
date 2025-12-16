@@ -8,19 +8,19 @@ export const StyledRegisterUserPage = styled.div`
     .page-title {
         font-size: 2rem;
         font-weight: 700;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         margin-bottom: 0.5rem;
     }
 
     .page-subtitle {
         font-size: 1rem;
-        color: #666;
+        color: var(--chakra-colors-light-text-secondary);
     }
 
     .register-container {
         max-width: 700px;
         margin: 0 auto;
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 2.5rem;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
@@ -29,7 +29,7 @@ export const StyledRegisterUserPage = styled.div`
     .access-denied {
         text-align: center;
         padding: 4rem 2rem;
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     }
@@ -43,12 +43,12 @@ export const StyledRegisterUserPage = styled.div`
     .access-denied-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         margin-bottom: 0.5rem;
     }
 
     .access-denied-text {
-        color: #666;
+        color: var(--chakra-colors-light-text-secondary);
         margin-bottom: 1.5rem;
     }
 
@@ -59,7 +59,7 @@ export const StyledRegisterUserPage = styled.div`
     .section-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #FE7743;
@@ -79,7 +79,7 @@ export const StyledRegisterUserPage = styled.div`
     .field-label {
         font-size: 0.9rem;
         font-weight: 500;
-        color: #555;
+        color: var(--chakra-colors-light-text-secondary);
         display: flex;
         align-items: center;
         gap: 0.25rem;
@@ -92,7 +92,7 @@ export const StyledRegisterUserPage = styled.div`
 
     .field-hint {
         font-size: 0.85rem;
-        color: #777;
+        color: var(--chakra-colors-light-text-muted);
         margin-top: 0.25rem;
     }
 
@@ -168,7 +168,7 @@ export const StyledRegisterUserPage = styled.div`
         gap: 1rem;
         margin-top: 2rem;
         padding-top: 2rem;
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid var(--chakra-colors-light-border);
     }
 
     .form-actions {
@@ -179,7 +179,7 @@ export const StyledRegisterUserPage = styled.div`
 
     .role-info {
         padding: 1rem;
-        background: #f8f9fa;
+        background: var(--chakra-colors-light-bg-card);
         border-left: 4px solid #FE7743;
         border-radius: 4px;
         margin-bottom: 1.5rem;
@@ -187,13 +187,13 @@ export const StyledRegisterUserPage = styled.div`
 
     .role-info-title {
         font-weight: 600;
-        color: #333;
+        color: var(--chakra-colors-light-text-primary);
         margin-bottom: 0.5rem;
     }
 
     .role-info-list {
         font-size: 0.9rem;
-        color: #666;
+        color: var(--chakra-colors-light-text-secondary);
         margin-left: 1rem;
     }
 
@@ -208,6 +208,57 @@ export const StyledRegisterUserPage = styled.div`
 
         .form-actions {
             flex-direction: column-reverse;
+        }
+    }
+
+    &[data-theme='dark'] {
+        .page-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .page-subtitle {
+            color: var(--chakra-colors-dark-text-secondary);
+        }
+
+        .register-container,
+        .access-denied {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .access-denied-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .access-denied-text {
+            color: var(--chakra-colors-dark-text-secondary);
+        }
+
+        .section-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .field-label {
+            color: var(--chakra-colors-dark-text-secondary);
+        }
+
+        .field-hint {
+            color: var(--chakra-colors-dark-text-muted);
+        }
+
+        .button-group {
+            border-top-color: var(--chakra-colors-dark-border);
+        }
+
+        .role-info {
+            background: var(--chakra-colors-dark-bg-card);
+        }
+
+        .role-info-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .role-info-list {
+            color: var(--chakra-colors-dark-text-secondary);
         }
     }
 `;

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, Flex, Text, IconButton, Input, InputGroup, InputLeftElement, Link, Tooltip } from '@chakra-ui/react';
+import { Box, Flex, Text, IconButton, Input, InputGroup, InputLeftElement, Link, Tooltip, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
 import ContainerCarrot from '@/components/Container';
@@ -9,7 +9,15 @@ import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown, Fi
 import { getFdIdentity } from '@/features/cso/csoApiService';
 import { StyledFDStudentIdentityPage } from './FdStudentIdentityPage.styled';
 
-function FdStudentIdentityPage() {    
+function FdStudentIdentityPage() {
+    const { colorMode } = useColorMode();
+    
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const tableHeaderBg = useColorModeValue('#fcf7ecff', '#2C3748');
+    const tableHeaderHoverBg = useColorModeValue('#f5efdcff', '#3A4556');
+    const tableHeaderColor = useColorModeValue('#3b3b43ff', 'dark.text.primary');
+    
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
@@ -145,13 +153,13 @@ function FdStudentIdentityPage() {
             <Box
                 as="th"
                 p={3}
-                bg="#fcf7ecff"
-                color="#3b3b43ff"
+                bg={tableHeaderBg}
+                color={tableHeaderColor}
                 textAlign="left"
                 cursor={isSortable ? 'pointer' : 'default'}
                 userSelect="none"
                 onClick={isSortable ? () => handleSort(sortKey) : undefined}
-                _hover={isSortable ? { bg: "#f5efdcff" } : undefined}
+                _hover={isSortable ? { bg: tableHeaderHoverBg } : undefined}
                 transition="background-color 0.2s"
                 {...props}
             >
@@ -253,7 +261,7 @@ function FdStudentIdentityPage() {
 
     return (
         <ContainerCarrot>
-            <StyledFDStudentIdentityPage>
+            <StyledFDStudentIdentityPage data-theme={colorMode}>
                 <Box className="page-header">
                     <Flex justify="space-between" align="center" mb={6}>
                         <Text fontSize="2xl" fontWeight="bold">
@@ -287,7 +295,7 @@ function FdStudentIdentityPage() {
                                     setCurrentPage(1); // Reset ke page 1 saat search
                                 }}
                                 borderRadius="md"
-                                bg="white"
+                                bg={cardBg}
                             />
                         </InputGroup>
                         {searchQuery && (

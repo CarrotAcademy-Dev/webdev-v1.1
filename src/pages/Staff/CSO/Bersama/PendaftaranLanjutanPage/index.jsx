@@ -16,7 +16,9 @@ import {
     TabPanels,
     TabPanel,
     InputGroup,
-    InputLeftElement
+    InputLeftElement,
+    useColorModeValue,
+    useColorMode
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getPendaftaranLanjutan, postTanggalKirimPendaftaran } from "@/features/cso/csoApiService";
@@ -29,8 +31,15 @@ import { handleError } from "@/utils/errorHandler";
 import { formatDate } from "@/utils/formatters";
 
 function PendaftaranLanjutanPage() {
+    const { colorMode } = useColorMode();
     const queryClient = useQueryClient();
     const toast = useToast();
+    
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textMuted = useColorModeValue('gray.600', 'gray.400');
+    const tabSelectedBg = useColorModeValue('gray.800', 'orange.500');
+    
     const [selectedDates, setSelectedDates] = useState({});
 
     const { data: pendaftaranData, isLoading, isError, error } = useQuery({
@@ -214,7 +223,7 @@ function PendaftaranLanjutanPage() {
                             borderRadius="md"
                         />
                     </InputGroup>
-                    <Text fontSize="sm" color="gray.600">
+                    <Text fontSize="sm" color={textMuted}>
                         {sortedData.length} results
                     </Text>
                 </Flex>
@@ -317,7 +326,7 @@ function PendaftaranLanjutanPage() {
                 </table>
                 {totalPages > 1 && (
                     <Flex justify="space-between" mt={4} align="center">
-                        <Text fontSize="sm" color="gray.600">
+                        <Text fontSize="sm" color={textMuted}>
                             Showing {((currentPage - 1) * 10) + 1} to {Math.min(currentPage * 10, sortedData.length)} of {sortedData.length} entries
                         </Text>
                         <Flex align="center" gap={4}>
@@ -357,7 +366,7 @@ function PendaftaranLanjutanPage() {
         : 0;
 
     return (
-        <StyledPendaftaranLanjutanPage>
+        <StyledPendaftaranLanjutanPage data-theme={colorMode}>
             <ContainerCarrot>
                 <h1 className="page-title">Pendaftaran Lanjutan - Overview</h1>
                 <div className="hero-section">
@@ -395,11 +404,11 @@ function PendaftaranLanjutanPage() {
                 </div>
             </ContainerCarrot>
             <ContainerCarrot>
-                <Box bg="white" borderRadius="24px" p={6} boxShadow="0 4px 12px rgba(0, 0, 0, 0.08)" mt={4}>
+                <Box bg={cardBg} borderRadius="24px" p={6} boxShadow="0 4px 12px rgba(0, 0, 0, 0.08)" mt={4}>
                     <Tabs align="center" variant="soft-rounded" colorScheme="orange">
                         <TabList mb={4}>
-                            <Tab _selected={{ color: 'white', bg: 'gray.800' }}>Belum Terkirim</Tab>
-                            <Tab _selected={{ color: 'white', bg: 'gray.800' }}>Sudah Terkirim</Tab>
+                            <Tab _selected={{ color: 'white', bg: tabSelectedBg }}>Belum Terkirim</Tab>
+                            <Tab _selected={{ color: 'white', bg: tabSelectedBg }}>Sudah Terkirim</Tab>
                         </TabList>
                         <TabPanels>
                             <TabPanel p={0}>

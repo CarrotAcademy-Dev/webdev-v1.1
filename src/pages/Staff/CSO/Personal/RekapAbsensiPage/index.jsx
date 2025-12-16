@@ -3,14 +3,23 @@ import { useQuery } from '@tanstack/react-query';
 import { AuthContext } from '@/context/AuthContext';
 import { getRekapAbsensiKaryawan, getAbsensiBulanan, getPayslip } from '@/features/cso/csoApiService';
 import { StyledRekapAbsensi } from './RekapAbsensi.styled';
-import { Box, Flex, Select, Text } from '@chakra-ui/react';
+import { Box, Flex, Select, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import Loading from '@/components/Loading';
 import { format } from 'date-fns';
 
 const RekapAbsensiPage = () => {
     const { currentUser } = useContext(AuthContext);
+    const { colorMode } = useColorMode();
     const namaKaryawan = currentUser?.nama || '';
-
+    
+    // Stats card colors - muted in dark mode
+    const greenCardBg = useColorModeValue('#4CAF50', '#2E7D32');
+    const redCardBg = useColorModeValue('#F44336', '#C62828');
+    const orangeCardBg = useColorModeValue('#FF9800', '#E65100');
+    
+    // Table header colors
+    const tableHeaderBg = useColorModeValue('#F7FAFC', '#3b495dff');
+    const tableHeaderColor = useColorModeValue('#2D3748', '#E2E8F0');    const tableBorderColor = useColorModeValue('#E2E8F0', '#4A5568');
     // State for month filter
     const currentDate = new Date();
     const currentMonth = format(currentDate, 'MMM yyyy'); // Format: Dec 2025
@@ -121,7 +130,7 @@ const RekapAbsensiPage = () => {
     }
 
     return (
-        <StyledRekapAbsensi>
+        <StyledRekapAbsensi data-theme={colorMode}>
             <h1 className="page-title">Dashboard Karyawan</h1>
 
             {/* Today's Attendance Section */}
@@ -167,7 +176,7 @@ const RekapAbsensiPage = () => {
                 <div className="statsCard">
                     {monthlyData && monthlyData.attendance && (
                         <div className="stats-grid">
-                            <Box bg="#4CAF50" p={4} borderRadius="12px" boxShadow="sm">
+                            <Box bg={greenCardBg} p={4} borderRadius="12px" boxShadow="sm">
                                 <Text fontSize="2xl" fontWeight="bold" color="white">
                                     {stats.hadir || 0}
                                 </Text>
@@ -175,7 +184,7 @@ const RekapAbsensiPage = () => {
                                     Hadir
                                 </Text>
                             </Box>
-                            <Box bg="#F44336" p={4} borderRadius="12px" boxShadow="sm">
+                            <Box bg={redCardBg} p={4} borderRadius="12px" boxShadow="sm">
                                 <Text fontSize="2xl" fontWeight="bold" color="white">
                                     {stats.tidak_hadir || 0}
                                 </Text>
@@ -183,7 +192,7 @@ const RekapAbsensiPage = () => {
                                     Tidak Hadir
                                 </Text>
                             </Box>
-                            <Box bg="#FF9800" p={4} borderRadius="12px" boxShadow="sm">
+                            <Box bg={orangeCardBg} p={4} borderRadius="12px" boxShadow="sm">
                                 <Text fontSize="2xl" fontWeight="bold" color="white">
                                     {stats.cuti || 0}
                                 </Text>
@@ -205,18 +214,18 @@ const RekapAbsensiPage = () => {
                     <Box overflowX="auto">
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
-                                <tr style={{ background: '#F7FAFC' }}>
-                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Tanggal</th>
-                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Hari</th>
-                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Check In</th>
-                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Check Out</th>
-                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Status</th>
-                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600 }}>Catatan</th>
+                                <tr style={{ background: tableHeaderBg }}>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Tanggal</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Hari</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Check In</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Check Out</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Status</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Catatan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {paginatedAttendance.map((item, index) => (
-                                    <tr key={index} style={{ borderBottom: '1px solid #E2E8F0' }}>
+                                    <tr key={index} style={{ borderBottom: `1px solid ${tableBorderColor}` }}>
                                         <td style={{ padding: '12px' }}>{item.date}</td>
                                         <td style={{ padding: '12px' }}>{item.day}</td>
                                         <td style={{ padding: '12px' }}>{item.check_in || '-'}</td>
@@ -245,7 +254,7 @@ const RekapAbsensiPage = () => {
 
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <Flex justify="space-between" align="center" mt={4} pt={4} borderTop="1px solid #E2E8F0">
+                            <Flex justify="space-between" align="center" mt={4} pt={4} borderTop={`1px solid ${tableBorderColor}`}>
                                 <Text fontSize="sm" color="gray.600">
                                     Menampilkan {startIndex + 1} - {Math.min(endIndex, attendanceList.length)} dari {attendanceList.length} data
                                 </Text>
@@ -256,7 +265,7 @@ const RekapAbsensiPage = () => {
                                         style={{
                                             padding: '8px 16px',
                                             borderRadius: '6px',
-                                            border: '1px solid #E2E8F0',
+                                            border: `1px solid ${tableBorderColor}`,
                                             background: currentPage === 1 ? '#F7FAFC' : 'white',
                                             color: currentPage === 1 ? '#A0AEC0' : '#2D3748',
                                             cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
@@ -273,7 +282,7 @@ const RekapAbsensiPage = () => {
                                             style={{
                                                 padding: '8px 12px',
                                                 borderRadius: '6px',
-                                                border: '1px solid #E2E8F0',
+                                                border: `1px solid ${tableBorderColor}`,
                                                 background: currentPage === page ? '#FE7743' : 'white',
                                                 color: currentPage === page ? 'white' : '#2D3748',
                                                 cursor: 'pointer',
@@ -290,7 +299,7 @@ const RekapAbsensiPage = () => {
                                         style={{
                                             padding: '8px 16px',
                                             borderRadius: '6px',
-                                            border: '1px solid #E2E8F0',
+                                            border: `1px solid ${tableBorderColor}`,
                                             background: currentPage === totalPages ? '#F7FAFC' : 'white',
                                             color: currentPage === totalPages ? '#A0AEC0' : '#2D3748',
                                             cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { Box, Button, Input, Select, useToast, FormControl, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
+import { Box, Button, Input, Select, useToast, FormControl, InputGroup, InputRightElement, IconButton, useColorMode } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser, validatePassword, getPasswordValidationMessage } from '@/features/auth/authApiService';
 import ContainerCarrot from '@/components/Container';
@@ -12,6 +12,7 @@ function RegisterUserPage() {
     const { currentUser } = useContext(AuthContext);
     const navigate = useNavigate();
     const toast = useToast();
+    const { colorMode } = useColorMode();
 
     // Role-based access control
     const hasAccess = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
@@ -188,7 +189,7 @@ function RegisterUserPage() {
 
     return (
         <ContainerCarrot>
-            <StyledRegisterUserPage>
+            <StyledRegisterUserPage data-theme={colorMode}>
                 <div className="page-header">
                     <h1 className="page-title">Registrasi User Baru</h1>
                     <p className="page-subtitle">
@@ -404,7 +405,8 @@ function RegisterUserPage() {
                     <div className="button-group">
                         <div className="form-actions">
                             <Button
-                                colorScheme="gray"
+                                colorScheme="red"
+                                variant="outline"
                                 size="lg"
                                 onClick={handleReset}
                                 isDisabled={registerMutation.isPending}
@@ -412,7 +414,7 @@ function RegisterUserPage() {
                                 Reset Form
                             </Button>
                             <Button
-                                colorScheme="orange"
+                                colorScheme="green"
                                 size="lg"
                                 onClick={handleSubmit}
                                 isLoading={registerMutation.isPending}

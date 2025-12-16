@@ -8,7 +8,7 @@ export const StyledStatistikProspektifPage = styled.div`
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 1rem;
-            color: #2D3748;
+            color: var(--chakra-colors-dark-text-secondary);
         }
 
         .filter-section {
@@ -18,7 +18,7 @@ export const StyledStatistikProspektifPage = styled.div`
 
     .table-container {
         overflow-x: auto;
-        background: white;
+        background: var(--chakra-colors-light-bg-card);
         border-radius: 8px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         padding: 1rem;
@@ -31,24 +31,51 @@ export const StyledStatistikProspektifPage = styled.div`
         th, td {
             padding: 12px;
             text-align: left;
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--chakra-colors-light-border);
         }
 
         th {
-            background-color: #fcf9e8ff;
+            background-color: var(--chakra-colors-brand-20);
             font-weight: 600;
-            color: #4A5568;
+            color: var(--chakra-colors-light-text-primary);
             white-space: nowrap;
         }
 
         tbody tr:hover {
-            background-color: #fdfce7ff;
+            background-color: var(--chakra-colors-brand-20);
         }
 
         td {
             &:not(:first-child) {
                 text-align: center;
             }
+        }
+    }
+
+    // support manual theme toggle
+    [data-theme='dark'] & {
+        tbody tr:hover {
+            background-color: var(--chakra-colors-dark-bg-hover);
+        }
+
+        .table-container {
+            background: var(--chakra-colors-dark-bg-card);
+        }
+
+        .statistik-table th, .statistik-table td {
+            border-color: var(--chakra-colors-dark-border);
+            color: var(--chakra-colors-dark-text-primary);
+        }
+        
+        th {
+            background-color: var(--chakra-colors-brand-900);
+            color: var(--chakra-colors-dark-text-primary);
+        }
+    }
+    
+    [data-theme='light'] & {
+        .statistik-table th, .statistik-table td {
+            border-color: var(--chakra-colors-light-border);
         }
     }
 `;

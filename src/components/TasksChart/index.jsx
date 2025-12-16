@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useColorMode } from '@chakra-ui/react';
 import { 
     ResponsiveContainer, 
     AreaChart, 
@@ -32,6 +33,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 function TasksChart() {
+    const { colorMode } = useColorMode();
     const [activeFilter, setActiveFilter] = useState('monthly');
     const [chartData, setChartData] = useState(monthlyData);
 
@@ -41,8 +43,13 @@ function TasksChart() {
         if (activeFilter === 'daily') setChartData(dailyData);
     }, [activeFilter]);
 
+    // Dynamic colors based on theme
+    const axisColor = colorMode === 'dark' ? '#A0AEC0' : '#718096';
+    const gridColor = colorMode === 'dark' ? '#4A5568' : '#E2E8F0';
+    const dotFill = colorMode === 'dark' ? '#2D3748' : 'white';
+
     return (
-        <StyledChart>
+        <StyledChart data-theme={colorMode}>
             <div className="chart-header">
                 <h3>Tasks Completed - 2025</h3>
                 <div className="filters">
@@ -61,12 +68,12 @@ function TasksChart() {
                                 <stop offset="95%" stopColor="#FE7743" stopOpacity={0}/>
                             </linearGradient>
                         </defs>
-                        <XAxis dataKey="name" stroke="#A0AEC0" fontSize={12} />
-                        <YAxis stroke="#A0AEC0" fontSize={12} tickFormatter={(value) => `${value}%`} />
-                        <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                        <XAxis dataKey="name" stroke={axisColor} fontSize={12} />
+                        <YAxis stroke={axisColor} fontSize={12} tickFormatter={(value) => `${value}%`} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                         <Tooltip
                             content={<CustomTooltip />} 
-                            cursor={{fill: 'rgba(240, 240, 240, 0.5)'}}
+                            cursor={{fill: colorMode === 'dark' ? 'rgba(55, 65, 81, 0.5)' : 'rgba(240, 240, 240, 0.5)'}}
                         />
                         <Area 
                             type="monotone" 
@@ -74,7 +81,7 @@ function TasksChart() {
                             stroke="#FE7743"
                             strokeWidth={2}
                             fill="url(#chartGradient)"
-                            dot={{ stroke: '#FE7743', strokeWidth: 2, r: 4, fill: 'white' }}
+                            dot={{ stroke: '#FE7743', strokeWidth: 2, r: 4, fill: dotFill }}
                         />
                     </AreaChart>
                 </ResponsiveContainer>

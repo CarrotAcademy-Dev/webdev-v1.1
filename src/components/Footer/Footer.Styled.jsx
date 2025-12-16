@@ -3,20 +3,28 @@ import styled from "styled-components";
 const StyledFooter = styled.div`
     /* Small Screen */
     .container {
-        background-color: #FFFFFF;
-        color: #64748B;
+        background-color: var(--chakra-colors-light-bg-secondary);
+        color: var(--chakra-colors-light-text-muted);
         padding: 1rem;
         text-align: center;
     }
 
     .footer {
-        background-color: #ffffff;
+        background-color: transparent;
     }
 
     .footer__title {
-        background-color: #FFFFFF;
+        background-color: transparent;
         margin-bottom: 1rem;
         font-size: 1rem;
+        color: inherit;
+    }
+
+    &[data-theme='dark'] {
+        .container {
+            background-color: var(--chakra-colors-dark-bg-secondary);
+            color: var(--chakra-colors-dark-text-muted);
+        }
     }
 
     /* Medium screen */

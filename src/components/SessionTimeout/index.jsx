@@ -10,12 +10,14 @@ import {
     Button,
     Text,
     Box,
+    useColorModeValue,
 } from '@chakra-ui/react';
 
 export default function SessionTimeout() {
     const { currentUser, extendSession, logout, getSessionTimeRemaining } = useContext(AuthContext);
     const [showWarning, setShowWarning] = useState(false);
     const [remainingMinutes, setRemainingMinutes] = useState(0);
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
 
     useEffect(() => {
         if (!currentUser) return;
@@ -75,7 +77,7 @@ export default function SessionTimeout() {
                             Untuk melanjutkan pekerjaan, silakan perpanjang sesi. 
                             Atau logout jika sudah selesai.
                         </Text>
-                        <Text fontSize="sm" color="gray.600">
+                        <Text fontSize="sm" color={textColor}>
                             💡 Tips: Simpan pekerjaan Anda terlebih dahulu untuk menghindari kehilangan data.
                         </Text>
                     </Box>

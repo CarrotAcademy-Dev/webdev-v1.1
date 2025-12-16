@@ -3,12 +3,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProfilSiswa, submitProfilSiswa } from '@/features/cso/csoApiService';
 import { AuthContext } from '@/context/AuthContext';
 import { StyledProfilSiswa } from './ProfilSiswa.styled';
-import { Box, Flex, Input, Button, Text, Textarea, useToast } from '@chakra-ui/react';
+import { Box, Flex, Input, Button, Text, Textarea, useToast, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import Loading from '@/components/Loading';
 import { format } from 'date-fns';
 
 const ProfilSiswaPage = () => {
     const { currentUser } = useContext(AuthContext);
+    const { colorMode } = useColorMode();
+    
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    
     const [searchName, setSearchName] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
@@ -132,7 +137,7 @@ const ProfilSiswaPage = () => {
     };
 
     return (
-        <StyledProfilSiswa>
+        <StyledProfilSiswa data-theme={colorMode}>
             <h1 className="page-title">Profil Siswa</h1>
 
             {/* Search Section */}
@@ -166,7 +171,7 @@ const ProfilSiswaPage = () => {
 
             {/* Error State */}
             {error && (
-                <Box bg="white" p={8} borderRadius="12px" textAlign="center">
+                <Box bg={cardBg} p={8} borderRadius="12px" textAlign="center">
                     <Text color="red.500" fontSize="lg">
                         Error: {error.message}
                     </Text>
@@ -175,7 +180,7 @@ const ProfilSiswaPage = () => {
 
             {/* Empty State */}
             {!isLoading && !error && !studentData && searchQuery && (
-                <Box bg="white" p={8} borderRadius="12px" textAlign="center">
+                <Box bg={cardBg} p={8} borderRadius="12px" textAlign="center">
                     <Text color="gray.500" fontSize="lg">
                         Tidak ada data siswa ditemukan untuk "{searchQuery}"
                     </Text>
