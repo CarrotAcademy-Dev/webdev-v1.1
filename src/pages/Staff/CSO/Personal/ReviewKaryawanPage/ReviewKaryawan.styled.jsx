@@ -8,11 +8,11 @@ export const StyledReviewKaryawan = styled.div`
         font-size: 2rem;
         font-weight: 800;
         margin-bottom: 2rem;
-        color: #2D3748;
+        color: var(--chakra-colors-light-text-primary);
     }
 
     .form-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -21,10 +21,10 @@ export const StyledReviewKaryawan = styled.div`
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #2D3748;
+            color: var(--chakra-colors-light-text-primary);
             margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid #F7FAFC;
+            border-bottom: 2px solid var(--chakra-colors-light-bg-card);
         }
 
         .warning-text {
@@ -55,11 +55,11 @@ export const StyledReviewKaryawan = styled.div`
             label {
                 font-size: 0.875rem;
                 font-weight: 600;
-                color: #4A5568;
+                color: var(--chakra-colors-light-text-secondary);
             }
 
             .input-readonly {
-                background: #F7FAFC;
+                background: var(--chakra-colors-light-bg-card);
                 cursor: not-allowed;
             }
         }
@@ -67,13 +67,13 @@ export const StyledReviewKaryawan = styled.div`
         .criteria-section {
             margin-top: 2rem;
             padding: 1.5rem;
-            background: #F7FAFC;
+            background: var(--chakra-colors-light-bg-card);
             border-radius: 8px;
 
             .criteria-title {
                 font-size: 1rem;
                 font-weight: 600;
-                color: #2D3748;
+                color: var(--chakra-colors-light-text-primary);
                 margin-bottom: 1rem;
             }
 
@@ -88,13 +88,13 @@ export const StyledReviewKaryawan = styled.div`
                 align-items: center;
                 justify-content: space-between;
                 padding: 0.75rem;
-                background: white;
+                background: var(--chakra-colors-light-bg-secondary);
                 border-radius: 6px;
 
                 label {
                     font-size: 0.875rem;
                     font-weight: 500;
-                    color: #2D3748;
+                    color: var(--chakra-colors-light-text-primary);
                 }
 
                 .rating-group {
@@ -116,7 +116,7 @@ export const StyledReviewKaryawan = styled.div`
     }
 
     .history-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 2rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -124,10 +124,10 @@ export const StyledReviewKaryawan = styled.div`
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #2D3748;
+            color: var(--chakra-colors-light-text-primary);
             margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid #F7FAFC;
+            border-bottom: 2px solid var(--chakra-colors-light-bg-card);
         }
     }
 
@@ -141,6 +141,48 @@ export const StyledReviewKaryawan = styled.div`
         .form-section,
         .history-section {
             padding: 1rem;
+        }
+    }
+
+    &[data-theme='dark'] {
+        .page-title {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .form-section,
+        .history-section {
+            background: var(--chakra-colors-dark-bg-secondary);
+
+            .section-title {
+                color: var(--chakra-colors-dark-text-primary);
+                border-bottom-color: var(--chakra-colors-dark-bg-card);
+            }
+        }
+
+        .form-group {
+            label {
+                color: var(--chakra-colors-dark-text-secondary);
+            }
+
+            .input-readonly {
+                background: var(--chakra-colors-dark-bg-card);
+            }
+        }
+
+        .criteria-section {
+            background: var(--chakra-colors-dark-bg-card);
+
+            .criteria-title {
+                color: var(--chakra-colors-dark-text-primary);
+            }
+
+            .criteria-item {
+                background: var(--chakra-colors-dark-bg-secondary);
+
+                label {
+                    color: var(--chakra-colors-dark-text-primary);
+                }
+            }
         }
     }
 `;

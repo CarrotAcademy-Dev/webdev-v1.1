@@ -2,7 +2,7 @@ import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import { LuTruck, LuPackage } from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
-import { Button, Select, useToast } from "@chakra-ui/react";
+import { Button, Select, useColorMode, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getMerchandiseData, postDataKirimMerch, getJenisMerchandise } from "@/features/cso/csoApiService";
 import StyledDaftarKirimMerchPage from "./DaftarKirimMerchPage.Styled";
@@ -15,6 +15,7 @@ const tabItems = [
 ];
 
 function DaftarKirimMerchPage() {
+    const { colorMode } = useColorMode();
     const queryClient = useQueryClient();
     const toast = useToast();
 
@@ -160,7 +161,7 @@ function DaftarKirimMerchPage() {
     if (isError) return <div>Error: {error.message}</div>;
 
     return (
-        <StyledDaftarKirimMerchPage>
+        <StyledDaftarKirimMerchPage data-theme={colorMode}>
             <ContainerCarrot>
                 <div className="hero-section">
                     <div className="hero-section__left">

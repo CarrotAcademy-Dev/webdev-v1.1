@@ -1,13 +1,22 @@
 import { useState, useMemo, memo } from 'react';
 import {
     Table, Thead, Tbody, Tr, Th, Td, TableContainer, Checkbox,
-    Flex, IconButton, Text, Input, InputGroup, InputLeftElement, Box, Select
+    Flex, IconButton, Text, Input, InputGroup, InputLeftElement, Box, Select, useColorModeValue
 } from '@chakra-ui/react';
 import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
+    const borderColor = useColorModeValue('gray.200', 'gray.600');
+    const scrollbarBg = useColorModeValue('#f7fafc', '#2D3748');
+    const scrollbarThumb = useColorModeValue('#cbd5e0', '#4A5568');
+    const scrollbarThumbHover = useColorModeValue('#a0aec0', '#718096');
+    const theadBg = useColorModeValue('orange.50', 'orange.900');
+    const theadHoverBg = useColorModeValue('orange.100', 'orange.800');
+    const textMuted = useColorModeValue('gray.600', 'gray.400');
+    const noDataColor = useColorModeValue('gray.500', 'gray.400');
+    
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
@@ -115,7 +124,7 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                         borderRadius="md"
                     />
                 </InputGroup>
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color={textMuted}>
                     {sortedData.length} results
                 </Text>
             </Flex>
@@ -125,27 +134,27 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                 overflowX="auto" 
                 maxW="100%"
                 border="1px solid"
-                borderColor="gray.200"
+                borderColor={borderColor}
                 borderRadius="md"
                 sx={{
                     '&::-webkit-scrollbar': {
                         height: '8px',
                     },
                     '&::-webkit-scrollbar-track': {
-                        background: '#f7fafc',
+                        background: scrollbarBg,
                         borderRadius: '4px',
                     },
                     '&::-webkit-scrollbar-thumb': {
-                        background: '#cbd5e0',
+                        background: scrollbarThumb,
                         borderRadius: '4px',
                     },
                     '&::-webkit-scrollbar-thumb:hover': {
-                        background: '#a0aec0',
+                        background: scrollbarThumbHover,
                     },
                 }}
             >
                 <Table variant="simple">
-                    <Thead bg="orange.50">
+                    <Thead bg={theadBg}>
                         <Tr>
                             {headerItems.map((headerName) => (
                                 <Th 
@@ -153,7 +162,7 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                                     cursor="pointer"
                                     onClick={() => handleSort(headerName.key)}
                                     userSelect="none"
-                                    _hover={{ bg: 'orange.100' }}
+                                    _hover={{ bg: theadHoverBg }}
                                     position="relative"
                                 >
                                     <Flex alignItems="center" gap={1}>
@@ -183,7 +192,7 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                         ) : currentItems.length === 0 ? (
                             <Tr>
                                 <Td colSpan={headerItems.length} textAlign="center">
-                                    <Text color="gray.500" py={4}>No data available</Text>
+                                    <Text color={noDataColor} py={4}>No data available</Text>
                                 </Td>
                             </Tr>
                         ) : (
@@ -221,7 +230,7 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
             
             {/* Pagination - Fixed, tidak ikut scroll */}
             <Flex justifyContent="space-between" alignItems="center" mt={4} flexWrap="wrap" gap={3}>
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color={textMuted}>
                     Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, sortedData.length)} of {sortedData.length} entries
                 </Text>
                 <Flex alignItems="center" gap={2}>

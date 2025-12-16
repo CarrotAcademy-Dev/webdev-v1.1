@@ -2,7 +2,7 @@ import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
-import { Checkbox, useToast } from "@chakra-ui/react";
+import { Checkbox, useToast, useColorModeValue } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getTicketExternal, postTicketExternal } from "@/features/cso/csoApiService";
 import { StyledTicketExternalPage } from "./TicketExternal.styled";
@@ -15,6 +15,11 @@ const tabItems = [
 ];
 
 function TicketExternalPage() {
+    const checkboxBg = useColorModeValue('white', 'gray.700');
+    const checkboxBorderColor = useColorModeValue('orange.200', 'orange.400');
+    const checkboxCheckedBg = useColorModeValue('#f9dbcfff', 'orange.700');
+    const checkboxCheckedHover = useColorModeValue('#FE7743', 'orange.600');
+    
     const queryClient = useQueryClient();
     const toast = useToast();
 
@@ -131,16 +136,16 @@ function TicketExternalPage() {
                     onChange={() => handleActionDone(item)}
                     colorScheme="orange"
                     sx={{
-                        borderColor: 'orange.200', 
-                        bg: 'white',
+                        borderColor: checkboxBorderColor, 
+                        bg: checkboxBg,
                         '.chakra-checkbox__control': {
                             '&[data-checked]': {
-                                bg: '#f9dbcfff',
-                                borderColor: '#f9dbcfff',
+                                bg: checkboxCheckedBg,
+                                borderColor: checkboxCheckedBg,
                             },
                             '&[data-checked]:hover': {
-                                bg: '#FE7743',
-                                borderColor: '#FE7743',
+                                bg: checkboxCheckedHover,
+                                borderColor: checkboxCheckedHover,
                             }
                         }
                     }}

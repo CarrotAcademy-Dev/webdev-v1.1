@@ -18,7 +18,7 @@ export const StyledFDStudentIdentityPage = styled.div`
     }
 
     .table-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -27,14 +27,14 @@ export const StyledFDStudentIdentityPage = styled.div`
     .table-container {
         overflow-x: auto;
         border-radius: 8px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--chakra-colors-light-border);
         
         &::-webkit-scrollbar {
             height: 8px;
         }
 
         &::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: var(--chakra-colors-light-bg-card);
             border-radius: 4px;
         }
 
@@ -63,7 +63,7 @@ export const StyledFDStudentIdentityPage = styled.div`
             cursor: pointer;
 
             &:hover {
-                background-color: #f8fafeff;
+                background-color: rgba(254, 119, 67, 0.05);
             }
         }
 
@@ -75,6 +75,24 @@ export const StyledFDStudentIdentityPage = styled.div`
         th {
             font-weight: 600;
             white-space: nowrap;
+        }
+    }
+
+    &[data-theme='dark'] {
+        .table-section {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .table-container {
+            border-color: var(--chakra-colors-dark-border);
+
+            &::-webkit-scrollbar-track {
+                background: var(--chakra-colors-dark-bg-card);
+            }
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(254, 119, 67, 0.1);
         }
     }
 `;

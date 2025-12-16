@@ -18,7 +18,7 @@ export const StyledTrackTicketFme = styled.div`
     }
 
     .table-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -63,7 +63,7 @@ export const StyledTrackTicketFme = styled.div`
             cursor: pointer;
 
             &:hover {
-                background-color: #f8fafeff;
+                background-color: var(--chakra-colors-light-bg-card);
             }
         }
 
@@ -75,6 +75,24 @@ export const StyledTrackTicketFme = styled.div`
         th {
             font-weight: 600;
             white-space: nowrap;
+        }
+    }
+
+    &[data-theme='dark'] {
+        .table-section {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .table-container {
+            border-color: var(--chakra-colors-dark-border);
+
+            &::-webkit-scrollbar-track {
+                background: var(--chakra-colors-dark-bg-card);
+            }
+        }
+
+        .data-table tbody tr:hover {
+            background-color: var(--chakra-colors-dark-bg-card);
         }
     }
 `;

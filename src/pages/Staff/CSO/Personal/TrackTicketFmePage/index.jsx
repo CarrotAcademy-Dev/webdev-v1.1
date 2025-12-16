@@ -1,15 +1,23 @@
 import { useState, useMemo } from 'react';
-import { Box, Flex, Text, Grid, GridItem, IconButton, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { Box, Flex, Text, Grid, GridItem, IconButton, Input, InputGroup, InputLeftElement, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
 import ContainerCarrot from '@/components/Container';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { FiClock, FiAlertCircle, FiTag, FiChevronLeft, FiChevronRight, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
+import { FiClock, FiAlertCircle, FiChevronLeft, FiChevronRight, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
 import { getTrackTicketFme } from '@/features/cso/csoApiService';
 import { StyledTrackTicketFme } from './TrackTicketFme.styled';
 
 function TrackTicketFmePage() {
+    const { colorMode } = useColorMode();
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
+    const tableHeaderBg = useColorModeValue('#fcf7ecff', '#2C3748');
+    const tableHeaderHoverBg = useColorModeValue('#f5efdcff', '#3A4556');
+    const tableHeaderColor = useColorModeValue('#3b3b43ff', 'dark.text.primary');
+    
     //Pagiation
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
@@ -162,13 +170,13 @@ function TrackTicketFmePage() {
             <Box 
                 as="th" 
                 p={3} 
-                bg="#fcf7ecff" 
-                color="#3b3b43ff" 
+                bg={tableHeaderBg} 
+                color={tableHeaderColor} 
                 textAlign="left"
                 cursor={isSortable ? "pointer" : "default"}
                 userSelect="none"
                 onClick={isSortable ? () => handleSort(sortKey) : undefined}
-                _hover={isSortable ? { bg: "#f5efdcff" } : undefined}
+                _hover={isSortable ? { bg: tableHeaderHoverBg } : undefined}
                 transition="background 0.2s"
                 {...props}
             >
@@ -216,7 +224,7 @@ function TrackTicketFmePage() {
 
     return (
         <ContainerCarrot>
-            <StyledTrackTicketFme>
+            <StyledTrackTicketFme data-theme={colorMode}>
                 <Box className="page-header">
                     <Flex justify="space-between" align="center" mb={6}>
                         <Text fontSize="2xl" fontWeight="bold">
@@ -227,13 +235,13 @@ function TrackTicketFmePage() {
                     {/* Overview Cards */}
                     <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }} gap={4} mb={6}>
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiClock size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Total Tickets</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Total Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -247,13 +255,13 @@ function TrackTicketFmePage() {
                         </GridItem>
 
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiClock size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Open Tickets</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Open Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -269,13 +277,13 @@ function TrackTicketFmePage() {
                         </GridItem>
 
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#28a745" p={2} borderRadius="md">
                                         <FiAlertCircle size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Close Tickets</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Close Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -317,7 +325,7 @@ function TrackTicketFmePage() {
                                     setCurrentPage(1); // Reset ke page 1 saat search
                                 }}
                                 borderRadius="md"
-                                bg="white"
+                                bg={cardBg}
                             />
                         </InputGroup>
                         {searchQuery && (

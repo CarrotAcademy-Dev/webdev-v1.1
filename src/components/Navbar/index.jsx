@@ -1,9 +1,10 @@
 import Logo from "../../assets/images/logo1.svg?react";
 import StyledNavbar from "./Navbar.Styled";
-import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack, Text, Tooltip, Badge } from "@chakra-ui/react"
+import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack, Text, Tooltip, Badge, HStack } from "@chakra-ui/react"
 import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu, FiShield, FiClock } from "react-icons/fi";
 import { PiSuitcaseBold } from "react-icons/pi";
 import NavbarMenu from "../Menu";
+import ThemeToggle from "../ThemeToggle";
 import { useLocation } from "react-router-dom";
 import { useContext, useMemo, useState, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
@@ -205,23 +206,31 @@ function Navbar() {
                   </li>
                 )
               })}
+              
+              {/* Theme Toggle in Desktop */}
+              <li className="navbar__item">
+                <ThemeToggle />
+              </li>
             </ul>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile Hamburger + Theme Toggle */}
           <div className="navbar__mobile">
-            <IconButton
-              icon={<FiMenu />}
-              onClick={onOpen}
-              variant="ghost"
-              colorScheme="gray"
-              fontSize="24px"
-              aria-label="Open menu"
-              _hover={{
-                color: '#FE7743',
-                backgroundColor: 'gray.100'
-              }}
-            />
+            <HStack spacing={2}>
+              <ThemeToggle size="md" />
+              <IconButton
+                icon={<FiMenu />}
+                onClick={onOpen}
+                variant="ghost"
+                colorScheme="gray"
+                fontSize="24px"
+                aria-label="Open menu"
+                _hover={{
+                  color: '#FE7743',
+                  backgroundColor: 'gray.100'
+                }}
+              />
+            </HStack>
           </div>
         </nav>
 

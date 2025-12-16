@@ -8,7 +8,7 @@ export const StyledCreateTicketing = styled.div`
     }
 
     .main-content-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -40,7 +40,7 @@ export const StyledCreateTicketing = styled.div`
 
         label {
             font-weight: 600;
-            color: #3b3b43;
+            color: var(--chakra-colors-light-text-primary);
             font-size: 0.875rem;
 
             .required {
@@ -55,6 +55,8 @@ export const StyledCreateTicketing = styled.div`
             border-radius: 8px;
             font-size: 0.875rem;
             transition: all 0.2s;
+            background: var(--chakra-colors-light-bg-secondary);
+            color: var(--chakra-colors-light-text-primary);
 
             &:focus {
                 outline: none;
@@ -63,7 +65,7 @@ export const StyledCreateTicketing = styled.div`
             }
 
             &:disabled {
-                background-color: #f7fafc;
+                background-color: var(--chakra-colors-light-bg-card);
                 cursor: not-allowed;
             }
         }
@@ -76,7 +78,7 @@ export const StyledCreateTicketing = styled.div`
 
         .helper-text {
             font-size: 0.75rem;
-            color: #718096;
+            color: var(--chakra-colors-light-text-muted);
             margin-top: 0.25rem;
         }
         
@@ -95,7 +97,7 @@ export const StyledCreateTicketing = styled.div`
         align-items: center;
         gap: 0.5rem;
         padding: 1rem;
-        background: #f7fafc;
+        background: var(--chakra-colors-light-bg-card);
         border-radius: 8px;
 
         input[type="checkbox"] {
@@ -146,12 +148,56 @@ export const StyledCreateTicketing = styled.div`
         }
 
         &.btn-secondary {
-            background: white;
-            color: #3b3b43;
+            background: var(--chakra-colors-light-bg-secondary);
+            color: var(--chakra-colors-light-text-primary);
             border: 1px solid #e2e8f0;
 
             &:hover {
-                background: #f7fafc;
+                background: var(--chakra-colors-light-bg-card);
+            }
+        }
+    }
+
+    &[data-theme='dark'] {
+        .main-content-section {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .form-group {
+            label {
+                color: var(--chakra-colors-dark-text-primary);
+            }
+
+            input, select, textarea {
+                background: var(--chakra-colors-dark-bg-card);
+                color: var(--chakra-colors-dark-text-primary);
+                border-color: var(--chakra-colors-dark-border);
+
+                &:disabled {
+                    background-color: var(--chakra-colors-dark-bg-card);
+                }
+            }
+
+            .helper-text {
+                color: var(--chakra-colors-dark-text-muted);
+            }
+        }
+
+        .checkbox-group {
+            background: var(--chakra-colors-dark-bg-card);
+        }
+
+        .form-actions {
+            border-top-color: var(--chakra-colors-dark-border);
+        }
+
+        .btn-secondary {
+            background: var(--chakra-colors-dark-bg-card);
+            color: var(--chakra-colors-dark-text-primary);
+            border-color: var(--chakra-colors-dark-border);
+
+            &:hover {
+                background: var(--chakra-colors-dark-bg-secondary);
             }
         }
     }

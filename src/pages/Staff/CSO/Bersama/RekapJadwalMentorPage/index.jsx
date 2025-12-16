@@ -7,8 +7,10 @@ import { LuUsers, LuClock, LuCalendar } from "react-icons/lu";
 import React from "react";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useColorMode } from '@chakra-ui/react';
 
 function RekapJadwalMentorPage() {
+    const { colorMode } = useColorMode();
     const { data = [], isLoading, isError, error } = useQuery({
         queryKey: ['rekapJadwalMentor'],
         queryFn: getRekapJadwalMentor,
@@ -59,7 +61,7 @@ function RekapJadwalMentorPage() {
     const isSummaryRow = (hari) => ['Total', 'Monthly', 'Hari Kosong'].includes(hari);
 
     return (
-        <StyledRekapJadwalMentorPage>
+        <StyledRekapJadwalMentorPage data-theme={colorMode}>
             <ContainerCarrot>
                 <div className="hero-section">
                     <div className="hero-section__left">

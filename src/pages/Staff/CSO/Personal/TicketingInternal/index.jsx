@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, Flex, Text, Grid, GridItem, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { Box, Flex, Text, Grid, GridItem, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getTicketingInternal, postCeklisTicketingInternal } from '@/features/cso/csoApiService';
 import useDebounce from '@/hooks/useDebounce';
@@ -13,6 +13,14 @@ function TicketingInternal() {
     const queryClient = useQueryClient();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { colorMode } = useColorMode();
+
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
+    const tableHeaderBg = useColorModeValue('#fcf7ecff', '#2C3748');
+    const tableHeaderHoverBg = useColorModeValue('#f5efdcff', '#3A4556');
+    const tableHeaderColor = useColorModeValue('#3b3b43ff', 'dark.text.primary');
 
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [formData, setFormData] = useState({
@@ -247,13 +255,13 @@ function TicketingInternal() {
             <Box 
                 as="th" 
                 p={3} 
-                bg="#fcf7ecff" 
-                color="#3b3b43ff" 
+                bg={tableHeaderBg} 
+                color={tableHeaderColor} 
                 textAlign="left"
                 cursor={isSortable ? "pointer" : "default"}
                 userSelect="none"
                 onClick={isSortable ? () => handleSort(sortKey) : undefined}
-                _hover={isSortable ? { bg: "#f5efdcff" } : undefined}
+                _hover={isSortable ? { bg: tableHeaderHoverBg } : undefined}
                 transition="background 0.2s"
                 {...props}
             >
@@ -301,7 +309,7 @@ function TicketingInternal() {
 
     return (
         <ContainerCarrot>
-            <StyledTicketingInternal>
+            <StyledTicketingInternal data-theme={colorMode}>
                 <Box className="page-header">
                     <Flex justify="space-between" align="center" mb={6}>
                         <Text fontSize="2xl" fontWeight="bold">
@@ -312,13 +320,13 @@ function TicketingInternal() {
                     {/* Overview Cards */}
                     <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }} gap={4} mb={6}>
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiClock size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Total Open Tickets</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Total Open Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -332,13 +340,13 @@ function TicketingInternal() {
                         </GridItem>
 
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiAlertCircle size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">High Priority</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">High Priority</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -354,13 +362,13 @@ function TicketingInternal() {
                         </GridItem>
 
                         <GridItem>
-                            <Box className="overview-card" bg="white" p={4} borderRadius="lg" boxShadow="md">
+                            <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
                                         <FiTag size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color="gray.600" mb={1} fontWeight="bold">Lost & Found</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Lost & Found</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -402,7 +410,7 @@ function TicketingInternal() {
                                     setCurrentPage(1); // Reset ke page 1 saat search
                                 }}
                                 borderRadius="md"
-                                bg="white"
+                                bg={cardBg}
                             />
                         </InputGroup>
                         {searchQuery && (

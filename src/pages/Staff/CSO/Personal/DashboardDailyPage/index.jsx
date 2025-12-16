@@ -1,7 +1,7 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import SistemTabs from "@/components/SistemTabs";
-import { Input, Flex, Text, Checkbox, useToast, Select } from "@chakra-ui/react";
+import { Flex, Checkbox, useToast, Select, useColorModeValue } from "@chakra-ui/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
     getDashboardDailySiswaBaru,
@@ -22,6 +22,10 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 function DashboardDailyPage() {
     const currentDate = new Date();
+
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
 
     // Format bulan tahun untuk birthday (mmm yyyy)
     const formatMonthYear = (date) => {
@@ -470,7 +474,7 @@ function DashboardDailyPage() {
                                 value={selectedMonthYear}
                                 onChange={handleMonthYearChange}
                                 maxW="200px"
-                                bg="white"
+                                bg={cardBg}
                                 borderColor="gray.300"
                             >
                                 {Array.from({ length: 12 }, (_, i) => {

@@ -8,6 +8,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { useColorMode } from '@chakra-ui/react';
 import { StyledStatisticsBarChart } from './StatisticsBarChart.styled';
 
 ChartJS.register(
@@ -20,6 +21,9 @@ ChartJS.register(
 );
 
 function StatisticsBarChart({ data, title, categories }) {
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
+    
     const formatLabel = (label) => {
         const shortMonths = {
             'Januari': 'Jan',
@@ -54,25 +58,27 @@ function StatisticsBarChart({ data, title, categories }) {
                     padding: 20,
                     font: {
                         size: 12
-                    }
+                    },
+                    color: isDark ? '#E2E8F0' : '#4A5568'
                 }
             },
             title: {
                 display: true,
                 text: title,
                 font: {
-                    size: 16,
+                    size: 18,
                     weight: 'bold'
                 },
                 padding: {
                     bottom: 30
-                }
+                },
+                color: isDark ? '#F7FAFC' : '#2D3748'
             },
             tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.69)',
-                titleColor: '#2D3748',
-                bodyColor: '#4A5568',
-                borderColor: '#E2E8F0',
+                backgroundColor: isDark ? 'rgba(45, 55, 72, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                titleColor: isDark ? '#F7FAFC' : '#2D3748',
+                bodyColor: isDark ? '#E2E8F0' : '#4A5568',
+                borderColor: isDark ? '#4A5568' : '#E2E8F0',
                 borderWidth: 1,
                 padding: 12,
                 cornerRadius: 8,
@@ -98,19 +104,23 @@ function StatisticsBarChart({ data, title, categories }) {
                         size: 12
                     },
                     maxRotation: 0,
-                    minRotation: 0
+                    minRotation: 0,
+                    color: isDark ? '#E2E8F0' : '#4A5568'
                 }
             },
             y: {
                 beginAtZero: true,
                 grid: {
-                    color: '#E2E8F0',
+                    color: isDark 
+                        ? '#4A5568' 
+                        : '#E2E8F0',
                     drawBorder: false
                 },
                 ticks: {
                     font: {
                         size: 12
-                    }
+                    },
+                    color: isDark ? '#E2E8F0' : '#4A5568'
                 }
             }
         },
@@ -146,7 +156,7 @@ function StatisticsBarChart({ data, title, categories }) {
     };
 
     return (
-        <StyledStatisticsBarChart>
+        <StyledStatisticsBarChart data-theme={colorMode}>
             <div className="chart-container">
                 <Bar options={options} data={chartData} />
             </div>

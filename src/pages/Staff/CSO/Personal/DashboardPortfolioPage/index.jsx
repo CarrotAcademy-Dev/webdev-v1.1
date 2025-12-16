@@ -2,7 +2,7 @@ import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import SistemTabs from "@/components/SistemTabs";
 import DataTableComponent from "@/components/Table";
-import { Input, Flex, Text, useToast, Button, Box } from "@chakra-ui/react";
+import { Input, Flex, Text, useToast, Button, Box, useColorModeValue } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { 
     getDataPortfolio,
@@ -15,6 +15,10 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 function DashboardPortfolioPage() {
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
+    
     const [searchName, setSearchName] = useState('');
     const toast = useToast();
 
@@ -221,7 +225,7 @@ function DashboardPortfolioPage() {
             {/* Search Section - Separate Container */}
             <div className="main-content-section" style={{ marginTop: '2rem' }}>
                 <ContainerCarrot>
-                    <Box bg="white" borderRadius="12px" p={6} boxShadow="0 2px 8px rgba(0, 0, 0, 0.05)">
+                    <Box bg={cardBg} borderRadius="12px" p={6} boxShadow="0 2px 8px rgba(0, 0, 0, 0.05)">
                         <Text fontSize="xl" fontWeight="bold" mb={4} color="#2D3748">
                             Cari Portfolio Per Nama
                         </Text>
@@ -233,7 +237,7 @@ function DashboardPortfolioPage() {
                                 value={searchName}
                                 onChange={(e) => setSearchName(e.target.value)}
                                 maxW="400px"
-                                bg="white"
+                                bg={cardBg}
                                 borderColor="gray.300"
                                 onKeyPress={(e) => {
                                     if (e.key === 'Enter') {

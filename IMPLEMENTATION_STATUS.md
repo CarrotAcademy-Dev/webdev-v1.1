@@ -203,6 +203,43 @@
 
 ---
 
+### 16. **Theme System (Dark/Light Mode)** ✅ NEW (Dec 2025)
+**Files**:
+- `src/components/ui/provider.jsx` - Extended theme configuration
+- `src/components/ThemeToggle/index.jsx` - Toggle button component
+- `src/hooks/useTheme.js` - Theme management hook
+
+**Features**:
+- ✅ Dark & Light mode toggle
+- ✅ Custom color palette (brand orange + theme-specific colors)
+- ✅ Smooth transitions (0.2s ease-in-out)
+- ✅ localStorage persistence (auto-save preference)
+- ✅ Component style overrides (Button, Card, Modal, Input, Table)
+- ✅ Scrollbar theming
+- ✅ Theme-aware styled components
+
+**Color Palette**:
+- **Brand Orange**: 9 shades (#FFF5F0 to #992F1F)
+- **Dark Mode**: Custom bg (#1A202C), text (#F7FAFC), border (#4A5568)
+- **Light Mode**: Warm beige (#EFEEEA), text (#1A202C), border (#E2E8F0)
+
+**Integration Locations**:
+- ✅ Navbar (desktop: right side, mobile: next to menu)
+- ✅ All Chakra UI components automatically themed
+- ✅ Styled components via CSS variables
+
+**Manfaat**:
+- Reduced eye strain dengan dark mode
+- Professional warm look dengan light mode
+- Better UX dengan smooth transitions
+- Automatic theme persistence
+- WCAG AA contrast compliance
+- Mengurangi "sakit mata" dari warna orange yang gonjreng 😄
+
+**Dokumentasi**: Complete guide in `THEME_GUIDE.md`
+
+---
+
 ## Utilities yang Sudah Dibuat Tapi Belum Dipakai
 
 ### 6. **Validation Utility** PARTIALLY IMPLEMENTED

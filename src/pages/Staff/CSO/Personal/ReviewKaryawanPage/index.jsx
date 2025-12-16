@@ -10,7 +10,9 @@ import {
     Textarea,
     Radio,
     RadioGroup,
-    Stack
+    Stack,
+    useColorModeValue,
+    useColorMode
 } from "@chakra-ui/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
@@ -33,6 +35,11 @@ function ReviewKaryawanPage() {
     const { user } = useContext(AuthContext);
     const toast = useToast();
     const queryClient = useQueryClient();
+    const { colorMode } = useColorMode();
+
+    // Theme colors
+    const cardBg = useColorModeValue('white', 'dark.bg.card');
+    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
 
     const [selectedKaryawan, setSelectedKaryawan] = useState('');
     const [karyawanData, setKaryawanData] = useState(null);
@@ -204,7 +211,7 @@ function ReviewKaryawanPage() {
     ];
 
     return (
-        <StyledReviewKaryawan>
+        <StyledReviewKaryawan data-theme={colorMode}>
             <ContainerCarrot>
                 <h1 className="page-title">📋 Penilaian Karyawan</h1>
 
@@ -224,7 +231,7 @@ function ReviewKaryawanPage() {
                             placeholder="Pilih Karyawan"
                             value={selectedKaryawan}
                             onChange={handleKaryawanChange}
-                            bg="white"
+                            bg={cardBg}
                         >
                             {KARYAWAN_LIST.map(karyawan => (
                                 <option key={karyawan.id} value={karyawan.nama}>
@@ -305,7 +312,7 @@ function ReviewKaryawanPage() {
                                         value={formData.review}
                                         onChange={(e) => setFormData(prev => ({ ...prev, review: e.target.value }))}
                                         rows={4}
-                                        bg="white"
+                                        bg={cardBg}
                                     />
                                 </div>
                             </div>

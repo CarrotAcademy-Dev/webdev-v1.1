@@ -29,7 +29,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
             font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: 2.5rem;
-            color: #2D3748;
+            color: var(--chakra-colors-light-text-primary);
             text-align: center;
         }
 
@@ -49,7 +49,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
         border: 2px solid #f97316;
         padding: 1.5rem;
         border-radius: 12px;
-        color: #2D3748;
+        color: var(--chakra-colors-light-text-primary);
         text-align: center;
         transition: transform 0.2s;
 
@@ -74,7 +74,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
     }
 
     .chart-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -84,7 +84,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
         font-size: 1.25rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
-        color: #2D3748;
+        color: var(--chakra-colors-light-text-primary);
         text-align: center;
         border-bottom: 3px solid #a6abb0ff;
         padding-bottom: 0.5rem;
@@ -92,7 +92,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
 
     .chart-container {
         padding: 1rem;
-        background: #f9fafb;
+        background: var(--chakra-colors-light-bg-card);
         border-radius: 8px;
     }
 
@@ -112,12 +112,12 @@ export const StyledDashboardSiswaAktifPage = styled.div`
         min-width: 120px;
         font-weight: 600;
         font-size: 0.875rem;
-        color: #4b5563;
+        color: var(--chakra-colors-light-text-secondary);
     }
 
     .bar-wrapper {
         flex: 1;
-        background: #e5e7eb;
+        background: var(--chakra-colors-light-border);
         border-radius: 8px;
         height: 32px;
         position: relative;
@@ -143,7 +143,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
     }
 
     .table-section {
-        background: white;
+        background: var(--chakra-colors-light-bg-secondary);
         padding: 1.5rem;
         border-radius: 12px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -174,7 +174,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
         width: 100%;
         max-width: 100%;
         -webkit-overflow-scrolling: touch;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--chakra-colors-light-border);
         border-radius: 8px;
 
         &::-webkit-scrollbar {
@@ -182,7 +182,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
         }
 
         &::-webkit-scrollbar-track {
-            background: #f7fafc;
+            background: var(--chakra-colors-light-bg-card);
             border-radius: 4px;
         }
 
@@ -200,11 +200,11 @@ export const StyledDashboardSiswaAktifPage = styled.div`
             min-width: 100%;
             border-collapse: collapse;
             font-size: 0.875rem;
-            background: white;
+            background: var(--chakra-colors-light-bg-secondary);
             table-layout: auto;
 
             thead {
-                background: #FFFAF0; /* orange.50 */
+                background: #FFFAF0;
                 position: sticky;
                 top: 0;
                 z-index: 10;
@@ -213,8 +213,8 @@ export const StyledDashboardSiswaAktifPage = styled.div`
                     padding: 0.75rem 1rem;
                     text-align: left;
                     font-weight: 600;
-                    color: #2D3748;
-                    border-bottom: 1px solid #e2e8f0;
+                    color: var(--chakra-colors-light-text-primary);
+                    border-bottom: 1px solid var(--chakra-colors-light-border);
                     white-space: nowrap;
                     font-size: 0.75rem;
                     text-transform: uppercase;
@@ -225,7 +225,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
                         user-select: none;
                         
                         &:hover {
-                            background: #FEEBC8; /* orange.100 */
+                            background: #FEEBC8;
                         }
                     }
                 }
@@ -234,10 +234,10 @@ export const StyledDashboardSiswaAktifPage = styled.div`
             tbody {
                 tr {
                     transition: background-color 0.15s;
-                    border-bottom: 1px solid #e2e8f0;
+                    border-bottom: 1px solid var(--chakra-colors-light-border);
 
                     &:hover {
-                        background: #f7fafc;
+                        background: var(--chakra-colors-light-bg-hover);
                     }
 
                     &.total-row {
@@ -259,11 +259,11 @@ export const StyledDashboardSiswaAktifPage = styled.div`
                         padding: 0.75rem 1rem;
                         text-align: left;
                         font-size: 0.875rem;
-                        color: #4A5568;
+                        color: var(--chakra-colors-light-text-secondary);
                         white-space: nowrap;
 
                         strong {
-                            color: #2D3748;
+                            color: var(--chakra-colors-light-text-primary);
                             font-weight: 700;
                         }
                     }
@@ -276,7 +276,7 @@ export const StyledDashboardSiswaAktifPage = styled.div`
         margin-top: 1rem;
         width: 100%;
         position: relative;
-        background: white;
+        background: transparent;
     }
 
     .status-badge {
@@ -342,6 +342,102 @@ export const StyledDashboardSiswaAktifPage = styled.div`
 
         .chart-section {
             padding: 1rem;
+        }
+    }
+
+    &[data-theme='dark'] {
+        .hero-section {
+            .page-title {
+                color: var(--chakra-colors-dark-text-primary);
+            }
+        }
+
+        .summary-card {
+            color: var(--chakra-colors-dark-text-primary);
+        }
+
+        .chart-section {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .section-title {
+            color: var(--chakra-colors-dark-text-primary);
+            border-bottom-color: #4A5568;
+        }
+
+        .chart-container {
+            background: var(--chakra-colors-dark-bg-card);
+        }
+
+        .bar-label {
+            color: var(--chakra-colors-dark-text-secondary);
+        }
+
+        .bar-wrapper {
+            background: var(--chakra-colors-dark-border);
+        }
+
+        .table-section {
+            background: var(--chakra-colors-dark-bg-secondary);
+        }
+
+        .table-container {
+            border-color: var(--chakra-colors-dark-border);
+
+            &::-webkit-scrollbar-track {
+                background: var(--chakra-colors-dark-bg-card);
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #4A5568;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: #718096;
+            }
+
+            table {
+                background: var(--chakra-colors-dark-bg-secondary);
+
+                thead {
+                    background: #744210;
+
+                    th {
+                        color: var(--chakra-colors-dark-text-primary);
+                        border-bottom-color: var(--chakra-colors-dark-border);
+
+                        &[style*="cursor: pointer"]:hover {
+                            background: #8B5000;
+                        }
+                    }
+                }
+
+                tbody {
+                    tr {
+                        border-bottom-color: var(--chakra-colors-dark-border);
+
+                        &:hover {
+                            background: var(--chakra-colors-dark-bg-hover);
+                        }
+
+                        &.total-row {
+                            background: #744210;
+
+                            &:hover {
+                                background: #8B5000;
+                            }
+                        }
+
+                        td {
+                            color: var(--chakra-colors-dark-text-secondary);
+
+                            strong {
+                                color: var(--chakra-colors-dark-text-primary);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 `;
