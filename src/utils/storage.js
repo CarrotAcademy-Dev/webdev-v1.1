@@ -129,12 +129,12 @@ export const STORAGE_KEYS = {
  * Specialized functions untuk common operations
  */
 export const auth = {
-    // Set user dengan expiry 8 jam (480 menit)
-    setUser: (user, expiryInMinutes = 480) => setItem(STORAGE_KEYS.USER, user, expiryInMinutes),
+    // Set user dengan expiry 9 jam (540 menit)
+    setUser: (user, expiryInMinutes = 540) => setItem(STORAGE_KEYS.USER, user, expiryInMinutes),
     getUser: () => getItem(STORAGE_KEYS.USER),
     removeUser: () => removeItem(STORAGE_KEYS.USER),
     
-    setToken: (token, expiryInMinutes = 60) => setItem(STORAGE_KEYS.AUTH_TOKEN, token, expiryInMinutes),
+    setToken: (token, expiryInMinutes = 540) => setItem(STORAGE_KEYS.AUTH_TOKEN, token, expiryInMinutes),
     getToken: () => getItem(STORAGE_KEYS.AUTH_TOKEN),
     removeToken: () => removeItem(STORAGE_KEYS.AUTH_TOKEN),
     
@@ -170,7 +170,7 @@ export const auth = {
             if (!item) return 0;
             
             const data = JSON.parse(item);
-            if (!data.expiry) return Infinity; // No expiry set
+            if (!data.expiry) return 0; // No expiry = expired (force re-login)
             
             const timeLeft = data.expiry - Date.now();
             return Math.max(0, Math.floor(timeLeft / (60 * 1000)));
@@ -179,8 +179,8 @@ export const auth = {
         }
     },
     
-    // Extend token expiry (refresh session)
-    extendToken: (additionalMinutes = 1440) => {
+    // Extend token expiry (refresh session) - 4 jam
+    extendToken: (additionalMinutes = 240) => {
         const user = getItem(STORAGE_KEYS.USER);
         if (user) {
             setItem(STORAGE_KEYS.USER, user, additionalMinutes);

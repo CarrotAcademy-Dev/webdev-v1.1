@@ -7,27 +7,14 @@ import {
   useDisclosure,
   Text,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { memo, useState } from "react";
 import { prefetchRoute } from "@/utils/prefetch";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
 function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
-  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [subMenuCategory, setSubMenuCategory] = useState(null);
-
-  const handleMenuClick = (path) => {
-    // Close menu first, then navigate after a short delay
-    onClose();
-    setSubMenuCategory(null); // Reset submenu
-    if (onMenuItemClick) onMenuItemClick();
-    
-    // Small delay to ensure menu closes before navigation
-    setTimeout(() => {
-      navigate(path);
-    }, 0);
-  };
 
   const handleLogoutClick = (onClickFn) => {
     onClose();
@@ -50,6 +37,14 @@ function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
   const handleMenuClose = () => {
     onClose();
     setSubMenuCategory(null);
+  };
+
+  const handleLinkClick = () => {
+    // Close menu when link is clicked
+    setTimeout(() => {
+      handleMenuClose();
+      if (onMenuItemClick) onMenuItemClick();
+    }, 100);
   };
 
   return (
@@ -90,7 +85,9 @@ function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
                 <MenuItem
                   key={index}
                   icon={item.icon}
-                  onClick={() => handleMenuClick(item.path)}
+                  as={Link}
+                  to={item.path}
+                  onClick={handleLinkClick}
                   onMouseEnter={() => prefetchRoute(item.path)}
                 >
                   {item.label}
@@ -120,7 +117,9 @@ function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
                   <MenuItem
                     key={index}
                     icon={item.icon}
-                    onClick={() => handleMenuClick(item.path)}
+                    as={Link}
+                    to={item.path}
+                    onClick={handleLinkClick}
                     onMouseEnter={() => prefetchRoute(item.path)}
                   >
                     {item.label}
