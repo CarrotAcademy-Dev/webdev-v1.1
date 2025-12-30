@@ -25,7 +25,6 @@ function DashboardDailyPage() {
 
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
-    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
 
     // Format bulan tahun untuk birthday (mmm yyyy)
     const formatMonthYear = (date) => {
