@@ -6,6 +6,26 @@
 
 const STORAGE_PREFIX = 'carrot_academy_';
 
+// Migration: Fix old sessions yang tidak punya expiry (unlimited)
+// Jalankan sekali saat app load untuk force re-login user dengan session lama
+(() => {
+    try {
+        const userKey = STORAGE_PREFIX + 'user';
+        const item = localStorage.getItem(userKey);
+        if (item) {
+            const data = JSON.parse(item);
+            // Jika session tidak punya expiry atau expiry di masa depan terlalu jauh (> 10 jam)
+            if (!data.expiry || (data.expiry - Date.now() > 10 * 60 * 60 * 1000)) {
+                console.log('Clearing old unlimited session...');
+                localStorage.removeItem(userKey);
+                localStorage.removeItem(STORAGE_PREFIX + 'auth_token');
+            }
+        }
+    } catch (error) {
+        console.error('Error during session migration:', error);
+    }
+})();
+
 /**
  * Set item ke localStorage dengan optional expiry
  */
@@ -129,7 +149,7 @@ export const STORAGE_KEYS = {
  * Specialized functions untuk common operations
  */
 export const auth = {
-    // Set user dengan expiry 9 jam (540 menit)
+    // Set user dengan expiry 9 jam (540 menit) - 8 jam kerja + 1 jam break
     setUser: (user, expiryInMinutes = 540) => setItem(STORAGE_KEYS.USER, user, expiryInMinutes),
     getUser: () => getItem(STORAGE_KEYS.USER),
     removeUser: () => removeItem(STORAGE_KEYS.USER),
@@ -179,8 +199,8 @@ export const auth = {
         }
     },
     
-    // Extend token expiry (refresh session) - 4 jam
-    extendToken: (additionalMinutes = 240) => {
+    // Extend token expiry (refresh session) - 9 jam (8 jam kerja + 1 jam break)
+    extendToken: (additionalMinutes = 540) => {
         const user = getItem(STORAGE_KEYS.USER);
         if (user) {
             setItem(STORAGE_KEYS.USER, user, additionalMinutes);

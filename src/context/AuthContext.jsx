@@ -92,11 +92,11 @@ export function AuthProvider({ children }) {
     // Extend session untuk user yang masih aktif
     const extendSession = () => {
         if (currentUser) {
-            const extended = storageAuth.extendToken(480); // Extend 8 jam
+            const extended = storageAuth.extendToken(); // Pakai default 540 menit (9 jam)
             if (extended) {
                 toaster.create({
                     title: 'Sesi Diperpanjang',
-                    description: 'Sesi login Anda telah diperpanjang 8 jam.',
+                    description: 'Sesi login Anda telah diperpanjang 9 jam.',
                     type: 'success',
                     duration: 3000,
                 });
