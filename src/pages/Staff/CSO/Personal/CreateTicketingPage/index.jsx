@@ -6,6 +6,60 @@ import ContainerCarrot from '@/components/Container';
 import { StyledCreateTicketing } from './CreateTicketing.styled';
 import { createTicketingExternal, createTicketingInternal } from '@/features/cso/csoApiService';
 
+// Mapping kategori ke request options berdasarkan screenshot
+const REQUEST_OPTIONS = {
+    'Schedule': [
+        'Reschedule',
+        'Rekap Jadwal Mentor',
+        'Izin'
+    ],
+    'Complaint': [
+        'Invoice',
+        'Progress Report',
+        'Modul',
+        'Progress Siswa'
+    ],
+    'Request': [
+        'Kelas Pengganti',
+        'Sertifikat',
+        'Mentor',
+        'Lost & Found',
+        'Personal Mentoring',
+        'Konsultasi',
+        'Janji Temu',
+        'Photo atau Design',
+        'Administratif',
+        'Retention',
+        'Modul',
+        'Invoice',
+        'Perizinan Buat Baru',
+        'Perizinan Orang Datang',
+        'Perizinan Perpanjang',
+        'Partnership',
+        'Sponsorship'
+    ],
+    'Billing': [
+        'Invoice',
+        'Bukti Pembayaran'
+    ],
+    'Offboarding': [
+        'Cuti',
+        'Ubah hari permanen',
+        'Off',
+        'Pindah program',
+        'Tambah sesi program',
+        'Kurang sesi program',
+        'Tambah modul',
+        'Kurang modul'
+    ],
+    'Info': [
+        'Class - Link',
+        'Reminder Kelas',
+        'Broadcast'
+    ],
+    'Query': []
+};
+
 function CreateTicketingPage() {
     const navigate = useNavigate();
     const toast = useToast();
@@ -115,10 +169,20 @@ function CreateTicketingPage() {
     // ============ HANDLERS ============
     const handleExternalChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setExternalForm(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        
+        // Reset request field when category changes
+        if (name === 'kategori') {
+            setExternalForm(prev => ({
+                ...prev,
+                kategori: value,
+                request: '' // Reset request saat kategori berubah
+            }));
+        } else {
+            setExternalForm(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
+        }
     };
 
     const handleInternalChange = (e) => {
@@ -283,24 +347,18 @@ function CreateTicketingPage() {
                                                     value={externalForm.request}
                                                     onChange={handleExternalChange}
                                                     required
+                                                    disabled={!externalForm.kategori}
                                                 >
-                                                    <option value="">Pilih request</option>
-                                                    <option value="Kelas Pengganti">Kelas Pengganti</option>
-                                                    <option value="Sertifikat">Sertifikat</option>
-                                                    <option value="Mentor">Mentor</option>
-                                                    <option value="Lost & Found">Lost & Found</option>
-                                                    <option value="Personal Mentoring">Personal Mentoring</option>
-                                                    <option value="Konsultasi">Konsultasi</option>
-                                                    <option value="Janji Temu">Janji Temu</option>
-                                                    <option value="Photo atau Design">Photo atau Design</option>
-                                                    <option value="Administratif">Administratif</option>
-                                                    <option value="Retention">Retention</option>
-                                                    <option value="Modul">Modul</option>
-                                                    <option value="Invoice">Invoice</option>
-                                                    <option value="Perizinan Buat Baru">Perizinan Buat Baru</option>
-                                                    <option value="Perizinan Perpanjang">Perizinan Perpanjang</option>
-                                                    <option value="Partnership">Partnership</option>
-                                                    <option value="Sponsorship">Sponsorship</option>
+                                                    <option value="">
+                                                        {!externalForm.kategori 
+                                                            ? 'Pilih kategori terlebih dahulu' 
+                                                            : 'Pilih request'}
+                                                    </option>
+                                                    {externalForm.kategori && REQUEST_OPTIONS[externalForm.kategori]?.map((option) => (
+                                                        <option key={option} value={option}>
+                                                            {option}
+                                                        </option>
+                                                    ))}
                                                 </select>
                                             </div>
                                         </div>
