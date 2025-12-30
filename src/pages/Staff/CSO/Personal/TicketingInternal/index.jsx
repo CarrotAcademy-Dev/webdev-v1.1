@@ -194,31 +194,7 @@ function TicketingInternal() {
     const paginatedTickets = sortedTickets.slice(startIndex, endIndex);
     const totalPages = Math.ceil(sortedTickets.length / itemsPerPage);
 
-    const PaginationControls = () => {
-        if (totalPages <= 1) return null;
-
-        return (
-            <Flex justify="center" align="center" gap={2} mt={4}>
-                <IconButton
-                    icon={<FiChevronLeft />}
-                    size="sm"
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    isDisabled={currentPage === 1}
-                    aria-label="Previous page"
-                />
-                <Text fontSize="sm">
-                    Page {currentPage} of {totalPages}
-                </Text>
-                <IconButton
-                    icon={<FiChevronRight />}
-                    size="sm"
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    isDisabled={currentPage === totalPages}
-                    aria-label="Next page"
-                />
-            </Flex>
-        );
-    };
+    // Using shared Pagination component
 
     const TableSkeleton = ({ columns }) => {
         return Array(5).fill(0).map((_, idx) => (
@@ -482,7 +458,16 @@ function TicketingInternal() {
                             </Box>
                         </Box>
                     </Box>
-                    <PaginationControls />
+                    {totalPages > 1 && (
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            startIndex={startIndex}
+                            endIndex={endIndex}
+                            totalItems={sortedTickets.length}
+                        />
+                    )}
                 </Box>
 
                 {/* Modal for Submit Result */}

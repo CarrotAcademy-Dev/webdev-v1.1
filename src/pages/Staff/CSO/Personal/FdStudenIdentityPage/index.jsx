@@ -3,6 +3,7 @@ import { Box, Flex, Text, IconButton, Input, InputGroup, InputLeftElement, Link,
 import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
 import ContainerCarrot from '@/components/Container';
+import Pagination from '@/components/Pagination';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown, FiExternalLink } from 'react-icons/fi';
@@ -93,29 +94,7 @@ function FdStudentIdentityPage() {
     const paginatedData = sortedData.slice(startIndex, endIndex);
     const totalPages = Math.ceil(sortedData.length / itemsPerPage);
 
-    const PaginationControls = () => {
-        if (totalPages <= 1) return null;
-
-        return (
-            <Flex justify="center" align="center" gap={2} mt={4}>
-                <IconButton 
-                    icon={<FiChevronLeft />}
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    isDisabled={currentPage === 1}
-                    aria-label="Previous Page"
-                />
-                <Text>
-                    Page {currentPage} of {totalPages}
-                </Text>
-                <IconButton 
-                    icon={<FiChevronRight />}
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    isDisabled={currentPage === totalPages}
-                    aria-label="Next Page"
-                />
-            </Flex>
-        );
-    };
+    // No need for PaginationControls component - using shared Pagination component now
 
     const TableSkeleton = ({ columns }) => {
         return Array(5).fill(0).map((_, rowIndex) => (
@@ -376,7 +355,16 @@ function FdStudentIdentityPage() {
                             </Box>
                         </Box>
                     </Box>
-                    <PaginationControls />
+                    {totalPages > 1 && (
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            startIndex={startIndex}
+                            endIndex={endIndex}
+                            totalItems={sortedData.length}
+                        />
+                    )}
                 </Box>
             </StyledFDStudentIdentityPage>
         </ContainerCarrot>
