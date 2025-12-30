@@ -205,6 +205,7 @@ function PendaftaranLanjutanPage() {
             totalPages,
             nextPage,
             prevPage,
+            goToPage,
             hasNextPage,
             hasPrevPage,
         } = usePagination(sortedData, 10);
