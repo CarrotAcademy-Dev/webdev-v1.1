@@ -77,7 +77,8 @@ export function AuthProvider({ children }) {
         
         if (result.message.includes('berhasil')) {
             setCurrentUser(result);
-            storageAuth.setUser(result);
+            console.log('[Auth] Setting user with 540 min expiry (9 hours)');
+            storageAuth.setUser(result); // Uses default 540 minutes
             return result;
         } else {
             throw new Error(result.message || 'Login failed');

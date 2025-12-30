@@ -12,17 +12,27 @@ const STORAGE_PREFIX = 'carrot_academy_';
     try {
         const userKey = STORAGE_PREFIX + 'user';
         const item = localStorage.getItem(userKey);
+        console.log('[Storage Migration] Checking for old session...', item ? 'Found' : 'Not found');
+        
         if (item) {
             const data = JSON.parse(item);
+            console.log('[Storage Migration] Session data:', {
+                hasExpiry: !!data.expiry,
+                expiry: data.expiry,
+                expiryInHours: data.expiry ? ((data.expiry - Date.now()) / (60 * 60 * 1000)).toFixed(2) : 'N/A'
+            });
+            
             // Jika session tidak punya expiry atau expiry di masa depan terlalu jauh (> 10 jam)
             if (!data.expiry || (data.expiry - Date.now() > 10 * 60 * 60 * 1000)) {
-                console.log('Clearing old unlimited session...');
+                console.log('[Storage Migration] Clearing old unlimited session...');
                 localStorage.removeItem(userKey);
                 localStorage.removeItem(STORAGE_PREFIX + 'auth_token');
+            } else {
+                console.log('[Storage Migration] Session is valid, keeping it.');
             }
         }
     } catch (error) {
-        console.error('Error during session migration:', error);
+        console.error('[Storage Migration] Error during session migration:', error);
     }
 })();
 

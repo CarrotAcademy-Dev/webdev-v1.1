@@ -40,7 +40,7 @@ function Navbar() {
     
     // Format session time untuk display
     const formatSessionTime = (minutes) => {
-        if (minutes === Infinity || minutes > 480) return '∞';
+        if (minutes === Infinity || minutes > 600) return '∞'; // > 10 jam = unlimited
         if (minutes >= 60) {
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
@@ -51,7 +51,7 @@ function Navbar() {
     
     // Color untuk badge berdasarkan waktu tersisa
     const getSessionColor = (minutes) => {
-        if (minutes === Infinity || minutes > 480) return 'gray';
+        if (minutes === Infinity || minutes > 600) return 'gray'; // > 10 jam = unlimited
         if (minutes <= 10) return 'red';
         if (minutes <= 30) return 'orange';
         if (minutes <= 120) return 'yellow';
