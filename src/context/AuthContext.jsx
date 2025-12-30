@@ -77,7 +77,8 @@ export function AuthProvider({ children }) {
         
         if (result.message.includes('berhasil')) {
             setCurrentUser(result);
-            storageAuth.setUser(result);
+            console.log('[Auth] Setting user with 540 min expiry (9 hours)');
+            storageAuth.setUser(result); // Uses default 540 minutes
             return result;
         } else {
             throw new Error(result.message || 'Login failed');
@@ -92,11 +93,11 @@ export function AuthProvider({ children }) {
     // Extend session untuk user yang masih aktif
     const extendSession = () => {
         if (currentUser) {
-            const extended = storageAuth.extendToken(480); // Extend 8 jam
+            const extended = storageAuth.extendToken(); // Pakai default 540 menit (9 jam)
             if (extended) {
                 toaster.create({
                     title: 'Sesi Diperpanjang',
-                    description: 'Sesi login Anda telah diperpanjang 8 jam.',
+                    description: 'Sesi login Anda telah diperpanjang 9 jam.',
                     type: 'success',
                     duration: 3000,
                 });
