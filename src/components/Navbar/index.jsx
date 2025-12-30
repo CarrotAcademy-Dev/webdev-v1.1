@@ -239,6 +239,9 @@ function Navbar() {
           <DrawerOverlay />
           <DrawerContent>
           <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth="1px">
+            <Logo style={{ width: '120px', height: 'auto' }} />
+          </DrawerHeader>
           <DrawerBody overflowY="auto" pb={8}>
             <VStack spacing={4} align="stretch" mt={4}>
               {menuData.map((menu, index) => {

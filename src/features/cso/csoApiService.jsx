@@ -2255,7 +2255,7 @@ export const getDataProspektif = async (psid) => {
 
 export const submitProspektifForm = async (formData) => {
     const userData = auth.getUser();
-    const pic = userData?.codeName || 'Unknown';
+    const pic = userData?.nama || 'Unknown';
 
     const params = new URLSearchParams({
         action: 'submit-prospektf',
@@ -2277,28 +2277,28 @@ export const submitProspektifForm = async (formData) => {
         goals: formData.goals || '',
         notes: formData.notes || '',
         fu1_date: formData.fu1_date || '',
-        fu1_ceklis: formData.fu1_ceklis || false,
+        fu1_ceklis: formData.fu1_ceklis || '',
         notes_fu1: formData.notes_fu1 || '',
         fu2_date: formData.fu2_date || '',
-        fu2_ceklis: formData.fu2_ceklis || false,
+        fu2_ceklis: formData.fu2_ceklis || '',
         notes_fu2: formData.notes_fu2 || '',
         fu3_date: formData.fu3_date || '',
-        fu3_ceklis: formData.fu3_ceklis || false,
+        fu3_ceklis: formData.fu3_ceklis || '',
         notes_fu3: formData.notes_fu3 || '',
-        retention: formData.retention || false,
-        program_explained: formData.program_explained || false,
-        pricelist_explained: formData.pricelist_explained || false,
-        trial_ceklis: formData.trial_ceklis || false,
-        target: formData.target || false,
-        registration: formData.registration || false,
-        predrawing: formData.predrawing || false,
-        invoice: formData.invoice || false,
-        onboarding: formData.onboarding || false,
-        class_email: formData.class_email || false,
-        photo: formData.photo || false,
-        qrcode_presence: formData.qrcode_presence || false,
-        reminder: formData.reminder || false,
-        merchandise: formData.merchandise || false,
+        retention: formData.retention || '',
+        program_explained: formData.program_explained || '',
+        pricelist_explained: formData.pricelist_explained || '',
+        trial_ceklis: formData.trial_ceklis || '',
+        target: formData.target || '',
+        registration: formData.registration || '',
+        predrawing: formData.predrawing || '',
+        invoice: formData.invoice || '',
+        onboarding: formData.onboarding || '',
+        class_email: formData.class_email || '',
+        photo: formData.photo || '',
+        qrcode_presence: formData.qrcode_presence || '',
+        reminder: formData.reminder || '',
+        merchandise: formData.merchandise || ''
     });
 
     try {
@@ -2318,7 +2318,7 @@ export const submitProspektifForm = async (formData) => {
 
 export const editDataProspektif = async (formData) => {
     const userData = auth.getUser();
-    const pic = userData?.codeName || 'Unknown';
+    const pic = userData?.nama || 'Unknown';
 
     const params = new URLSearchParams({
         action: 'edit-prospektif',
@@ -2363,9 +2363,7 @@ export const editDataProspektif = async (formData) => {
         photo: formData.photo || '',
         qrcode_presence: formData.qrcode_presence || '',
         reminder: formData.reminder || '',
-        merchandise: formData.merchandise || '',
-        cancel_check: formData.cancel_check || '',
-        prefilled_link_form: formData.prefilled_link_form || ''
+        merchandise: formData.merchandise || ''
     });
 
     try {
