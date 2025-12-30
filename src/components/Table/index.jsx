@@ -223,6 +223,8 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                                     </Td>
                                 ))}
                             </Tr>
+                            ))
+                        )}
                     </Tbody>
                 </Table>
             </TableContainer>
