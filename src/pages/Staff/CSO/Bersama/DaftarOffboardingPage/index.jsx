@@ -196,6 +196,7 @@ function DaftarOffboardingPage() {
                 
                 return (
                     <Input 
+                        type="date"
                         value={currentData.tanggalMulaiCuti || ''}
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'tanggalMulaiCuti')}
                         width="10rem"
@@ -214,6 +215,7 @@ function DaftarOffboardingPage() {
                 
                 return (
                     <Input 
+                        type="date"
                         value={currentData.tanggalAkhirCuti || ''}
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'tanggalAkhirCuti')}
                         width="10rem"
