@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, Flex, Text, Grid, GridItem, IconButton, Input, InputGroup, InputLeftElement, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text, Grid, GridItem, IconButton, Input, InputGroup, InputLeftElement, Select, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
 import ContainerCarrot from '@/components/Container';
@@ -29,9 +29,6 @@ function TrackTicketFmePage() {
     // Search state
     const [searchQuery, setSearchQuery] = useState('');
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
-
-    // Year filter state
-    const [selectedYear, setSelectedYear] = useState('all');
 
     // Year filter state
     const [selectedYear, setSelectedYear] = useState('all');
@@ -361,7 +358,6 @@ function TrackTicketFmePage() {
                                 {sortedTickets.length} result{sortedTickets.length !== 1 ? 's' : ''}
                             </Text>
                         )}
-                    </Flex>
                     </Flex>
                     <Box className="table-container">
                         <Box as="table" className="data-table" width="100%">

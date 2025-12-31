@@ -210,15 +210,6 @@ function TicketingInternal() {
         });
         return Array.from(years).sort((a, b) => b - a); // Sort descending
     }, [tickets]);
-                ticket.id_ticket?.toLowerCase().includes(searchLower) ||
-                ticket.nama_ticket?.toLowerCase().includes(searchLower) ||
-                ticket.description?.toLowerCase().includes(searchLower) ||
-                ticket.label?.toLowerCase().includes(searchLower) ||
-                ticket.priority?.toLowerCase().includes(searchLower) ||
-                ticket.from_who?.toLowerCase().includes(searchLower)
-            );
-        });
-    }, [tickets, debouncedSearch]);
 
     // Sort handler
     const handleSort = (key) => {

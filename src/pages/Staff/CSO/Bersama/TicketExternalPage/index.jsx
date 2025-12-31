@@ -2,12 +2,13 @@ import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
-import { Checkbox, useToast, useColorModeValue } from "@chakra-ui/react";
+import { Checkbox, useToast, useColorModeValue, Flex, Select, Text } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getTicketExternal, postTicketExternal } from "@/features/cso/csoApiService";
 import { StyledTicketExternalPage } from "./TicketExternal.styled";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useState, useMemo } from 'react';
 
 const tabItems = [
     {key: 'dataOpen', label: 'Ticket Open'},
@@ -23,11 +24,46 @@ function TicketExternalPage() {
     const queryClient = useQueryClient();
     const toast = useToast();
 
+    // Year filter state
+    const [selectedYear, setSelectedYear] = useState('all');
+
     const { data: ticketExternal, isLoading, isError, error } = useQuery({
         queryKey: ['ticketExternal'],
         queryFn: getTicketExternal,
         placeholderData: { dataOpen: [], dataClose: [] }
     });
+
+    // Get available years from tickets
+    const availableYears = useMemo(() => {
+        if (!ticketExternal) return [];
+        const years = new Set();
+        [...ticketExternal.dataOpen, ...ticketExternal.dataClose].forEach(ticket => {
+            if (ticket.timestamp) {
+                const year = new Date(ticket.timestamp).getFullYear();
+                years.add(year);
+            }
+        });
+        return Array.from(years).sort((a, b) => b - a);
+    }, [ticketExternal]);
+
+    // Filter tickets by year
+    const filteredTicketExternal = useMemo(() => {
+        if (!ticketExternal) return { dataOpen: [], dataClose: [] };
+        if (selectedYear === 'all') return ticketExternal;
+
+        const filterByYear = (tickets) => {
+            return tickets.filter(ticket => {
+                if (!ticket.timestamp) return false;
+                const ticketYear = new Date(ticket.timestamp).getFullYear().toString();
+                return ticketYear === selectedYear;
+            });
+        };
+
+        return {
+            dataOpen: filterByYear(ticketExternal.dataOpen),
+            dataClose: filterByYear(ticketExternal.dataClose)
+        };
+    }, [ticketExternal, selectedYear]);
 
     const { mutate: markDoneMutation } = useMutation({
         mutationFn: ({ rowData }) => postTicketExternal({ rowData }),
@@ -187,7 +223,23 @@ function TicketExternalPage() {
             </ContainerCarrot>
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs tabItems={tabItems} tableData={ticketExternal} headerItems={headerItems} isLoading={isLoading} />
+                    <Flex mb={4} gap={3} alignItems="center">
+                        <Text fontSize="sm" fontWeight="medium">Filter Tahun:</Text>
+                        <Select
+                            maxW="150px"
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(e.target.value)}
+                            borderRadius="md"
+                        >
+                            <option value="all">Semua Tahun</option>
+                            {availableYears.map(year => (
+                                <option key={year} value={year.toString()}>
+                                    {year}
+                                </option>
+                            ))}
+                        </Select>
+                    </Flex>
+                    <SistemTabs tabItems={tabItems} tableData={filteredTicketExternal} headerItems={headerItems} isLoading={isLoading} />
                 </ContainerCarrot>
             </div>
         </StyledTicketExternalPage>
