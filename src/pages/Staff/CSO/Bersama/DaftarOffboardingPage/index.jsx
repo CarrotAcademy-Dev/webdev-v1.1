@@ -16,6 +16,51 @@ const tabItems = [
     { key: 'done', label: 'Done' }
 ];
 
+// Helper function to convert "24 Dec 2025" to "2025-12-24"
+const convertToDateInputFormat = (dateStr) => {
+    if (!dateStr || dateStr === '') return '';
+    
+    try {
+        // Parse "24 Dec 2025" format
+        const date = new Date(dateStr);
+        
+        if (isNaN(date.getTime())) return '';
+        
+        // Convert to yyyy-MM-dd format
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}`;
+    } catch (error) {
+        console.error('Error converting date:', error);
+        return '';
+    }
+};
+
+// Helper function to convert "2025-12-24" back to "24 Dec 2025" for API
+const convertFromDateInputFormat = (dateStr) => {
+    if (!dateStr || dateStr === '') return '';
+    
+    try {
+        const date = new Date(dateStr);
+        
+        if (isNaN(date.getTime())) return '';
+        
+        // Format as "24 Dec 2025"
+        const day = date.getDate();
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+        
+        return `${day} ${month} ${year}`;
+    } catch (error) {
+        console.error('Error converting date:', error);
+        return '';
+    }
+};
+
 function DaftarOffboardingPage() {
     const queryClient = useQueryClient();       
     const toast = useToast();
@@ -194,15 +239,21 @@ function DaftarOffboardingPage() {
                 const isEditing = editingRows[item.id_ticket];
                 const currentData = editedData[item.id_ticket] || item;
                 
-                return (
+                // Show original date when not editing, converted date when editing
+                const displayValue = isEditing 
+                    ? (currentData.tanggalMulaiCuti || '')
+                    : (item.tanggalMulaiCuti || '');
+                
+                return isEditing ? (
                     <Input 
                         type="date"
-                        value={currentData.tanggalMulaiCuti || ''}
+                        value={displayValue}
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'tanggalMulaiCuti')}
                         width="10rem"
-                        isDisabled={!isEditing}
-                        bg={isEditing ? 'yellow.50' : 'transparent'}
+                        bg="yellow.50"
                     />
+                ) : (
+                    <span>{displayValue}</span>
                 );
             }
         },
@@ -213,15 +264,21 @@ function DaftarOffboardingPage() {
                 const isEditing = editingRows[item.id_ticket];
                 const currentData = editedData[item.id_ticket] || item;
                 
-                return (
+                // Show original date when not editing, converted date when editing
+                const displayValue = isEditing 
+                    ? (currentData.tanggalAkhirCuti || '')
+                    : (item.tanggalAkhirCuti || '');
+                
+                return isEditing ? (
                     <Input 
                         type="date"
-                        value={currentData.tanggalAkhirCuti || ''}
+                        value={displayValue}
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'tanggalAkhirCuti')}
                         width="10rem"
-                        isDisabled={!isEditing}
-                        bg={isEditing ? 'yellow.50' : 'transparent'}
+                        bg="yellow.50"
                     />
+                ) : (
+                    <span>{displayValue}</span>
                 );
             }
         },
@@ -316,7 +373,15 @@ function DaftarOffboardingPage() {
     // Start editing a row
     const handleStartEdit = (item) => {
         setEditingRows(prev => ({ ...prev, [item.id_ticket]: true }));
-        setEditedData(prev => ({ ...prev, [item.id_ticket]: { ...item } }));
+        // Convert dates to yyyy-MM-dd format when entering edit mode
+        setEditedData(prev => ({ 
+            ...prev, 
+            [item.id_ticket]: { 
+                ...item,
+                tanggalMulaiCuti: convertToDateInputFormat(item.tanggalMulaiCuti),
+                tanggalAkhirCuti: convertToDateInputFormat(item.tanggalAkhirCuti)
+            } 
+        }));
     };
 
     // Update field value in local state
@@ -334,7 +399,13 @@ function DaftarOffboardingPage() {
     const handleSaveEdit = (rowId) => {
         const dataToSave = editedData[rowId];
         if (dataToSave) {
-            updateOffboarding(dataToSave);
+            // Convert dates back to "24 Dec 2025" format for API
+            const dataWithConvertedDates = {
+                ...dataToSave,
+                tanggalMulaiCuti: convertFromDateInputFormat(dataToSave.tanggalMulaiCuti),
+                tanggalAkhirCuti: convertFromDateInputFormat(dataToSave.tanggalAkhirCuti)
+            };
+            updateOffboarding(dataWithConvertedDates);
         }
     };
 
