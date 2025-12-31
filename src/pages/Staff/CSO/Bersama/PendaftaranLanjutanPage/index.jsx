@@ -28,6 +28,7 @@ import { useState, useMemo } from "react";
 import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown } from "react-icons/fi";
 import { usePagination } from "@/hooks/usePagination";
 import { handleError } from "@/utils/errorHandler";
+import Pagination from "@/components/Pagination";
 import { formatDate } from "@/utils/formatters";
 
 function PendaftaranLanjutanPage() {
@@ -204,6 +205,7 @@ function PendaftaranLanjutanPage() {
             totalPages,
             nextPage,
             prevPage,
+            goToPage,
             hasNextPage,
             hasPrevPage,
         } = usePagination(sortedData, 10);
@@ -325,32 +327,14 @@ function PendaftaranLanjutanPage() {
                     </tbody>
                 </table>
                 {totalPages > 1 && (
-                    <Flex justify="space-between" mt={4} align="center">
-                        <Text fontSize="sm" color={textMuted}>
-                            Showing {((currentPage - 1) * 10) + 1} to {Math.min(currentPage * 10, sortedData.length)} of {sortedData.length} entries
-                        </Text>
-                        <Flex align="center" gap={4}>
-                            <Text fontSize="sm">
-                                Page {currentPage} of {totalPages}
-                            </Text>
-                            <Flex gap={2}>
-                                <IconButton
-                                    icon={<FiChevronLeft />}
-                                    onClick={prevPage}
-                                    isDisabled={!hasPrevPage}
-                                    aria-label="Previous page"
-                                    size="sm"
-                                />
-                                <IconButton
-                                    icon={<FiChevronRight />}
-                                    onClick={nextPage}
-                                    isDisabled={!hasNextPage}
-                                    aria-label="Next page"
-                                    size="sm"
-                                />
-                            </Flex>
-                        </Flex>
-                    </Flex>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={goToPage}
+                        startIndex={(currentPage - 1) * 10}
+                        endIndex={Math.min(currentPage * 10, sortedData.length)}
+                        totalItems={sortedData.length}
+                    />
                 )}
             </div>
         );

@@ -10,13 +10,16 @@ import {
     getDashboardDailyLastDay,
     getDashboardDailySiswaNaikLevel,
     getDashboardDailySiswaPindahModul,
+    getDashboardDailyComplaintWA,
+    getDashboardDailySertifikat,
     submitDoneSiswaBaru,
     submitDoneSiswaRetention,
-    submitDoneBirthday
+    submitDoneBirthday,
+    submitDoneSertifikat
 } from "@/features/cso/csoApiService";
 import { StyledDashboardDaily } from "./DashboardDaily.styled";
 import { useState, useMemo } from "react";
-import { FiUsers, FiUserCheck, FiGift, FiUserX, FiTrendingUp, FiRepeat } from "react-icons/fi";
+import { FiUsers, FiUserCheck, FiGift, FiUserX, FiTrendingUp, FiRepeat, FiAlertCircle, FiAward } from "react-icons/fi";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -74,6 +77,18 @@ function DashboardDailyPage() {
     const { data: pindahModul, isLoading: loadingPindahModul } = useQuery({
         queryKey: ['dashboardDailyPindahModul'],
         queryFn: getDashboardDailySiswaPindahModul,
+        staleTime: 5 * 60 * 1000
+    });
+
+    const { data: complaintWA, isLoading: loadingComplaintWA } = useQuery({
+        queryKey: ['dashboardDailyComplaintWA'],
+        queryFn: getDashboardDailyComplaintWA,
+        staleTime: 5 * 60 * 1000
+    });
+
+    const { data: sertifikat, isLoading: loadingSertifikat } = useQuery({
+        queryKey: ['dashboardDailySertifikat'],
+        queryFn: getDashboardDailySertifikat,
         staleTime: 5 * 60 * 1000
     });
 
@@ -147,6 +162,29 @@ function DashboardDailyPage() {
         }
     });
 
+    const doneSertifikatMutation = useMutation({
+        mutationFn: ({ tahun, id }) => submitDoneSertifikat(tahun, id),
+        onSuccess: () => {
+            toast({
+                title: "Berhasil",
+                description: "Sertifikat ditandai selesai",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+            queryClient.invalidateQueries(['dashboardDailySertifikat']);
+        },
+        onError: (error) => {
+            toast({
+                title: "Gagal",
+                description: error.message,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    });
+
     // Handle checklist
     const handleChecklist = async (target, sid, mapStatus, doneStatus) => {
         const itemKey = `${target}-${sid}`;
@@ -180,6 +218,9 @@ function DashboardDailyPage() {
             await doneRetentionMutation.mutateAsync({ sid, map: 'no', done: 'yes' });
         } else if (target === 'done-birthday') {
             await doneBirthdayMutation.mutateAsync({ sid, map: 'no', done: 'yes' });
+        } else if (target.startsWith('done-sertifikat-')) {
+            const tahun = target.split('-')[2]; // Extract year from target
+            await doneSertifikatMutation.mutateAsync({ tahun, id: sid });
         }
     };
 
@@ -294,16 +335,31 @@ function DashboardDailyPage() {
             });
         };
 
+        const transformSertifikat = (dataObject, tahun) => {
+            if (!dataObject || !Array.isArray(dataObject)) return [];
+            return dataObject.map((item, index) => ({
+                id: item.id,
+                no: index + 1,
+                tanggal_kelas: item.tanggal_kelas,
+                nama: item.nama,
+                modul: item.modul,
+                level: item.level,
+                status_sertifikat: item.status_sertifikat,
+                tahun: tahun
+            }));
+        };
+
         return {
             siswaBaru: transformSiswaBaru(siswaBaru?.data || []),
             retention: transformRetention(retention?.data || []),
             birthday: transformBirthday(birthday?.data || []),
             lastDay: transformLastDay(lastDay?.data || []),
             naikLevel: transformNaikLevel(naikLevel?.data || []),
-            pindahModul: transformPindahModul(pindahModul?.data || [])
+            pindahModul: transformPindahModul(pindahModul?.data || []),
+            sertifikat2025: transformSertifikat(sertifikat?.res_2025 || [], '2025')
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [siswaBaru, retention, birthday, lastDay, naikLevel, pindahModul, checkedItems]);
+    }, [siswaBaru, retention, birthday, lastDay, naikLevel, pindahModul, sertifikat, checkedItems]);
 
     // Define tabs
     const tabItems = [
@@ -312,7 +368,8 @@ function DashboardDailyPage() {
         { key: 'birthday', label: 'Birthday' },
         { key: 'lastDay', label: 'Last Day' },
         { key: 'naikLevel', label: 'Naik Level' },
-        { key: 'pindahModul', label: 'Pindah Modul' }
+        { key: 'pindahModul', label: 'Pindah Modul' },
+        { key: 'sertifikat2025', label: 'Sertifikat 2025' }
     ];
 
     // Header untuk Siswa Baru & Retention
@@ -439,6 +496,34 @@ function DashboardDailyPage() {
         { key: 'modulBaru', label: 'Modul Baru' }
     ];
 
+    // Header untuk Sertifikat
+    const headerItemsSertifikat = [
+        { key: 'no', label: 'No' },
+        { key: 'tanggal_kelas', label: 'Tanggal Kelas' },
+        { key: 'nama', label: 'Nama' },
+        { key: 'modul', label: 'Modul' },
+        { key: 'level', label: 'Level' },
+        { key: 'status_sertifikat', label: 'Status Sertifikat' },
+        {
+            key: 'done',
+            label: 'Done?',
+            render: (item) => (
+                <Checkbox
+                    colorScheme="green"
+                    onChange={() => handleChecklist(`done-sertifikat-${item.tahun}`, item.id, 'yes', 'no')}
+                    sx={{
+                        '.chakra-checkbox__control': {
+                            '&[data-checked]': {
+                                bg: '#48BB78',
+                                borderColor: '#48BB78',
+                            }
+                        }
+                    }}
+                />
+            )
+        }
+    ];
+
     // Get header based on tab
     const getHeaderItems = (tabKey) => {
         switch(tabKey) {
@@ -453,12 +538,14 @@ function DashboardDailyPage() {
                 return headerItemsNaikLevel;
             case 'pindahModul':
                 return headerItemsPindahModul;
+            case 'sertifikat2025':
+                return headerItemsSertifikat;
             default:
                 return [];
         }
     };
 
-    const isLoading = loadingSiswaBaru || loadingRetention || loadingBirthday || loadingLastDay || loadingNaikLevel || loadingPindahModul;
+    const isLoading = loadingSiswaBaru || loadingRetention || loadingBirthday || loadingLastDay || loadingNaikLevel || loadingPindahModul || loadingComplaintWA || loadingSertifikat;
 
     return (
         <StyledDashboardDaily>
@@ -542,6 +629,27 @@ function DashboardDailyPage() {
                                     <Skeleton height="40px" width="60px" />
                                 ) : (
                                     <p className="card__points">{tableData.pindahModul?.length || 0}</p>
+                                )}
+                            </InfoCard>
+                            <InfoCard>
+                                <FiAlertCircle size="30px" color="#FE7743" />
+                                <p>Complaint WA</p>
+                                {loadingComplaintWA ? (
+                                    <Skeleton height="40px" width="100px" />
+                                ) : (
+                                    <>
+                                        <p style={{ fontSize: '14px', margin: '5px 0' }}>Hari: {complaintWA?.hari_terbanyak?.hari || '-'} ({complaintWA?.hari_terbanyak?.jumlah || 0})</p>
+                                        <p style={{ fontSize: '14px' }}>Kategori: {complaintWA?.complaint_terbanyak?.kategori || '-'} ({complaintWA?.complaint_terbanyak?.jumlah || 0})</p>
+                                    </>
+                                )}
+                            </InfoCard>
+                            <InfoCard>
+                                <FiAward size="30px" color="#FE7743" />
+                                <p>Sertifikat 2025</p>
+                                {loadingSertifikat ? (
+                                    <Skeleton height="40px" width="60px" />
+                                ) : (
+                                    <p className="card__points">{tableData.sertifikat2025?.length || 0}</p>
                                 )}
                             </InfoCard>
                         </div>
