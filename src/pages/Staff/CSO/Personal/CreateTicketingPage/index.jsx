@@ -57,7 +57,9 @@ const REQUEST_OPTIONS = {
         'Reminder Kelas',
         'Broadcast'
     ],
-    'Query': []
+    'Query': [
+        'Query'
+    ]
 };
 
 function CreateTicketingPage() {

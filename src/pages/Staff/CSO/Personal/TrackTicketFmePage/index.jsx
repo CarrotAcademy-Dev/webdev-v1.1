@@ -30,6 +30,12 @@ function TrackTicketFmePage() {
     const [searchQuery, setSearchQuery] = useState('');
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
+    // Year filter state
+    const [selectedYear, setSelectedYear] = useState('all');
+
+    // Year filter state
+    const [selectedYear, setSelectedYear] = useState('all');
+
     // Fetch tickets data
     const { data: tickets = [], isLoading, isError, error } = useQuery({
         queryKey: ['trackTicketFme'],
@@ -75,24 +81,50 @@ function TrackTicketFmePage() {
 
     // Filtered tickets
     const filteredTickets = useMemo(() => {
-        if (!debouncedSearchQuery) return tickets;
+        let filtered = tickets;
 
-        const lowercasedQuery = debouncedSearchQuery.toLowerCase();
-        return tickets.filter(ticket => {
-            return (
-                ticket.id_ticket?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.nama_ticket?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.description?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.status?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.label?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.type?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.priority?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.responsible?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.result?.toLowerCase().includes(lowercasedQuery) ||
-                ticket.notes?.toLowerCase().includes(lowercasedQuery)
-            );
+        // Filter by search query
+        if (debouncedSearchQuery) {
+            const lowercasedQuery = debouncedSearchQuery.toLowerCase();
+            filtered = filtered.filter(ticket => {
+                return (
+                    ticket.id_ticket?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.nama_ticket?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.description?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.status?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.label?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.type?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.priority?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.responsible?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.result?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.notes?.toLowerCase().includes(lowercasedQuery)
+                );
+            });
+        }
+
+        // Filter by year
+        if (selectedYear !== 'all') {
+            filtered = filtered.filter(ticket => {
+                if (!ticket.deadline) return false;
+                const ticketYear = new Date(ticket.deadline).getFullYear().toString();
+                return ticketYear === selectedYear;
+            });
+        }
+
+        return filtered;
+    }, [tickets, debouncedSearchQuery, selectedYear]);
+
+    // Get available years from tickets
+    const availableYears = useMemo(() => {
+        const years = new Set();
+        tickets.forEach(ticket => {
+            if (ticket.deadline) {
+                const year = new Date(ticket.deadline).getFullYear();
+                years.add(year);
+            }
         });
-    }, [tickets, debouncedSearchQuery]);
+        return Array.from(years).sort((a, b) => b - a); // Sort descending
+    }, [tickets]);
 
     // Sort handler
     const handleSort = (key) => {
@@ -289,7 +321,7 @@ function TrackTicketFmePage() {
                     </Flex>
 
                     {/* Search Bar */}
-                    <Flex mb={4} gap={3} alignItems="center">
+                    <Flex mb={4} gap={3} alignItems="center" flexWrap="wrap">
                         <InputGroup maxW="500px">
                             <InputLeftElement pointerEvents="none">
                                 <FiSearch color="gray" />
@@ -305,11 +337,31 @@ function TrackTicketFmePage() {
                                 bg={cardBg}
                             />
                         </InputGroup>
+                        
+                        <Select
+                            maxW="150px"
+                            value={selectedYear}
+                            onChange={(e) => {
+                                setSelectedYear(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            borderRadius="md"
+                            bg={cardBg}
+                        >
+                            <option value="all">Semua Tahun</option>
+                            {availableYears.map(year => (
+                                <option key={year} value={year.toString()}>
+                                    {year}
+                                </option>
+                            ))}
+                        </Select>
+
                         {searchQuery && (
                             <Text fontSize="sm" color="gray.600" whiteSpace="nowrap">
                                 {sortedTickets.length} result{sortedTickets.length !== 1 ? 's' : ''}
                             </Text>
                         )}
+                    </Flex>
                     </Flex>
                     <Box className="table-container">
                         <Box as="table" className="data-table" width="100%">
