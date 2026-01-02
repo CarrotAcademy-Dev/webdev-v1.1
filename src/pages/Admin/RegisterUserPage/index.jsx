@@ -237,7 +237,7 @@ function RegisterUserPage() {
                                     </label>
                                     <Input
                                         type="email"
-                                        placeholder="nama@carrotacademy.com"
+                                        placeholder="nama@role.carrotacademy.com"
                                         value={formData.email}
                                         onChange={(e) => handleInputChange('email', e.target.value)}
                                         size="lg"

@@ -1,4 +1,5 @@
 import ContainerCarrot from "@/components/Container";
+import Pagination from "@/components/Pagination";
 import { Select, Box, Grid, GridItem, Input, InputGroup, InputLeftElement, Button, Flex, Text, IconButton, useColorModeValue, useColorMode } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getDataSiswaAktifPerBulan, getDashboardSiswaAktifTahunan } from "@/features/cso/csoApiService";
@@ -618,35 +619,16 @@ function DashboardSiswaAktifPage() {
                             </table>
                         </div>
 
-                        {/* Pagination - Fixed tidak ikut scroll */}
-                        {sortedSiswaData.length > 0 && (
-                            <div className="pagination-container">
-                                <Flex justify="space-between" align="center" flexWrap="wrap" gap={4}>
-                                    <Text fontSize="sm" color="gray.600">
-                                        Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, sortedSiswaData.length)} of {sortedSiswaData.length} entries
-                                    </Text>
-                                    <Flex align="center">
-                                        <Text fontSize="sm" mr={4}>
-                                            Page {currentPage} of {totalPages}
-                                        </Text>
-                                        <IconButton
-                                            aria-label="Previous Page"
-                                            icon={<FiChevronLeft />}
-                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                                            isDisabled={currentPage === 1}
-                                            mr={2}
-                                            size="sm"
-                                        />
-                                        <IconButton
-                                            aria-label="Next Page"
-                                            icon={<FiChevronRight />}
-                                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                                            isDisabled={currentPage === totalPages}
-                                            size="sm"
-                                        />
-                                    </Flex>
-                                </Flex>
-                            </div>
+                        {/* Pagination */}
+                        {sortedSiswaData.length > 0 && totalPages > 1 && (
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                                startIndex={(currentPage - 1) * itemsPerPage}
+                                endIndex={Math.min(currentPage * itemsPerPage, sortedSiswaData.length)}
+                                totalItems={sortedSiswaData.length}
+                            />
                         )}
                     </div>
                 </Box>

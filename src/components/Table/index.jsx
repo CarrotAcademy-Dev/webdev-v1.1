@@ -4,6 +4,7 @@ import {
     Flex, IconButton, Text, Input, InputGroup, InputLeftElement, Box, Select, useColorModeValue
 } from '@chakra-ui/react';
 import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import Pagination from '@/components/Pagination';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -222,37 +223,23 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                                     </Td>
                                 ))}
                             </Tr>
-                        ))
+                            ))
                         )}
                     </Tbody>
                 </Table>
             </TableContainer>
             
-            {/* Pagination - Fixed, tidak ikut scroll */}
-            <Flex justifyContent="space-between" alignItems="center" mt={4} flexWrap="wrap" gap={3}>
-                <Text fontSize="sm" color={textMuted}>
-                    Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, sortedData.length)} of {sortedData.length} entries
-                </Text>
-                <Flex alignItems="center" gap={2}>
-                    <Text fontSize="sm">
-                        Page {currentPage} of {totalPages}
-                    </Text>
-                    <IconButton
-                        aria-label="Previous Page"
-                        icon={<FiChevronLeft />}
-                        onClick={() => setCurrentPage(prev => prev - 1)}
-                        isDisabled={currentPage === 1}
-                        size="sm"
-                    />
-                    <IconButton
-                        aria-label="Next Page"
-                        icon={<FiChevronRight />}
-                        onClick={() => setCurrentPage(prev => prev + 1)}
-                        isDisabled={currentPage === totalPages}
-                        size="sm"
-                    />
-                </Flex>
-            </Flex>
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                    startIndex={indexOfFirstItem}
+                    endIndex={Math.min(indexOfLastItem, sortedData.length)}
+                    totalItems={sortedData.length}
+                />
+            )}
         </Box>
     );
 }

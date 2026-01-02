@@ -39,6 +39,9 @@ function TicketingInternal() {
     const [searchQuery, setSearchQuery] = useState('');
     const debouncedSearch = useDebounce(searchQuery, 300);
 
+    // Year filter state
+    const [selectedYear, setSelectedYear] = useState('all');
+
     // Fetch tickets
     const { data: tickets = [], isLoading, isError, error } = useQuery({
         queryKey: ['ticketing-internal'],
@@ -161,22 +164,52 @@ function TicketingInternal() {
         });
     };
 
-    // Filter data berdasarkan search query
+    // Filter data berdasarkan search query dan year
     const filteredTickets = useMemo(() => {
-        if (!debouncedSearch) return tickets;
+        let filtered = tickets;
 
-        const searchLower = debouncedSearch.toLowerCase();
-        return tickets.filter(ticket => {
-            return (
-                ticket.id_ticket?.toLowerCase().includes(searchLower) ||
-                ticket.nama_ticket?.toLowerCase().includes(searchLower) ||
-                ticket.description?.toLowerCase().includes(searchLower) ||
-                ticket.label?.toLowerCase().includes(searchLower) ||
-                ticket.priority?.toLowerCase().includes(searchLower) ||
-                ticket.from_who?.toLowerCase().includes(searchLower)
-            );
+        // Filter by search query
+        if (debouncedSearch) {
+            const searchLower = debouncedSearch.toLowerCase();
+            filtered = filtered.filter(ticket => {
+                return (
+                    ticket.id_ticket?.toLowerCase().includes(searchLower) ||
+                    ticket.title?.toLowerCase().includes(searchLower) ||
+                    ticket.description?.toLowerCase().includes(searchLower) ||
+                    ticket.status?.toLowerCase().includes(searchLower) ||
+                    ticket.label?.toLowerCase().includes(searchLower) ||
+                    ticket.priority?.toLowerCase().includes(searchLower) ||
+                    ticket.responsible?.toLowerCase().includes(searchLower) ||
+                    ticket.accountable?.toLowerCase().includes(searchLower) ||
+                    ticket.consulted?.toLowerCase().includes(searchLower) ||
+                    ticket.informed?.toLowerCase().includes(searchLower)
+                );
+            });
+        }
+
+        // Filter by year
+        if (selectedYear !== 'all') {
+            filtered = filtered.filter(ticket => {
+                if (!ticket.deadline) return false;
+                const ticketYear = new Date(ticket.deadline).getFullYear().toString();
+                return ticketYear === selectedYear;
+            });
+        }
+
+        return filtered;
+    }, [tickets, debouncedSearch, selectedYear]);
+
+    // Get available years from tickets
+    const availableYears = useMemo(() => {
+        const years = new Set();
+        tickets.forEach(ticket => {
+            if (ticket.deadline) {
+                const year = new Date(ticket.deadline).getFullYear();
+                years.add(year);
+            }
         });
-    }, [tickets, debouncedSearch]);
+        return Array.from(years).sort((a, b) => b - a); // Sort descending
+    }, [tickets]);
 
     // Sort handler
     const handleSort = (key) => {
@@ -194,31 +227,7 @@ function TicketingInternal() {
     const paginatedTickets = sortedTickets.slice(startIndex, endIndex);
     const totalPages = Math.ceil(sortedTickets.length / itemsPerPage);
 
-    const PaginationControls = () => {
-        if (totalPages <= 1) return null;
-
-        return (
-            <Flex justify="center" align="center" gap={2} mt={4}>
-                <IconButton
-                    icon={<FiChevronLeft />}
-                    size="sm"
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    isDisabled={currentPage === 1}
-                    aria-label="Previous page"
-                />
-                <Text fontSize="sm">
-                    Page {currentPage} of {totalPages}
-                </Text>
-                <IconButton
-                    icon={<FiChevronRight />}
-                    size="sm"
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    isDisabled={currentPage === totalPages}
-                    aria-label="Next page"
-                />
-            </Flex>
-        );
-    };
+    // Using shared Pagination component
 
     const TableSkeleton = ({ columns }) => {
         return Array(5).fill(0).map((_, idx) => (
@@ -397,7 +406,7 @@ function TicketingInternal() {
                     </Flex>
 
                     {/* Search Bar */}
-                    <Flex mb={4} gap={3} alignItems="center">
+                    <Flex mb={4} gap={3} alignItems="center" flexWrap="wrap">
                         <InputGroup maxW="500px">
                             <InputLeftElement pointerEvents="none">
                                 <FiSearch color="gray" />
@@ -413,6 +422,25 @@ function TicketingInternal() {
                                 bg={cardBg}
                             />
                         </InputGroup>
+                        
+                        <Select
+                            maxW="150px"
+                            value={selectedYear}
+                            onChange={(e) => {
+                                setSelectedYear(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            borderRadius="md"
+                            bg={cardBg}
+                        >
+                            <option value="all">Semua Tahun</option>
+                            {availableYears.map(year => (
+                                <option key={year} value={year.toString()}>
+                                    {year}
+                                </option>
+                            ))}
+                        </Select>
+
                         {searchQuery && (
                             <Text fontSize="sm" color="gray.600" whiteSpace="nowrap">
                                 {sortedTickets.length} result{sortedTickets.length !== 1 ? 's' : ''}
@@ -482,7 +510,16 @@ function TicketingInternal() {
                             </Box>
                         </Box>
                     </Box>
-                    <PaginationControls />
+                    {totalPages > 1 && (
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                            startIndex={startIndex}
+                            endIndex={endIndex}
+                            totalItems={sortedTickets.length}
+                        />
+                    )}
                 </Box>
 
                 {/* Modal for Submit Result */}

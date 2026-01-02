@@ -5,6 +5,7 @@ import { getRekapAbsensiKaryawan, getAbsensiBulanan, getPayslip } from '@/featur
 import { StyledRekapAbsensi } from './RekapAbsensi.styled';
 import { Box, Flex, Select, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import Loading from '@/components/Loading';
+import Pagination from '@/components/Pagination';
 import { format } from 'date-fns';
 
 const RekapAbsensiPage = () => {
@@ -254,63 +255,14 @@ const RekapAbsensiPage = () => {
 
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <Flex justify="space-between" align="center" mt={4} pt={4} borderTop={`1px solid ${tableBorderColor}`}>
-                                <Text fontSize="sm" color="gray.600">
-                                    Menampilkan {startIndex + 1} - {Math.min(endIndex, attendanceList.length)} dari {attendanceList.length} data
-                                </Text>
-                                <Flex gap={2}>
-                                    <button
-                                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                                        disabled={currentPage === 1}
-                                        style={{
-                                            padding: '8px 16px',
-                                            borderRadius: '6px',
-                                            border: `1px solid ${tableBorderColor}`,
-                                            background: currentPage === 1 ? '#F7FAFC' : 'white',
-                                            color: currentPage === 1 ? '#A0AEC0' : '#2D3748',
-                                            cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                                            fontSize: '0.875rem',
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Previous
-                                    </button>
-                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                                        <button
-                                            key={page}
-                                            onClick={() => setCurrentPage(page)}
-                                            style={{
-                                                padding: '8px 12px',
-                                                borderRadius: '6px',
-                                                border: `1px solid ${tableBorderColor}`,
-                                                background: currentPage === page ? '#FE7743' : 'white',
-                                                color: currentPage === page ? 'white' : '#2D3748',
-                                                cursor: 'pointer',
-                                                fontSize: '0.875rem',
-                                                fontWeight: 600
-                                            }}
-                                        >
-                                            {page}
-                                        </button>
-                                    ))}
-                                    <button
-                                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                                        disabled={currentPage === totalPages}
-                                        style={{
-                                            padding: '8px 16px',
-                                            borderRadius: '6px',
-                                            border: `1px solid ${tableBorderColor}`,
-                                            background: currentPage === totalPages ? '#F7FAFC' : 'white',
-                                            color: currentPage === totalPages ? '#A0AEC0' : '#2D3748',
-                                            cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                                            fontSize: '0.875rem',
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Next
-                                    </button>
-                                </Flex>
-                            </Flex>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                                startIndex={startIndex}
+                                endIndex={endIndex}
+                                totalItems={attendanceList.length}
+                            />
                         )}
                     </Box>
                 )}

@@ -1,19 +1,20 @@
 import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import SistemTabs from "@/components/SistemTabs";
-import { Input, Flex, Text, Checkbox, useToast, useColorModeValue } from "@chakra-ui/react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { Input, Flex, Text, Checkbox, useToast, useColorModeValue, IconButton, Tooltip } from "@chakra-ui/react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getDashboardProspektifPersonal, ceklisDashboardProspektif } from "@/features/cso/csoApiService";
 import { StyledDashboardProspektifPage } from "./DashboardProspektif.styled";
 import { useState, useMemo } from "react";
-import { FiUsers, FiCalendar, FiMessageSquare } from "react-icons/fi";
+import { FiUsers, FiCalendar, FiMessageSquare, FiEdit } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 function DashboardProspektifPage() {
+    const navigate = useNavigate();
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
-    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
     
     const currentDate = new Date();
     const formatDateForInput = (date) => {
@@ -25,6 +26,7 @@ function DashboardProspektifPage() {
 
     const [selectedDate, setSelectedDate] = useState(formatDateForInput(currentDate));
     const toast = useToast();
+    const queryClient = useQueryClient();
 
     // Track checked items locally per tanggal
     const [checkedItems, setCheckedItems] = useState({});
@@ -33,7 +35,13 @@ function DashboardProspektifPage() {
     const { data: dashboardData, isLoading, refetch } = useQuery({
         queryKey: ['dashboardProspektifPersonal', selectedDate],
         queryFn: () => getDashboardProspektifPersonal(selectedDate),
-        enabled: !!selectedDate
+        enabled: !!selectedDate,
+        refetchOnMount: 'always', // Always refetch on mount untuk pastikan data fresh
+        refetchOnWindowFocus: true, // Refetch saat window focus kembali
+        onSuccess: () => {
+            // Clear checked items cache saat data di-refetch agar sinkron dengan backend
+            setCheckedItems({});
+        }
     });
 
     // Mutation untuk checklist
@@ -48,6 +56,8 @@ function DashboardProspektifPage() {
                 isClosable: true,
             });
             refetch();
+            // Invalidate prospektifData query agar form juga terupdate
+            queryClient.invalidateQueries(['prospektifData']);
         },
         onError: (error) => {
             toast({
@@ -159,6 +169,22 @@ function DashboardProspektifPage() {
         { key: 'tanggal', label: 'Tanggal' },
         { key: 'noHp', label: 'No. Handphone' },
         {
+            key: 'edit',
+            label: 'Edit',
+            render: (item) => (
+                <Tooltip label="Edit Prospektif Form" placement="top">
+                    <IconButton
+                        icon={<FiEdit />}
+                        size="sm"
+                        colorScheme="blue"
+                        variant="ghost"
+                        onClick={() => navigate(`/my-tasks/prospektif-form?psid=${item.psid}`)}
+                        aria-label="Edit"
+                    />
+                </Tooltip>
+            )
+        },
+        {
             key: 'done',
             label: 'Done?',
             render: (item) => (
@@ -187,6 +213,22 @@ function DashboardProspektifPage() {
         { key: 'psid', label: 'PSID' },
         { key: 'nama', label: 'Nama' },
         { key: 'noHp', label: 'No. Handphone' },
+        {
+            key: 'edit',
+            label: 'Edit',
+            render: (item) => (
+                <Tooltip label="Edit Prospektif Form" placement="top">
+                    <IconButton
+                        icon={<FiEdit />}
+                        size="sm"
+                        colorScheme="blue"
+                        variant="ghost"
+                        onClick={() => navigate(`/my-tasks/prospektif-form?psid=${item.psid}`)}
+                        aria-label="Edit"
+                    />
+                </Tooltip>
+            )
+        },
         {
             key: 'done',
             label: 'Done?',
