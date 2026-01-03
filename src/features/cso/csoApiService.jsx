@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { API_CONFIG } from '@/config/api.config';
 import { logError, ApiError } from '@/utils/errorHandler';
 import { auth } from '@/utils/storage';
+import { getJabatanAbbreviation } from '@/utils/formatters';
 
 const apiClient = axios.create({
     baseURL: API_CONFIG.baseURL,
@@ -1233,7 +1234,7 @@ export const getTicketingInternal = async () => {
         // Ambil codeName dari user yang login
         const userData = auth.getUser();
         const pic = userData?.codeName || userData?.name || 'Unknown';
-        const role = userData?.role || 'Unknown';
+        const role = getJabatanAbbreviation(userData?.jabatan);
         const kode = (`${role} - ${pic}`).toUpperCase();
 
         const response = await apiClient.get(ENDPOINT.csoPersonal, {
@@ -1353,8 +1354,8 @@ export async function createTicketingExternal(ticketData) {
     try {
         const userData = auth.getUser();
         const pic = userData?.codeName || userData?.name || 'Unknown';
-        const role = userData?.role || 'Unknown';
-        const person = (`${role} - ${pic}`).toUpperCase();
+        const jabatanAbbr = getJabatanAbbreviation(userData?.jabatan);
+        const person = `${jabatanAbbr} - ${pic}`.toUpperCase();
 
         const formData = new URLSearchParams();
         formData.append('action', 'create-ticketing-external');
@@ -1416,8 +1417,8 @@ export async function createTicketingInternal(ticketData) {
     try {
         const userData = auth.getUser();
         const pic = userData?.codeName || userData?.name || 'Unknown';
-        const role = userData?.role || 'Unknown';
-        const person = (`${role} - ${pic}`).toUpperCase();
+        const jabatanAbbr = getJabatanAbbreviation(userData?.jabatan);
+        const person = `${jabatanAbbr} - ${pic}`.toUpperCase();
 
         const formData = new URLSearchParams();
         formData.append('action', 'create-ticketing-internal');

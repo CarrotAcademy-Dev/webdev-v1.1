@@ -222,6 +222,37 @@ export const buildQueryString = (params) => {
     return searchParams.toString();
 };
 
+/**
+ * Get abbreviation for jabatan (job title)
+ * @param {string} jabatan - Full job title name
+ * @returns {string} Abbreviated job title
+ */
+export const getJabatanAbbreviation = (jabatan) => {
+    if (!jabatan) return 'UNKNOWN';
+    
+    const jabatanLower = jabatan.toLowerCase().trim();
+    
+    // Map jabatan to abbreviation
+    const abbreviationMap = {
+        'customer service officer': 'CSO',
+        'it developer': 'JSD',
+        'education support officer': 'ESO',
+        'illustration drawing teacher': 'MTR',
+        'marketing communications specialist': 'Marcom',
+        'finance': 'FIN',
+        'hr&ga officer': 'HR',
+        'education director': 'EDU',
+        'operation director': 'Operation',
+        'office boy': 'OB',
+        'intern': 'Intern',
+        'social media specialist': 'SMS',
+        'accounting': 'ACC',
+        'customer support administration': 'CSA',
+    };
+    
+    return abbreviationMap[jabatanLower] || jabatan.toUpperCase();
+};
+
 export default {
     formatDate,
     formatCurrency,
@@ -235,4 +266,5 @@ export default {
     formatNIS,
     parseQueryParams,
     buildQueryString,
+    getJabatanAbbreviation,
 };
