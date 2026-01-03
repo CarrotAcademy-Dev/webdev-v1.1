@@ -190,7 +190,12 @@ function ProspektifFormPage() {
     const transformDataForEdit = (data) => {
         if (!data) return {};
         
-        const transformed = { ...data };
+        const transformed = { 
+            ...data,
+            // Pastikan timestamp dan psid tetap ada untuk edit
+            timestamp: data.timestamp,
+            psid: data.psid
+        };
         
         // Convert date fields dari ISO format ke YYYY-MM-DD
         const dateFields = [
@@ -550,7 +555,7 @@ function ProspektifFormPage() {
                                             {!isNewMode && renderField('PSID', 'psid')}
                                             {renderField('Full Name', 'full_name', 'text', true)}
                                             {renderField('Phone Number', 'phone_number', 'tel')}
-                                            {renderField('Age', 'age', 'number')}
+                                            {renderField('Age', 'age', 'text')}
                                             {renderField('Gender', 'gender', 'select')}
                                         </div>
                                     </div>
