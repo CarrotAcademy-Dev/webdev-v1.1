@@ -190,7 +190,12 @@ function ProspektifFormPage() {
     const transformDataForEdit = (data) => {
         if (!data) return {};
         
-        const transformed = { ...data };
+        const transformed = { 
+            ...data,
+            // Pastikan timestamp dan psid tetap ada untuk edit
+            timestamp: data.timestamp,
+            psid: data.psid
+        };
         
         // Convert date fields dari ISO format ke YYYY-MM-DD
         const dateFields = [
@@ -251,10 +256,22 @@ function ProspektifFormPage() {
 
     const handleSubmit = () => {
         // Validasi field wajib
-        if (!editedData.full_name || !editedData.phone_number || !editedData.first_contact_date) {
+        if (!editedData.full_name || !editedData.first_contact_date) {
             toast({
                 title: 'Data tidak lengkap',
-                description: 'Nama Lengkap, Nomor HP, dan Tanggal Kontak Pertama wajib diisi',
+                description: 'Nama Lengkap dan Tanggal Kontak Pertama wajib diisi',
+                status: 'warning',
+                duration: 3000,
+                isClosable: true
+            });
+            return;
+        }
+
+        // Validasi phone number - minimal salah satu harus diisi
+        if (!editedData.phone_number && !editedData.parent_phone) {
+            toast({
+                title: 'Data tidak lengkap',
+                description: 'Minimal salah satu nomor telepon harus diisi (Phone Number atau Parents/Guardian Phone Number)',
                 status: 'warning',
                 duration: 3000,
                 isClosable: true
@@ -537,8 +554,8 @@ function ProspektifFormPage() {
                                         <div className="form-grid">
                                             {!isNewMode && renderField('PSID', 'psid')}
                                             {renderField('Full Name', 'full_name', 'text', true)}
-                                            {renderField('Phone Number', 'phone_number', 'tel', true)}
-                                            {renderField('Age', 'age', 'number')}
+                                            {renderField('Phone Number', 'phone_number', 'tel')}
+                                            {renderField('Age', 'age', 'text')}
                                             {renderField('Gender', 'gender', 'select')}
                                         </div>
                                     </div>
