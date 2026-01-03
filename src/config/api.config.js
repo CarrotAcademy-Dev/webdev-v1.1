@@ -6,7 +6,7 @@ export const API_CONFIG = {
         csoPersonal: import.meta.env.VITE_API_CSO_PERSONAL_ENDPOINT,
         auth: import.meta.env.VITE_API_AUTH_ENDPOINT,
     },
-    timeout: 30000,
+    timeout: 150000, // 2.5 minutes
     retryAttempts: 3,
     retryDelay: 1000,
 };
