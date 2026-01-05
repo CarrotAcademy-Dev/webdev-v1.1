@@ -4,9 +4,10 @@ import { AuthContext } from '@/context/AuthContext';
 import { getRekapAbsensiKaryawan, getAbsensiBulanan, getPayslip } from '@/features/cso/csoApiService';
 import { StyledRekapAbsensi } from './RekapAbsensi.styled';
 import { Box, Flex, Select, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
-import Loading from '@/components/Loading';
 import Pagination from '@/components/Pagination';
 import { format } from 'date-fns';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const RekapAbsensiPage = () => {
     const { currentUser } = useContext(AuthContext);
@@ -116,10 +117,6 @@ const RekapAbsensiPage = () => {
         return `Rp ${parseInt(value).toLocaleString('id-ID')}`;
     };
 
-    if (isLoadingRekap) {
-        return <Loading />;
-    }
-
     if (errorRekap) {
         return (
             <Box p={8}>
@@ -141,13 +138,13 @@ const RekapAbsensiPage = () => {
                     <div className="time-item">
                         <div className="time-label">Check In</div>
                         <div className="time-value">
-                            {presensiToday.check_in || '-'}
+                            {isLoadingRekap ? <Skeleton height="30px" width="100px" /> : (presensiToday.check_in || '-')}
                         </div>
                     </div>
                     <div className="time-item">
                         <div className="time-label">Check Out</div>
                         <div className="time-value">
-                            {presensiToday.check_out || '-'}
+                            {isLoadingRekap ? <Skeleton height="30px" width="100px" /> : (presensiToday.check_out || '-')}
                         </div>
                     </div>
                 </div>
@@ -175,7 +172,28 @@ const RekapAbsensiPage = () => {
 
                 {/* Stats Cards */}
                 <div className="statsCard">
-                    {monthlyData && monthlyData.attendance && (
+                    {isLoadingMonthly ? (
+                        <div className="stats-grid">
+                            <Box bg={greenCardBg} p={4} borderRadius="12px" boxShadow="sm">
+                                <Skeleton height="32px" width="40px" baseColor="rgba(255,255,255,0.3)" highlightColor="rgba(255,255,255,0.5)" />
+                                <Text fontSize="sm" color="white" mt={1}>
+                                    Hadir
+                                </Text>
+                            </Box>
+                            <Box bg={redCardBg} p={4} borderRadius="12px" boxShadow="sm">
+                                <Skeleton height="32px" width="40px" baseColor="rgba(255,255,255,0.3)" highlightColor="rgba(255,255,255,0.5)" />
+                                <Text fontSize="sm" color="white" mt={1}>
+                                    Tidak Hadir
+                                </Text>
+                            </Box>
+                            <Box bg={orangeCardBg} p={4} borderRadius="12px" boxShadow="sm">
+                                <Skeleton height="32px" width="40px" baseColor="rgba(255,255,255,0.3)" highlightColor="rgba(255,255,255,0.5)" />
+                                <Text fontSize="sm" color="white" mt={1}>
+                                    Cuti
+                                </Text>
+                            </Box>
+                        </div>
+                    ) : monthlyData && monthlyData.attendance && (
                         <div className="stats-grid">
                             <Box bg={greenCardBg} p={4} borderRadius="12px" boxShadow="sm">
                                 <Text fontSize="2xl" fontWeight="bold" color="white">
@@ -206,7 +224,32 @@ const RekapAbsensiPage = () => {
                 </div>
 
                 {isLoadingMonthly ? (
-                    <Loading />
+                    <Box overflowX="auto">
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ background: tableHeaderBg }}>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Tanggal</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Hari</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Check In</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Check Out</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Status</th>
+                                    <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: tableHeaderColor }}>Catatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Array.from({ length: 5 }).map((_, idx) => (
+                                    <tr key={idx} style={{ borderBottom: `1px solid ${tableBorderColor}` }}>
+                                        <td style={{ padding: '12px' }}><Skeleton height="20px" /></td>
+                                        <td style={{ padding: '12px' }}><Skeleton height="20px" /></td>
+                                        <td style={{ padding: '12px' }}><Skeleton height="20px" /></td>
+                                        <td style={{ padding: '12px' }}><Skeleton height="20px" /></td>
+                                        <td style={{ padding: '12px' }}><Skeleton height="20px" width="60px" /></td>
+                                        <td style={{ padding: '12px' }}><Skeleton height="20px" /></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </Box>
                 ) : attendanceList.length === 0 ? (
                     <Text color="gray.500" textAlign="center" py={8}>
                         Tidak ada data absensi untuk bulan ini
@@ -304,7 +347,21 @@ const RekapAbsensiPage = () => {
                 </Flex>
 
                 {isLoadingPayslip ? (
-                    <Loading />
+                    <Box>
+                        <div className="payslip-grid">
+                            <div className="payslip-group">
+                                <div className="group-title">Gaji & Tunjangan</div>
+                                <Skeleton height="30px" count={3} style={{ marginBottom: '10px' }} />
+                            </div>
+                            <div className="payslip-group">
+                                <div className="group-title">Potongan</div>
+                                <Skeleton height="30px" count={2} style={{ marginBottom: '10px' }} />
+                            </div>
+                        </div>
+                        <div className="payslip-total">
+                            <Skeleton height="40px" />
+                        </div>
+                    </Box>
                 ) : !payslipResult ? (
                     <Text color="gray.500" textAlign="center" py={8}>
                         Tidak ada data slip gaji untuk periode ini

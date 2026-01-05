@@ -23,6 +23,8 @@ import { StyledReviewKaryawan } from "./ReviewKaryawan.styled";
 import { useState, useMemo, useContext } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import { AuthContext } from "@/context/AuthContext";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 // Dummy data karyawan - nanti bisa diganti dengan API
 const KARYAWAN_LIST = [

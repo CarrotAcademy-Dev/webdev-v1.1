@@ -5,14 +5,15 @@ import { Input, Flex, Text, Checkbox, useToast, useColorModeValue, IconButton, T
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getDashboardProspektifPersonal, ceklisDashboardProspektif } from "@/features/cso/csoApiService";
 import { StyledDashboardProspektifPage } from "./DashboardProspektif.styled";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { FiUsers, FiCalendar, FiMessageSquare, FiEdit } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 function DashboardProspektifPage() {
     const navigate = useNavigate();
+    const location = useLocation();
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
     
@@ -43,6 +44,26 @@ function DashboardProspektifPage() {
             setCheckedItems({});
         }
     });
+
+    // Handle refetch saat kembali dari edit form (harus SETELAH useQuery)
+    useEffect(() => {
+        if (location.state?.refetchNeeded) {
+            // Refetch data dashboard
+            refetch();
+            
+            // Clear state setelah refetch untuk hindari refetch berulang
+            window.history.replaceState({}, document.title);
+            
+            // Show toast untuk inform user data sudah diupdate
+            toast({
+                title: "Data Diperbarui",
+                description: "Dashboard telah diperbarui dengan data terbaru",
+                status: "info",
+                duration: 2000,
+                isClosable: true,
+            });
+        }
+    }, [location.state, refetch, toast]);
 
     // Mutation untuk checklist
     const checklistMutation = useMutation({
