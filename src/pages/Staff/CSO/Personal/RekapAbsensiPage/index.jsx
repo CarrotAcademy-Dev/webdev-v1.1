@@ -347,7 +347,21 @@ const RekapAbsensiPage = () => {
                 </Flex>
 
                 {isLoadingPayslip ? (
-                    <Loading />
+                    <Box>
+                        <div className="payslip-grid">
+                            <div className="payslip-group">
+                                <div className="group-title">Gaji & Tunjangan</div>
+                                <Skeleton height="30px" count={3} style={{ marginBottom: '10px' }} />
+                            </div>
+                            <div className="payslip-group">
+                                <div className="group-title">Potongan</div>
+                                <Skeleton height="30px" count={2} style={{ marginBottom: '10px' }} />
+                            </div>
+                        </div>
+                        <div className="payslip-total">
+                            <Skeleton height="40px" />
+                        </div>
+                    </Box>
                 ) : !payslipResult ? (
                     <Text color="gray.500" textAlign="center" py={8}>
                         Tidak ada data slip gaji untuk periode ini
