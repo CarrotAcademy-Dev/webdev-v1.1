@@ -20,8 +20,12 @@ function Navbar() {
     const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
     // Check if user is CSO
     const isCSO = currentUser?.jabatan === JABATAN.CSO;
+    // Check if user is ESO
+    const isESO = currentUser?.jabatan === JABATAN.ESO;
     // Show CSO menu if user is CSO or Admin
     const showCSOMenu = isCSO || isAdmin;
+    // Show ESO menu if user is ESO or Admin
+    const showESOMenu = isESO || isAdmin;
     
     // Update session time every minute
     useEffect(() => {
@@ -132,9 +136,30 @@ function Navbar() {
       });
     }
 
+    // Add ESO menu only for ESO jabatan or Admin
+    if (showESOMenu) {
+      baseMenu.splice(showCSOMenu ? 2 : 1, 0, {
+        mainIcon: <PiSuitcaseBold />,
+        items: [
+          {
+            category: "Bersama",
+            items: [
+              // ESO Bersama pages will be added here
+            ]
+          },
+          {
+            category: "Personal",
+            items: [
+              { label: "Track Ticket From Me", path: "/eso/track-ticket-fme" },
+            ]
+          }
+        ],
+      });
+    }
+
     // Add Admin menu only for admin/super_admin
     if (isAdmin) {
-      baseMenu.splice(showCSOMenu ? 2 : 1, 0, {
+      baseMenu.splice((showCSOMenu ? 1 : 0) + (showESOMenu ? 1 : 0) + 1, 0, {
         mainIcon: <FiShield />,
         items: [
           {
@@ -148,7 +173,7 @@ function Navbar() {
     }
 
     return baseMenu;
-  }, [logout, isAdmin, showCSOMenu]);
+  }, [logout, isAdmin, showCSOMenu, showESOMenu]);
 
     return (
       <StyledNavbar>
