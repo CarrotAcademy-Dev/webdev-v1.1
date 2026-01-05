@@ -4,8 +4,9 @@ import { getProfilSiswa, submitProfilSiswa } from '@/features/cso/csoApiService'
 import { AuthContext } from '@/context/AuthContext';
 import { StyledProfilSiswa } from './ProfilSiswa.styled';
 import { Box, Flex, Input, Button, Text, Textarea, useToast, useColorModeValue, useColorMode } from '@chakra-ui/react';
-import Loading from '@/components/Loading';
 import { format } from 'date-fns';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const ProfilSiswaPage = () => {
     const { currentUser } = useContext(AuthContext);
@@ -167,7 +168,17 @@ const ProfilSiswaPage = () => {
             </div>
 
             {/* Loading State */}
-            {isLoading && <Loading />}
+            {isLoading && (
+                <Box bg={cardBg} p={8} borderRadius="12px">
+                    <Skeleton height="200px" borderRadius="12px" />
+                    <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                        <Skeleton height="100px" borderRadius="8px" />
+                        <Skeleton height="100px" borderRadius="8px" />
+                        <Skeleton height="100px" borderRadius="8px" />
+                        <Skeleton height="100px" borderRadius="8px" />
+                    </div>
+                </Box>
+            )}
 
             {/* Error State */}
             {error && (
