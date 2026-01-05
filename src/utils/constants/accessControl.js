@@ -44,5 +44,11 @@ export const ACCESS_GROUPS = {
         allowedJabatan: [JABATAN.CSO],
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
         requireAny: true
+    },
+    // Admin can also access ESO pages
+    ESO_OR_ADMIN: {
+        allowedJabatan: [JABATAN.ESO],
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        requireAny: true
     }
 };
