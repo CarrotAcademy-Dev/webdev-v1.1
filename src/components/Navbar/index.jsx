@@ -151,6 +151,7 @@ function Navbar() {
             category: "Personal",
             items: [
               { label: "Track Ticket From Me", path: "/eso/track-ticket-fme" },
+              { label: "Ticketing Internal", path: "/eso/ticketing-internal" },
             ]
           }
         ],

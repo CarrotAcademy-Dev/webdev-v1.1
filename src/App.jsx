@@ -40,6 +40,7 @@ const TicketingInternalPage = lazy(() => import('./pages/Staff/CSO/Personal/Tick
 const FdStudentIdentityPage = lazy(() => import('./pages/Staff/CSO/Personal/FdStudenIdentityPage'));
 const TrackTicketFmePage = lazy(() => import('./pages/Staff/CSO/Personal/TrackTicketFmePage'));
 const TrackTicketFmePageEso = lazy(() => import('./pages/Staff/ESO/Personal/TrackTicketFMe'));
+const TicketingInternalPageEso = lazy(() => import('./pages/Staff/ESO/Personal/TicketingInternalPage'));
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
@@ -284,6 +285,14 @@ function App() {
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <TrackTicketFmePageEso />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="eso/ticketing-internal" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <TicketingInternalPageEso />
             </Layout>
           </ProtectedRoute>
         } />

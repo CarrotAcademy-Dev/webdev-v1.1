@@ -1328,12 +1328,14 @@ export const getTrackTicketFme = async () => {
     try {
         // Ambil codeName dari user yang login
         const userData = auth.getUser();
-        const kode = userData?.codeName || userData?.name || 'Unknown';
+        const kodeNama = userData?.codeName || '';
+        const jabatanAbbr = getJabatanAbbreviation(userData?.jabatan);
+        const person = `${jabatanAbbr} - ${kodeNama}`.toUpperCase();
 
         const response = await apiClient.get(ENDPOINT.csoPersonal, {
             params: {
                 action: 'track-ticket-fme',
-                kode_nama: kode
+                kode_nama: person
             }
         });
 
