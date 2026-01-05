@@ -1,16 +1,16 @@
 import { useState, useMemo } from 'react';
-import { Box, Flex, Text, Grid, GridItem, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement, useColorModeValue, useColorMode } from '@chakra-ui/react';
+import { Box, Flex, Text, Grid, GridItem, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement, useColorModeValue, useColorMode } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTicketingInternal, postCeklisTicketingInternal } from '@/features/cso/csoApiService';
+import { getTicketingInternal, postCeklisTicketingInternal } from '@/features/eso/esoApiService';
 import useDebounce from '@/hooks/useDebounce';
 import { StyledTicketingInternal } from './TicketingInternal.styled';
 import ContainerCarrot from '@/components/Container';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { FiCheckCircle, FiClock, FiAlertCircle, FiTag, FiChevronLeft, FiChevronRight, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
+import { FiCheckCircle, FiClock, FiAlertCircle, FiTag, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
 import Pagination from '@/components/Pagination';
 
-function TicketingInternal() {
+function TicketingInternalEso() {
     const queryClient = useQueryClient();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,7 +45,7 @@ function TicketingInternal() {
 
     // Fetch tickets
     const { data: tickets = [], isLoading, isError, error } = useQuery({
-        queryKey: ['ticketing-internal'],
+        queryKey: ['ticketing-internal-eso'],
         queryFn: getTicketingInternal,
         staleTime: 5 * 60 * 1000
     });
@@ -85,17 +85,17 @@ function TicketingInternal() {
             if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         });
-    }
+    };
 
     // Submit mutation
     const { mutate: submitTicket } = useMutation({
         mutationFn: postCeklisTicketingInternal,
         onMutate: async (variables) => {
-            await queryClient.cancelQueries({ queryKey: ['ticketing-internal'] });
-            const previousData = queryClient.getQueryData(['ticketing-internal']);
+            await queryClient.cancelQueries({ queryKey: ['ticketing-internal-eso'] });
+            const previousData = queryClient.getQueryData(['ticketing-internal-eso']);
 
             // Optimistic update - mark as updating
-            queryClient.setQueryData(['ticketing-internal'], (oldData) => {
+            queryClient.setQueryData(['ticketing-internal-eso'], (oldData) => {
                 if (!oldData) return [];
                 return oldData.map(ticket => 
                     ticket.id_ticket === variables.id_ticket 
@@ -106,13 +106,12 @@ function TicketingInternal() {
 
             return { previousData };
         },
-        onError: (error, variables, context) => {
-            if (context && context.previousData) {
-                queryClient.setQueryData(['ticketing-internal'], context.previousData);
-            }
+        onError: (err, variables, context) => {
+            // Rollback pada error
+            queryClient.setQueryData(['ticketing-internal-eso'], context.previousData);
             toast({
-                title: 'Submit Failed',
-                description: error.message || 'Gagal submit ticket',
+                title: 'Gagal Submit',
+                description: err.message,
                 status: 'error',
                 duration: 5000,
                 isClosable: true
@@ -120,15 +119,16 @@ function TicketingInternal() {
         },
         onSuccess: () => {
             toast({
-                title: 'Ticket Berhasil Diselesaikan!',
+                title: 'Berhasil!',
+                description: 'Ticket berhasil diselesaikan',
                 status: 'success',
-                duration: 2000,
+                duration: 3000,
                 isClosable: true
             });
 
-            // Remove from list after animation
+            // Refetch setelah 500ms untuk memastikan data terbaru
             setTimeout(() => {
-                queryClient.invalidateQueries({ queryKey: ['ticketing-internal'] });
+                queryClient.invalidateQueries({ queryKey: ['ticketing-internal-eso'] });
             }, 500);
 
             onClose();
@@ -171,19 +171,15 @@ function TicketingInternal() {
 
         // Filter by search query
         if (debouncedSearch) {
-            const searchLower = debouncedSearch.toLowerCase();
+            const query = debouncedSearch.toLowerCase();
             filtered = filtered.filter(ticket => {
                 return (
-                    ticket.id_ticket?.toLowerCase().includes(searchLower) ||
-                    ticket.title?.toLowerCase().includes(searchLower) ||
-                    ticket.description?.toLowerCase().includes(searchLower) ||
-                    ticket.status?.toLowerCase().includes(searchLower) ||
-                    ticket.label?.toLowerCase().includes(searchLower) ||
-                    ticket.priority?.toLowerCase().includes(searchLower) ||
-                    ticket.responsible?.toLowerCase().includes(searchLower) ||
-                    ticket.accountable?.toLowerCase().includes(searchLower) ||
-                    ticket.consulted?.toLowerCase().includes(searchLower) ||
-                    ticket.informed?.toLowerCase().includes(searchLower)
+                    ticket.id_ticket?.toLowerCase().includes(query) ||
+                    ticket.nama_ticket?.toLowerCase().includes(query) ||
+                    ticket.description?.toLowerCase().includes(query) ||
+                    ticket.label?.toLowerCase().includes(query) ||
+                    ticket.priority?.toLowerCase().includes(query) ||
+                    ticket.from_who?.toLowerCase().includes(query)
                 );
             });
         }
@@ -192,8 +188,8 @@ function TicketingInternal() {
         if (selectedYear !== 'all') {
             filtered = filtered.filter(ticket => {
                 if (!ticket.deadline) return false;
-                const ticketYear = new Date(ticket.deadline).getFullYear().toString();
-                return ticketYear === selectedYear;
+                const ticketYear = new Date(ticket.deadline).getFullYear();
+                return ticketYear.toString() === selectedYear;
             });
         }
 
@@ -227,8 +223,6 @@ function TicketingInternal() {
     const endIndex = startIndex + itemsPerPage;
     const paginatedTickets = sortedTickets.slice(startIndex, endIndex);
     const totalPages = Math.ceil(sortedTickets.length / itemsPerPage);
-
-    // Using shared Pagination component
 
     const TableSkeleton = ({ columns }) => {
         return Array(5).fill(0).map((_, idx) => (
@@ -588,4 +582,4 @@ function TicketingInternal() {
     );
 }
 
-export default TicketingInternal;
+export default TicketingInternalEso;

@@ -1,52 +1,42 @@
 import { useState, useMemo } from 'react';
-import { Box, Flex, Text, Grid, GridItem, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement, useColorModeValue, useColorMode } from '@chakra-ui/react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTicketingInternal, postCeklisTicketingInternal } from '@/features/cso/csoApiService';
+import { Box, Flex, Text, Grid, GridItem, Input, InputGroup, InputLeftElement, Select, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import useDebounce from '@/hooks/useDebounce';
-import { StyledTicketingInternal } from './TicketingInternal.styled';
 import ContainerCarrot from '@/components/Container';
+import Pagination from '@/components/Pagination';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { FiCheckCircle, FiClock, FiAlertCircle, FiTag, FiChevronLeft, FiChevronRight, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
-import Pagination from '@/components/Pagination';
+import { FiClock, FiAlertCircle, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
+import { getTrackTicketFme } from '@/features/eso/esoApiService';
+import { StyledTrackTicketFme } from './TrackTicketFme.styled';
 
-function TicketingInternal() {
-    const queryClient = useQueryClient();
-    const toast = useToast();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+function TrackTicketFmePage() {
     const { colorMode } = useColorMode();
-
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
     const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
     const tableHeaderBg = useColorModeValue('#fcf7ecff', '#2C3748');
     const tableHeaderHoverBg = useColorModeValue('#f5efdcff', '#3A4556');
     const tableHeaderColor = useColorModeValue('#3b3b43ff', 'dark.text.primary');
-
-    const [selectedTicket, setSelectedTicket] = useState(null);
-    const [formData, setFormData] = useState({
-        result: '',
-        notes: ''
-    });
-
-    // Pagination
+    
+    //Pagination
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
     // Sort state
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'desc' });
 
     // Search state
     const [searchQuery, setSearchQuery] = useState('');
-    const debouncedSearch = useDebounce(searchQuery, 300);
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     // Year filter state
     const [selectedYear, setSelectedYear] = useState('all');
 
-    // Fetch tickets
+    // Fetch tickets data
     const { data: tickets = [], isLoading, isError, error } = useQuery({
-        queryKey: ['ticketing-internal'],
-        queryFn: getTicketingInternal,
+        queryKey: ['trackTicketFmeEso'],
+        queryFn: getTrackTicketFme,
         staleTime: 5 * 60 * 1000
     });
 
@@ -55,135 +45,56 @@ function TicketingInternal() {
         if (!sortConfig.key || !data) return data;
 
         return [...data].sort((a, b) => {
-            let aVal = a[sortConfig.key] || '';
-            let bVal = b[sortConfig.key] || '';
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
 
-            // Special handling untuk kolom deadline (tanggal)
+            // Handling untuk kolom deadline (tanggal)
             if (sortConfig.key === 'deadline') {
-                // Parse tanggal ke timestamp untuk perbandingan yang akurat
-                const aDate = aVal ? new Date(aVal).getTime() : 0;
-                const bDate = bVal ? new Date(bVal).getTime() : 0;
-                
-                return sortConfig.direction === 'asc' 
-                    ? aDate - bDate 
+                const aDate = aValue ? new Date(aValue) : 0;
+                const bDate = bValue ? new Date(bValue) : 0;
+
+                return sortConfig.direction === 'asc'
+                    ? aDate - bDate
                     : bDate - aDate;
             }
 
-            // Untuk priority, sort berdasarkan tingkat urgency
+            // Sort berdasarkan priority
             if (sortConfig.key === 'priority') {
                 const priorityOrder = { 'Very High': 4, 'High': 3, 'Normal': 2, 'Low': 1 };
-                const aOrder = priorityOrder[aVal] || 0;
-                const bOrder = priorityOrder[bVal] || 0;
-                
+                const aPriority = priorityOrder[aValue] || 0;
+                const bPriority = priorityOrder[bValue] || 0;
+
                 return sortConfig.direction === 'asc'
-                    ? aOrder - bOrder
-                    : bOrder - aOrder;
+                    ? aPriority - bPriority
+                    : bPriority - aPriority;
             }
 
-            // Default string comparison untuk kolom lainnya
-            if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
-            if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+            // Default sorting (string/number)
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         });
     }
 
-    // Submit mutation
-    const { mutate: submitTicket } = useMutation({
-        mutationFn: postCeklisTicketingInternal,
-        onMutate: async (variables) => {
-            await queryClient.cancelQueries({ queryKey: ['ticketing-internal'] });
-            const previousData = queryClient.getQueryData(['ticketing-internal']);
-
-            // Optimistic update - mark as updating
-            queryClient.setQueryData(['ticketing-internal'], (oldData) => {
-                if (!oldData) return [];
-                return oldData.map(ticket => 
-                    ticket.id_ticket === variables.id_ticket 
-                        ? { ...ticket, isUpdating: true }
-                        : ticket
-                );
-            });
-
-            return { previousData };
-        },
-        onError: (error, variables, context) => {
-            if (context && context.previousData) {
-                queryClient.setQueryData(['ticketing-internal'], context.previousData);
-            }
-            toast({
-                title: 'Submit Failed',
-                description: error.message || 'Gagal submit ticket',
-                status: 'error',
-                duration: 5000,
-                isClosable: true
-            });
-        },
-        onSuccess: () => {
-            toast({
-                title: 'Ticket Berhasil Diselesaikan!',
-                status: 'success',
-                duration: 2000,
-                isClosable: true
-            });
-
-            // Remove from list after animation
-            setTimeout(() => {
-                queryClient.invalidateQueries({ queryKey: ['ticketing-internal'] });
-            }, 500);
-
-            onClose();
-            setFormData({ result: '', notes: '' });
-            setSelectedTicket(null);
-        }
-    });
-
-    const handleOpenModal = (ticket) => {
-        setSelectedTicket(ticket);
-        setFormData({
-            result: ticket.result || '',
-            notes: ticket.notes || ''
-        });
-        onOpen();
-    };
-
-    const handleSubmit = () => {
-        if (!formData.result) {
-            toast({
-                title: 'Form Tidak Lengkap',
-                description: 'Result wajib diisi',
-                status: 'warning',
-                duration: 3000,
-                isClosable: true
-            });
-            return;
-        }
-
-        submitTicket({
-            id_ticket: selectedTicket.id_ticket,
-            result: formData.result,
-            notes: formData.notes
-        });
-    };
-
-    // Filter data berdasarkan search query dan year
+    // Filtered tickets
     const filteredTickets = useMemo(() => {
         let filtered = tickets;
 
         // Filter by search query
-        if (debouncedSearch) {
-            const searchLower = debouncedSearch.toLowerCase();
+        if (debouncedSearchQuery) {
+            const lowercasedQuery = debouncedSearchQuery.toLowerCase();
             filtered = filtered.filter(ticket => {
                 return (
-                    ticket.id_ticket?.toLowerCase().includes(searchLower) ||
-                    ticket.title?.toLowerCase().includes(searchLower) ||
-                    ticket.description?.toLowerCase().includes(searchLower) ||
-                    ticket.status?.toLowerCase().includes(searchLower) ||
-                    ticket.label?.toLowerCase().includes(searchLower) ||
-                    ticket.priority?.toLowerCase().includes(searchLower) ||
-                    ticket.responsible?.toLowerCase().includes(searchLower) ||
-                    ticket.accountable?.toLowerCase().includes(searchLower) ||
-                    ticket.consulted?.toLowerCase().includes(searchLower) ||
-                    ticket.informed?.toLowerCase().includes(searchLower)
+                    ticket.id_ticket?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.nama_ticket?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.description?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.status?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.label?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.type?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.priority?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.responsible?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.result?.toLowerCase().includes(lowercasedQuery) ||
+                    ticket.notes?.toLowerCase().includes(lowercasedQuery)
                 );
             });
         }
@@ -198,7 +109,7 @@ function TicketingInternal() {
         }
 
         return filtered;
-    }, [tickets, debouncedSearch, selectedYear]);
+    }, [tickets, debouncedSearchQuery, selectedYear]);
 
     // Get available years from tickets
     const availableYears = useMemo(() => {
@@ -214,11 +125,11 @@ function TicketingInternal() {
 
     // Sort handler
     const handleSort = (key) => {
-        setSortConfig(prev => ({
+        setSortConfig(prevConfig => ({
             key,
-            direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
         }));
-        setCurrentPage(1); // Reset ke halaman pertama saat sort
+        setCurrentPage(1); // Reset ke halaman pertama setelah sorting
     };
 
     // Sort dan Pagination
@@ -227,8 +138,6 @@ function TicketingInternal() {
     const endIndex = startIndex + itemsPerPage;
     const paginatedTickets = sortedTickets.slice(startIndex, endIndex);
     const totalPages = Math.ceil(sortedTickets.length / itemsPerPage);
-
-    // Using shared Pagination component
 
     const TableSkeleton = ({ columns }) => {
         return Array(5).fill(0).map((_, idx) => (
@@ -319,11 +228,11 @@ function TicketingInternal() {
 
     return (
         <ContainerCarrot>
-            <StyledTicketingInternal data-theme={colorMode}>
+            <StyledTrackTicketFme data-theme={colorMode}>
                 <Box className="page-header">
                     <Flex justify="space-between" align="center" mb={6}>
                         <Text fontSize="2xl" fontWeight="bold">
-                            Ticketing Internal
+                            Track Ticket From Me
                         </Text>
                     </Flex>
 
@@ -336,7 +245,7 @@ function TicketingInternal() {
                                         <FiClock size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Total Open Tickets</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Total Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -353,10 +262,10 @@ function TicketingInternal() {
                             <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
                                     <Box color="#FE7743" p={2} borderRadius="md">
-                                        <FiAlertCircle size={20} />
+                                        <FiClock size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">High Priority</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Open Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -364,7 +273,7 @@ function TicketingInternal() {
                                         <Skeleton width={40} height={30} />
                                     ) : (
                                         <Text fontSize="2xl" fontWeight="bold">
-                                            {tickets.filter(t => t.priority === 'High').length}
+                                            {tickets.filter(t => t.status === 'Open').length}
                                         </Text>
                                     )}
                                 </Flex>
@@ -374,11 +283,11 @@ function TicketingInternal() {
                         <GridItem>
                             <Box className="overview-card" bg={cardBg} p={4} borderRadius="lg" boxShadow="md">
                                 <Flex align="center" gap={3} mb={2}>
-                                    <Box color="#FE7743" p={2} borderRadius="md">
-                                        <FiTag size={20} />
+                                    <Box color="#28a745" p={2} borderRadius="md">
+                                        <FiAlertCircle size={20} />
                                     </Box>
                                     <Box flex="1">
-                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Lost & Found</Text>
+                                        <Text fontSize="xs" color={textColor} mb={1} fontWeight="bold">Close Tickets</Text>
                                     </Box>
                                 </Flex>
                                 <Flex p={3} borderRadius="md" align="center" justify="center">
@@ -386,7 +295,7 @@ function TicketingInternal() {
                                         <Skeleton width={40} height={30} />
                                     ) : (
                                         <Text fontSize="2xl" fontWeight="bold">
-                                            {tickets.filter(t => t.label === 'Lost and Found').length}
+                                            {tickets.filter(t => t.status === 'Close').length}
                                         </Text>
                                     )}
                                 </Flex>
@@ -399,10 +308,10 @@ function TicketingInternal() {
                 <Box className="table-section">
                     <Flex justify="space-between" align="center" mb={4}>
                         <Text fontSize="lg" fontWeight="bold">
-                            Open Tickets
+                            All Tickets
                         </Text>
                         <Text fontSize="sm" color="gray.600">
-                            Total: {tickets.length}
+                            Total: {sortedTickets.length} tickets
                         </Text>
                     </Flex>
 
@@ -417,7 +326,7 @@ function TicketingInternal() {
                                 value={searchQuery}
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
-                                    setCurrentPage(1); // Reset ke page 1 saat search
+                                    setCurrentPage(1);
                                 }}
                                 borderRadius="md"
                                 bg={cardBg}
@@ -448,30 +357,35 @@ function TicketingInternal() {
                             </Text>
                         )}
                     </Flex>
+                    
                     <Box className="table-container">
                         <Box as="table" className="data-table" width="100%">
                             <Box as="thead">
                                 <Box as="tr">
                                     <TableHeader>No</TableHeader>
+                                    <TableHeader sortKey="timestamp">Timestamp</TableHeader>
                                     <TableHeader sortKey="id_ticket">ID Ticket</TableHeader>
                                     <TableHeader sortKey="nama_ticket">Nama Ticket</TableHeader>
                                     <TableHeader>Description</TableHeader>
+                                    <TableHeader sortKey="status">Status</TableHeader>
                                     <TableHeader sortKey="deadline">Deadline</TableHeader>
                                     <TableHeader sortKey="label">Label</TableHeader>
+                                    <TableHeader sortKey="type">Type</TableHeader>
                                     <TableHeader sortKey="priority">Priority</TableHeader>
-                                    <TableHeader sortKey="from_who">From</TableHeader>
-                                    <TableHeader>Action</TableHeader>
+                                    <TableHeader sortKey="responsible">Responsible</TableHeader>
+                                    <TableHeader>Result</TableHeader>
+                                    <TableHeader>Notes</TableHeader>
                                 </Box>
                             </Box>
                             <Box as="tbody">
                                 {isLoading ? (
-                                    <TableSkeleton columns={9} />
+                                    <TableSkeleton columns={13} />
                                 ) : sortedTickets.length === 0 ? (
                                     <Box as="tr">
-                                        <TableCell colSpan={9} textAlign="center">
+                                        <TableCell colSpan={13} textAlign="center">
                                             {searchQuery 
                                                 ? `Tidak ada ticket yang cocok dengan "${searchQuery}"` 
-                                                : 'Tidak ada ticket open'
+                                                : 'Tidak ada ticket'
                                             }
                                         </TableCell>
                                     </Box>
@@ -480,37 +394,38 @@ function TicketingInternal() {
                                         <Box 
                                             as="tr" 
                                             key={ticket.id_ticket}
-                                            opacity={ticket.isUpdating ? 0.5 : 1}
-                                            transition="opacity 0.3s"
                                         >
                                             <TableCell>{startIndex + idx + 1}</TableCell>
+                                            <TableCell>{formatDate(ticket.timestamp)}</TableCell>
                                             <TableCell>{ticket.id_ticket}</TableCell>
                                             <TableCell wrap>{ticket.nama_ticket}</TableCell>
                                             <TableCell wrap maxW="300px">{ticket.description}</TableCell>
-                                            <TableCell>{formatDate(ticket.deadline)}</TableCell>
-                                            <TableCell>{ticket.label}</TableCell>
                                             <TableCell>
-                                                <Text color={getPriorityColor(ticket.priority)} fontWeight="medium">
-                                                    {ticket.priority}
+                                                <Text 
+                                                    color={ticket.status === 'Open' ? 'orange.500' : 'green.500'}
+                                                    fontWeight="medium"
+                                                >
+                                                    {ticket.status}
                                                 </Text>
                                             </TableCell>
-                                            <TableCell>{ticket.from_who}</TableCell>
+                                            <TableCell>{formatDate(ticket.deadline)}</TableCell>
+                                            <TableCell wrap>{ticket.label}</TableCell>
+                                            <TableCell>{ticket.type}</TableCell>
                                             <TableCell>
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => handleOpenModal(ticket)}
-                                                    isDisabled={ticket.isUpdating}
-                                                    leftIcon={<FiCheckCircle />}
-                                                >
-                                                    Done
-                                                </Button>
+                                                <Text color={getPriorityColor(ticket.priority)} fontWeight="medium">
+                                                    {ticket.priority || '-'}
+                                                </Text>
                                             </TableCell>
+                                            <TableCell wrap>{ticket.responsible}</TableCell>
+                                            <TableCell>{ticket.result || '-'}</TableCell>
+                                            <TableCell wrap maxW="250px">{ticket.notes || '-'}</TableCell>
                                         </Box>
                                     ))
                                 )}
                             </Box>
                         </Box>
                     </Box>
+                    
                     {totalPages > 1 && (
                         <Pagination
                             currentPage={currentPage}
@@ -522,70 +437,9 @@ function TicketingInternal() {
                         />
                     )}
                 </Box>
-
-                {/* Modal for Submit Result */}
-                <Modal isOpen={isOpen} onClose={onClose} size="xl">
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Complete Ticket: {selectedTicket?.id_ticket}</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            <Box mb={4}>
-                                <Text fontWeight="bold" mb={2}>Ticket Info:</Text>
-                                <Text fontSize="sm" color="gray.600">
-                                    {selectedTicket?.nama_ticket} - {selectedTicket?.description}
-                                </Text>
-                            </Box>
-
-                            {selectedTicket?.notes && (
-                                <Box mb={4} p={3} bg="gray.50" borderRadius="md" borderLeft="3px solid" borderColor="orange.500">
-                                    <Text fontWeight="bold" mb={2} fontSize="sm">Previous Notes:</Text>
-                                    <Text fontSize="sm" color="gray.700" whiteSpace="pre-wrap">
-                                        {selectedTicket.notes}
-                                    </Text>
-                                </Box>
-                            )}
-
-                            <Box mb={4}>
-                                <Text mb={2} fontWeight="medium">Result *</Text>
-                                <Select
-                                    value={formData.result}
-                                    onChange={(e) => setFormData({ ...formData, result: e.target.value })}
-                                    placeholder="Pilih result"
-                                >
-                                    <option value="Done">Done</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Not Found">Not Found</option>
-                                    <option value="Resolved">Resolved</option>
-                                </Select>
-                            </Box>
-
-                            <Box mb={4}>
-                                <Text mb={2} fontWeight="medium">Notes</Text>
-                                <Textarea
-                                    value={formData.notes}
-                                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                    placeholder="Tambahkan catatan... (optional)"
-                                    rows={4}
-                                />
-                            </Box>
-
-                            <Text fontSize="xs" color="gray.500">* Wajib diisi</Text>
-                        </ModalBody>
-
-                        <ModalFooter>
-                            <Button variant="ghost" mr={3} onClick={onClose}>
-                                Cancel
-                            </Button>
-                            <Button colorScheme="orange" onClick={handleSubmit}>
-                                Submit
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
-            </StyledTicketingInternal>
+            </StyledTrackTicketFme>
         </ContainerCarrot>
     );
 }
 
-export default TicketingInternal;
+export default TrackTicketFmePage;
