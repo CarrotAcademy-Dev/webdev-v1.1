@@ -4,12 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getDataProspektif, submitProspektifForm, editDataProspektif } from '@/features/cso/csoApiService';
 import ContainerCarrot from '@/components/Container';
 import { StyledProspektifFormPage } from './ProspektifForm.styled';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { FiCopy, FiExternalLink } from 'react-icons/fi';
 
 function ProspektifFormPage() {
     const { colorMode } = useColorMode();
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [searchPsid, setSearchPsid] = useState('');
     const [currentPsid, setCurrentPsid] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
@@ -91,6 +92,27 @@ function ProspektifFormPage() {
             queryClient.invalidateQueries(['prospektifData', currentPsid]);
             // Invalidate dashboard query agar checklist terupdate (semua query yang match prefix)
             queryClient.invalidateQueries({ queryKey: ['dashboardProspektifPersonal'] });
+            
+            // Navigate back ke dashboard prospektif kalau datang dari sana
+            const cameFromDashboard = searchParams.get('from') === 'dashboard' || searchParams.get('psid');
+            if (cameFromDashboard) {
+                // Tentukan field mana yang diubah untuk selective refetch
+                const editedFields = Object.keys(editedData || {});
+                const needsRefetch = {
+                    followUp: editedFields.some(f => f.includes('fu1') || f.includes('fu2') || f.includes('fu3')),
+                    trial: editedFields.some(f => f.includes('trial')),
+                    firstClass: editedFields.some(f => f.includes('first_class'))
+                };
+                
+                navigate('/my-tasks/dashboard-prospektif', { 
+                    state: { 
+                        refetchNeeded: true,
+                        editedPsid: currentPsid,
+                        needsRefetch
+                    },
+                    replace: true // Replace history agar back button langsung ke dashboard
+                });
+            }
         },
         onError: (error) => {
             toast({
@@ -214,6 +236,7 @@ function ProspektifFormPage() {
         });
         
         // Convert boolean ke string untuk checkbox
+        // Pastikan semua boolean field jadi 'true' atau 'false' string, BUKAN empty string
         const booleanFields = [
             'fu1_ceklis', 'fu2_ceklis', 'fu3_ceklis',
             'retention', 'program_explained', 'pricelist_explained',
@@ -223,8 +246,13 @@ function ProspektifFormPage() {
         ];
         
         booleanFields.forEach(field => {
-            if (typeof transformed[field] === 'boolean') {
-                transformed[field] = transformed[field].toString();
+            const value = transformed[field];
+            // Normalize ke 'true' atau 'false' string
+            if (value === true || value === 'true') {
+                transformed[field] = 'true';
+            } else {
+                // Apapun selain true/'true' jadi 'false' (termasuk false, 'false', '', null, undefined)
+                transformed[field] = 'false';
             }
         });
         
@@ -457,7 +485,7 @@ function ProspektifFormPage() {
                 {isEditMode ? (
                     <Checkbox
                         isChecked={isChecked}
-                        onChange={(e) => handleInputChange(field, e.target.checked.toString())}
+                        onChange={(e) => handleInputChange(field, e.target.checked ? 'true' : 'false')}
                         colorScheme={checkboxColor}
                     >
                         <span style={isCancelCheck ? { color: '#E53E3E', fontWeight: '600' } : {}}>
