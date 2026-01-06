@@ -129,3 +129,63 @@ export const postCeklisTicketingInternal = async (data) => {
         throw error;
     }
 };
+
+/**
+ * Get List Nama Student Report (ESO Personal)
+ * Mengambil list nama siswa untuk dropdown search
+ * @returns {Promise} Promise with array of student names
+ */
+export const getListNamaStudentReport = async () => {
+    const params = new URLSearchParams({
+        action: 'get-list-nama-sr'
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Failed to fetch student names');
+        }
+    } catch (error) {
+        console.error("Error fetching list nama student report:", error);
+        throw error;
+    }
+};
+
+/**
+ * Cari Data Student Report (ESO Personal)
+ * Mencari data student report berdasarkan nama lengkap
+ * @param {string} namaLengkap - Nama lengkap siswa
+ * @returns {Promise} Promise with student report data
+ */
+export const getDataStudentReport = async (namaLengkap) => {
+    if (!namaLengkap) {
+        throw new Error('Nama lengkap harus diisi');
+    }
+
+    const params = new URLSearchParams({
+        action: 'cari-data-student-report',
+        nama_lengkap: namaLengkap
+    });
+
+    try {
+        const response = await apiClient.post(ENDPOINT.esoPersonal, params, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Tidak ditemukan data untuk nama tersebut');
+        }
+    } catch (error) {
+        console.error("Error fetching student report data:", error);
+        throw error;
+    }
+};
