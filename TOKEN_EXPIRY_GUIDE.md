@@ -193,21 +193,21 @@ auth.setUser(result, 480); // 480 menit = 8 jam
 ## Testing Checklist
 
 ### Manual Testing
-- [ ] Login → Check badge muncul dengan waktu correct
-- [ ] Wait 5 menit → Badge update otomatis
-- [ ] Set expiry 11 menit → Modal muncul setelah 1 menit
-- [ ] Click "Perpanjang" → Timer reset, modal close, toast success
-- [ ] Click "Logout" → Redirect ke login page
-- [ ] Wait until expired → Auto-logout + toast warning
-- [ ] Refresh page dengan expired token → Auto-logout
-- [ ] Navbar badge color sesuai dengan waktu tersisa
+- [x] Login → Check badge muncul dengan waktu correct
+- [x] Wait 5 menit → Badge update otomatis
+- [x] Set expiry 11 menit → Modal muncul setelah 1 menit
+- [x] Click "Perpanjang" → Timer reset, modal close, toast success
+- [x] Click "Logout" → Redirect ke login page
+- [x] Wait until expired → Auto-logout + toast warning
+- [x] Refresh page dengan expired token → Auto-logout
+- [x] Navbar badge color sesuai dengan waktu tersisa
 
 ### Edge Cases
-- [ ] Login dengan token expired di localStorage → Auto-cleanup
-- [ ] Multiple tabs open → All tabs sync logout
-- [ ] Network offline → Expiry tetap jalan (client-side)
-- [ ] Browser closed → Token persist dengan expiry
-- [ ] Browser reopened after expiry → Auto-logout on mount
+- [x] Login dengan token expired di localStorage → Auto-cleanup
+- [x] Multiple tabs open → All tabs sync logout
+- [x] Network offline → Expiry tetap jalan (client-side)
+- [x] Browser closed → Token persist dengan expiry
+- [x] Browser reopened after expiry → Auto-logout on mount
 
 ## Future Improvements
 
