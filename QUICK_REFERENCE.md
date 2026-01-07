@@ -1,10 +1,10 @@
-# 🎯 Quick Reference - User Flow
+# Quick Reference - User Flow
 
 > **Cheat sheet untuk memahami flow sistem dengan cepat**
 
 ---
 
-## 🚦 Flow Sederhana (3 Tahap Utama)
+## Flow Sederhana (3 Tahap Utama)
 
 ```
 ┌─────────────┐      ┌─────────────┐      ┌─────────────┐
@@ -18,7 +18,7 @@
 
 ---
 
-## 📊 State Diagram User
+## State Diagram User
 
 ```
          START
@@ -37,7 +37,7 @@
            ├─── Working ────────────────┐
            │                            │
            │   Session Active           │
-           │   (Max 8 jam)              │
+           │   (Max 9 jam)              │
            │                            │
            ├─── Warning ────────────────┤
            │   (Sisa 15 menit)          │
@@ -47,34 +47,34 @@
            │   (Sisa 10 menit)          │
            │   Modal muncul             │
            │                            │
-           ├─ Extend? ──┐               │
-           │             │               │
-           │   Yes ──────┼─ +24 jam     │
-           │             │   Continue    │
-           │             │               │
+           ├─ Extend?  ──┐              │
+           │             │              │
+           │   Yes ──────┼─ +8 jam      │
+           │             │   Continue   │
+           │             │              │
            │   No ───────┼─ Logout ─────┤
-           │             │               │
+           │             │              │
            └─ Expired ───┴─ Auto Logout ┘
-                          ↓
-                   ┌─────────────┐
-                   │  Anonymous  │
-                   │   Visitor   │
-                   └─────────────┘
-                        END
+                         ↓
+                  ┌─────────────┐
+                  │  Anonymous  │
+                  │   Visitor   │
+                  └─────────────┘
+                       END
 ```
 
 ---
 
-## 🔐 Access Control - Siapa Bisa Akses Apa?
+## Access Control - Siapa Bisa Akses Apa?
 
 ### Matrix Sederhana
 
-| Halaman | CSO | Staff Lain | Admin |
-|---------|-----|------------|-------|
-| Overview | ✅ | ✅ | ✅ |
-| KPI Details | ✅ | ✅ | ✅ |
-| My Tasks (CSO) | ✅ | ❌ | ✅ |
-| Register User | ❌ | ❌ | ✅ |
+| Halaman        | CSO | Staff Lain | Admin |
+|----------------|-----|------------|-------|
+| Overview       | ✅ |     ✅     |   ✅  |
+| KPI Details    | ✅ |     ✅     |   ✅  |
+| My Tasks (CSO) | ✅ |     ❌     |   ✅  |
+| Register User  | ❌ |     ❌     |   ✅  |
 
 ### Logika Akses
 
@@ -87,10 +87,10 @@ ELSE
 
 ---
 
-## ⏱️ Timeline Session Management
+## Timeline Session Management
 
 ```
-0 menit      → Login berhasil, token dibuat (expiry 8 jam)
+0 menit      → Login berhasil, token dibuat (expiry 9 jam)
              
 7j 45m       → Toast: "Sesi akan berakhir dalam 15 menit"
              
@@ -101,35 +101,35 @@ ELSE
 
 ---
 
-## 🎨 Visual Indicators Cheat Sheet
+## Visual Indicators Cheat Sheet
 
 ### Session Badge Colors
 
-| Color | Waktu Tersisa | Status |
-|-------|--------------|--------|
-| 🟢 Hijau | > 2 jam | Aman |
-| 🟡 Kuning | 30 menit - 2 jam | Normal |
-| 🟠 Orange | 10 - 30 menit | Perhatian |
-| 🔴 Merah | < 10 menit | Urgent! |
+|    Color  |   Waktu Tersisa  |   Status  |
+|-----------|------------------|-----------|
+| 🟢 Hijau  | > 2 jam          | Aman      |
+| 🟡 Kuning | 30 menit - 2 jam | Normal    |
+| 🟠 Orange | 10 - 30 menit    | Perhatian |
+| 🔴 Merah  | < 10 menit       | Urgent!   |
 
 ---
 
-## 📱 User Actions & Expected Results
+## User Actions & Expected Results
 
-| User Action | Expected Result |
-|-------------|-----------------|
-| Input email & password → Klik LOGIN | Redirect ke /home (dashboard) |
-| Klik menu "Overview" | Tampil dashboard dengan info KPI |
-| Klik menu "My Tasks" (sebagai CSO) | Tampil list semua tasks CSO |
-| Klik menu "My Tasks" (bukan CSO) | Tidak muncul di navbar |
-| Paksa akses URL CSO (bukan CSO) | Redirect ke /access-denied |
-| Klik "Perpanjang Sesi" di modal | Session +24 jam, modal tutup |
-| Tidak respond modal 10 menit | Auto logout, redirect login |
-| Klik "Logout" di menu | Clear data, kembali ke login |
+|               User Action           |                       Expected Result                        |
+|-------------------------------------|--------------------------------------------------------------|
+| Input email & password → Klik LOGIN | Redirect ke /home (dashboard)                                |
+| Klik menu "Overview"                | Tampil dashboard dengan info KPI                             |
+| Klik menu "My Tasks" (sebagai CSO)  | Tampil list semua tasks CSO                                  |
+| Klik menu "My Tasks" (bukan CSO)    | Tidak muncul di navbar (hanya menampilkan Task yg relevan)   |
+| Paksa akses URL CSO (bukan CSO)     | Redirect ke /access-denied                                   |
+| Klik "Perpanjang Sesi" di modal     | Session +8 jam, modal tutup                                  |
+| Tidak respond modal 10 menit        | Auto logout, redirect login                                  |
+| Klik "Logout" di menu               | Clear data, kembali ke login                                 |
 
 ---
 
-## 🔄 Lifecycle Hooks (Technical)
+## Lifecycle Hooks (Technical)
 
 ```
 App Start
@@ -155,7 +155,7 @@ Back to Login
 
 ---
 
-## 🧩 Component Hierarchy
+## Component Hierarchy
 
 ```
 main.jsx
@@ -176,18 +176,18 @@ main.jsx
 
 ---
 
-## 💾 Data Storage
+## Data Storage
 
-| Data | Location | Expiry | Purpose |
-|------|----------|--------|---------|
-| currentUser | AuthContext (State) | - | Runtime user data |
-| User token | localStorage | 8 jam | Persistent login |
-| Theme | localStorage | - | Dark/light mode |
-| Query cache | React Query | 5 menit | API response cache |
+|     Data    |       Location      | Expiry  |       Purpose      |
+|-------------|---------------------|---------|--------------------|
+| currentUser | AuthContext (State) |    -    | Runtime user data  |
+| User token  | localStorage        |  8 jam  | Persistent login   |
+| Theme       | localStorage        |    -    | Dark/light mode    |
+| Query cache | React Query         | 5 menit | API response cache |
 
 ---
 
-## 🎯 Key Decisions Tree
+## Key Decisions Tree
 
 ### Login Flow
 ```
@@ -222,7 +222,7 @@ Every 5 minutes check:
 
 ---
 
-## 📍 Important Files Map
+## Important Files Map
 
 ```
 src/
@@ -246,18 +246,18 @@ src/
 
 ---
 
-## 🚨 Error Scenarios
+## Error Scenarios
 
-| Scenario | Cause | Solution |
-|----------|-------|----------|
-| "Sesi Berakhir" | Token expired (8 jam) | Login ulang |
-| "Access Denied" | User tidak punya permission | Hubungi admin |
-| "Login Failed" | Wrong credentials | Check email/password |
+|        Scenario       |            Cause             |              Solution            |
+|-----------------------|------------------------------|----------------------------------|
+| "Sesi Berakhir"       | Token expired (8 jam)        | Login ulang                      |
+| "Access Denied"       | User tidak punya permission  | Hubungi admin                    |
+| "Login Failed"        | Wrong credentials            | Check email/password             |
 | Auto logout tiba-tiba | Session expired tanpa notice | Perpanjang session sebelum habis |
 
 ---
 
-## 📞 Quick Troubleshooting
+## Quick Troubleshooting
 
 ```
 PROBLEM: Tidak bisa login
@@ -280,7 +280,7 @@ PROBLEM: Access denied
 
 ---
 
-## 🎓 Key Concepts
+## Key Concepts
 
 ### 1. Authentication vs Authorization
 - **Authentication** = "Who are you?" → Login process
@@ -289,8 +289,8 @@ PROBLEM: Access denied
 ### 2. Token Expiry
 - Token = Kunci akses setelah login
 - Expiry = Waktu habis masa berlaku
-- Default = 8 jam sejak login
-- Can extend = +24 jam lagi
+- Default = 9 jam sejak login
+- Can extend = +8 jam lagi
 
 ### 3. Role vs Jabatan
 - **Role** = Tingkat akses umum (admin/staff)
@@ -299,7 +299,7 @@ PROBLEM: Access denied
 
 ---
 
-## 📈 Performance Notes
+## Performance Notes
 
 - **Lazy Loading**: Halaman dimuat on-demand (lebih cepat)
 - **React Query**: API response di-cache 5 menit
@@ -308,7 +308,7 @@ PROBLEM: Access denied
 
 ---
 
-## ✅ Checklist untuk Stakeholder
+## Checklist untuk Stakeholder
 
 **Saat user login:**
 - [ ] Dashboard overview muncul dengan benar

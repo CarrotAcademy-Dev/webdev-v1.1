@@ -174,4 +174,54 @@ Project ini sudah dilengkapi dengan sistem keamanan multi-layer:
 
 **Catatan Penting**: Client-side security adalah UX layer. Backend validation tetap WAJIB untuk security sesungguhnya.
 
+## 7. Dokumentasi & Learning Path
+
+Project ini memiliki dokumentasi lengkap yang terstruktur. Untuk memahami project dengan baik, ikuti urutan baca dokumentasi berikut:
+
+### Quick Start (Untuk Developer Baru)
+1. **[README.md](README.md)** (dokumen ini) - Overview project, instalasi, dan arsitektur
+2. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Cheat sheet utilities dan hooks
+3. **[IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)** - Status fitur dan utilities yang sudah dibuat
+
+### Core Documentation (Developer)
+4. **[RBAC_GUIDE.md](RBAC_GUIDE.md)** - Access control dan permission system
+5. **[TOKEN_EXPIRY_GUIDE.md](TOKEN_EXPIRY_GUIDE.md)** - Session management dan token expiry
+6. **[THEME_GUIDE.md](THEME_GUIDE.md)** - Dark/Light mode dan theming system
+
+### Feature-Specific Guides
+7. **[DASHBOARD_PROSPEKTIF_GUIDE.md](DASHBOARD_PROSPEKTIF_GUIDE.md)** - Dashboard Prospektif features
+8. **[DASHBOARD_REMINDER_GUIDE.md](DASHBOARD_REMINDER_GUIDE.md)** - Dashboard Reminder & Janjian Temu
+
+### Workflow & Process
+9. **[GIT_WORKFLOW.md](GIT_WORKFLOW.md)** - Git branching strategy dan commit conventions
+10. **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment process dan environment setup
+11. **[APP_NAVIGATION_FLOW.md](APP_NAVIGATION_FLOW.md)** - User navigation flows
+
+### Planning & Stories
+12. **[USER_STORIES.md](USER_STORIES.md)** - User stories dan requirements
+13. **[USER_FLOW_GUIDE.md](USER_FLOW_GUIDE.md)** - Detailed user flow diagrams
+14. **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Known issues dan planned improvements
+
+### Theme Migration (Historical)
+15. **[THEME_MIGRATION.md](THEME_MIGRATION.md)** - Migration dari Chakra v2 ke v3
+16. **[THEME_UPDATE_SUMMARY.md](THEME_UPDATE_SUMMARY.md)** - Summary of theme changes
+
+### Master Documentation Index
+17. **[FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md)** - Complete documentation navigation guide
+
+### Recommended Reading by Role
+
+**Frontend Developer (New)**: 1 → 2 → 3 → 4 → 5 → 6 → 9  
+**Backend Integration**: 4 → 5 → 11 → 9  
+**UI/UX Designer**: 6 → 15 → 16 → 11  
+**QA/Testing**: 3 → 7 → 8 → 11 → 14  
+**Project Manager**: 1 → 3 → 12 → 13 → 14  
+**DevOps**: 9 → 10
+
+**Tips**: Gunakan [FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md) sebagai navigation guide untuk menjelajahi dokumentasi berdasarkan kebutuhan spesifik Anda.
+
+---
+
 Dokumentasi ini adalah dokumen hidup. Selalu perbarui seiring dengan perkembangan project.
+
+Last update: 7 January 2026

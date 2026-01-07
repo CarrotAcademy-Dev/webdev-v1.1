@@ -1,144 +1,144 @@
-# 🎯 User Flow Guide - Carrot Academy Dashboard
+# User Flow Guide - Carrot Academy Dashboard
 
 > **Panduan alur penggunaan sistem dari Login sampai Logout**  
 > Dibuat untuk stakeholder non-technical agar mudah dipahami
 
 ---
 
-## 📋 Ringkasan Sistem
+## Ringkasan Sistem
 
 Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas karyawan dengan fitur:
-- ✅ Login & Logout dengan keamanan tinggi
-- ✅ Dashboard untuk melihat overview pekerjaan
-- ✅ Menu khusus sesuai posisi (CSO, Admin, dll)
-- ✅ Session management otomatis (auto logout jika tidak aktif)
-- ✅ Akses kontrol berdasarkan Role & Jabatan
+- Login & Logout dengan keamanan tinggi
+- Dashboard untuk melihat overview pekerjaan
+- Menu khusus sesuai posisi (CSO, Admin, dll)
+- Session management otomatis (auto logout jika tidak aktif)
+- Akses kontrol berdasarkan Role & Jabatan
 
 ---
 
-## 🔄 Flow Lengkap: Login sampai Logout
+## Flow Lengkap: Login sampai Logout
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     🚀 START: User Akses Aplikasi                │
+│                       START: User Akses Aplikasi                │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  1️⃣  HALAMAN LOGIN                                               │
+│  1️.  HALAMAN LOGIN                                              │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  • User membuka aplikasi                            │         │
-│  │  • Masukkan Email & Password                        │         │
-│  │  • Klik tombol "LOGIN"                              │         │
+│  │  • User membuka aplikasi                           │         │
+│  │  • Masukkan Email & Password                       │         │
+│  │  • Klik tombol "LOGIN"                             │         │
 │  └────────────────────────────────────────────────────┘         │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
-                        ❓ Validasi Login
+                           Validasi Login
                                 ↓
                   ┌─────────────┴─────────────┐
                   ↓                           ↓
-            ❌ GAGAL                      ✅ BERHASIL
-    ┌──────────────────────┐       ┌──────────────────────┐
+               GAGAL                       BERHASIL
+    ┌───────────────────────┐       ┌───────────────────────┐
     │ • Email/password salah│       │ • Data user disimpan  │
-    │ • Tampil pesan error  │       │ • Token dibuat (8 jam)│
+    │ • Tampil pesan error  │       │ • Token dibuat (9 jam)│
     │ • Tetap di halaman    │       │ • Redirect ke /home   │
-    │   login               │       └──────────────────────┘
-    └──────────────────────┘                  ↓
+    │   login               │       └───────────────────────┘
+    └───────────────────────┘                  ↓
             ↓                                  ↓
         Coba lagi                              ↓
                                                ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  2️⃣  AUTENTIKASI & INISIALISASI SESSION                          │
+│  2️.  AUTENTIKASI & INISIALISASI SESSION                         │
 │  ┌────────────────────────────────────────────────────┐         │
 │  │  ✓ AuthContext menyimpan data user                 │         │
-│  │  ✓ Token disimpan di localStorage (expiry 8 jam)   │         │
+│  │  ✓ Token disimpan di localStorage (expiry 9 jam)   │         │
 │  │  ✓ Session monitoring dimulai                      │         │
 │  │  ✓ Timer session berjalan di background            │         │
 │  └────────────────────────────────────────────────────┘         │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  3️⃣  HALAMAN OVERVIEW (Dashboard Utama)                          │
+│  3️.  HALAMAN OVERVIEW (Dashboard Utama)                         │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  📊 TAMPILAN:                                       │         │
+│  │  TAMPILAN:                                         │         │
 │  │  • Navbar (dengan menu sesuai role/jabatan)        │         │
 │  │  • Session Timer Badge (hijau/kuning/merah)        │         │
 │  │  • Profil user & sapaan (Hallo, [Nama])            │         │
-│  │  • Clock in/out hari ini                            │         │
-│  │  • Attendance streak (berapa hari berturut-turut)   │         │
-│  │  • Task summary (assigned/completed/on progress)    │         │
-│  │  • Grafik tasks completed                           │         │
-│  │  • Kalender absensi                                 │         │
-│  │  • Widget reminder                                  │         │
-│  │                                                     │         │
-│  │  🔐 AKSES KONTROL:                                  │         │
+│  │  • Clock in/out hari ini                           │         │
+│  │  • Attendance streak (berapa hari berturut-turut)  │         │
+│  │  • Task summary (assigned/completed/on progress)   │         │
+│  │  • Grafik tasks completed                          │         │
+│  │  • Kalender absensi                                │         │
+│  │  • Widget reminder                                 │         │
+│  │                                                    │         │
+│  │  AKSES KONTROL:                                    │         │
 │  │  • Semua user yang login bisa akses Overview       │         │
 │  └────────────────────────────────────────────────────┘         │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  4️⃣  NAVIGASI MENU (Berdasarkan Role & Jabatan)                  │
-│                                                                  │
-│  📂 MENU HOME (Semua User):                                      │
-│  ├─ Overview                                                     │
-│  ├─ Attendance                                                   │
-│  ├─ KPI Details                                                  │
-│  └─ Leave Request                                                │
-│                                                                  │
-│  💼 MENU MY TASKS (Khusus CSO atau Admin):                       │
-│  ├─ Bersama (Shared Tasks):                                      │
-│  │  ├─ Statistik Prospektif                                      │
-│  │  ├─ Rekap Jadwal Mentor                                       │
-│  │  ├─ Daftar Kelas Tersedia                                     │
-│  │  ├─ Daftar Kirim Merchandise                                  │
-│  │  ├─ Daftar Siswa Trial                                        │
-│  │  ├─ Daftar Offboarding                                        │
-│  │  ├─ Daily Story                                               │
-│  │  ├─ Janji Temu                                                │
-│  │  ├─ Ticket External                                           │
-│  │  ├─ Pendaftaran Lanjutan                                      │
-│  │  ├─ Pendaftaran Fulltime Course                               │
-│  │  ├─ Lost And Found                                            │
-│  │  ├─ Prospektif Dari Marcom                                    │
-│  │  ├─ Partnership                                               │
-│  │  └─ Dashboard Siswa Aktif                                     │
-│  │                                                                │
-│  └─ Personal (Individual Tasks):                                 │
-│     ├─ Prospektif Form                                           │
-│     ├─ Dashboard Prospektif                                      │
-│     ├─ Dashboard Reminder                                        │
-│     ├─ Dashboard Daily                                           │
-│     ├─ Dashboard Invoice                                         │
-│     ├─ Dashboard Portfolio                                       │
-│     ├─ FD Student Identity                                       │
-│     ├─ Profil Siswa                                              │
-│     ├─ Create Ticketing                                          │
-│     ├─ Ticketing Internal                                        │
-│     ├─ Track Ticket From Me                                      │
-│     ├─ Review Karyawan                                           │
-│     └─ Dashboard Karyawan                                        │
-│                                                                  │
-│  🛡️ MENU ADMIN (Khusus Admin/Super Admin):                      │
-│  └─ Register User                                                │
-│                                                                  │
-│  👤 MENU PROFILE (Semua User):                                   │
-│  ├─ Profile                                                      │
-│  ├─ Payment                                                      │
-│  └─ Settings                                                     │
-│                                                                  │
-│  🚪 MENU LOGOUT (Semua User):                                    │
-│  └─ Logout                                                       │
+│  4️.  NAVIGASI MENU (Berdasarkan Role & Jabatan)                 │
+│                                                                 │
+│  MENU HOME (Semua User):                                        │
+│  ├─ Overview                                                    │
+│  ├─ Attendance                                                  │
+│  ├─ KPI Details                                                 │
+│  └─ Leave Request                                               │
+│                                                                 │
+│  MENU MY TASKS (Khusus CSO atau Admin):                         │
+│  ├─ Bersama (Shared Tasks):                                     │
+│  │  ├─ Statistik Prospektif                                     │
+│  │  ├─ Rekap Jadwal Mentor                                      │
+│  │  ├─ Daftar Kelas Tersedia                                    │
+│  │  ├─ Daftar Kirim Merchandise                                 │
+│  │  ├─ Daftar Siswa Trial                                       │
+│  │  ├─ Daftar Offboarding                                       │
+│  │  ├─ Daily Story                                              │
+│  │  ├─ Janji Temu                                               │
+│  │  ├─ Ticket External                                          │
+│  │  ├─ Pendaftaran Lanjutan                                     │
+│  │  ├─ Pendaftaran Fulltime Course                              │
+│  │  ├─ Lost And Found                                           │
+│  │  ├─ Prospektif Dari Marcom                                   │
+│  │  ├─ Partnership                                              │
+│  │  └─ Dashboard Siswa Aktif                                    │
+│  │                                                              │
+│  └─ Personal (Individual Tasks):                                │
+│     ├─ Prospektif Form                                          │
+│     ├─ Dashboard Prospektif                                     │
+│     ├─ Dashboard Reminder                                       │
+│     ├─ Dashboard Daily                                          │
+│     ├─ Dashboard Invoice                                        │
+│     ├─ Dashboard Portfolio                                      │
+│     ├─ FD Student Identity                                      │
+│     ├─ Profil Siswa                                             │
+│     ├─ Create Ticketing                                         │
+│     ├─ Ticketing Internal                                       │
+│     ├─ Track Ticket From Me                                     │
+│     ├─ Review Karyawan                                          │
+│     └─ Dashboard Karyawan                                       │
+│                                                                 │
+│  MENU ADMIN (Khusus Admin/Super Admin):                         │
+│  └─ Register User                                               │
+│                                                                 │
+│  MENU PROFILE (Semua User):                                     │
+│  ├─ Profile                                                     │
+│  ├─ Payment                                                     │
+│  └─ Settings                                                    │
+│                                                                 │
+│  MENU LOGOUT (Semua User):                                      │
+│  └─ Logout                                                      │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  5️⃣  PROTEKSI AKSES HALAMAN                                      │
+│  5️.  PROTEKSI AKSES HALAMAN                                     │
 │  ┌────────────────────────────────────────────────────┐         │
 │  │  Setiap halaman dilindungi ProtectedRoute:         │         │
-│  │                                                     │         │
-│  │  ❓ Check: Apakah user sudah login?                │         │
+│  │                                                    │         │
+│  │  Check: Apakah user sudah login?                   │         │
 │  │     ├─ Belum → Redirect ke halaman Login           │         │
 │  │     └─ Sudah → Lanjut ke check berikutnya          │         │
-│  │                                                     │         │
-│  │  ❓ Check: Apakah user punya akses?                │         │
+│  │                                                    │         │
+│  │  Check: Apakah user punya akses?                   │         │
 │  │     • Check Role (admin/super_admin/staff)         │         │
 │  │     • Check Jabatan (CSO/ESO/Finance/dll)          │         │
 │  │     ├─ Tidak → Redirect ke /access-denied          │         │
@@ -147,18 +147,18 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  6️⃣  SESSION MANAGEMENT (Berjalan di Background)                 │
+│  6️.  SESSION MANAGEMENT (Berjalan di Background)                │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  🕐 Session Timer:                                  │         │
-│  │  • Default expiry: 8 jam sejak login               │         │
+│  │  Session Timer:                                    │         │
+│  │  • Default expiry: 9 jam sejak login               │         │
 │  │  • Auto check setiap 5 menit                       │         │
 │  │  • Update badge timer setiap 1 menit               │         │
-│  │                                                     │         │
-│  │  ⏰ WARNING NOTIFICATIONS:                          │         │
+│  │                                                    │         │
+│  │  WARNING NOTIFICATIONS:                            │         │
 │  │  • Sisa 15 menit → Toast notification              │         │
 │  │  • Sisa 10 menit → Modal popup muncul              │         │
-│  │                                                     │         │
-│  │  🎨 VISUAL INDICATORS (Badge di Navbar):           │         │
+│  │                                                    │         │
+│  │  VISUAL INDICATORS (Badge di Navbar):              │         │
 │  │  • 🟢 Hijau: > 2 jam tersisa                       │         │
 │  │  • 🟡 Kuning: 30 menit - 2 jam                     │         │
 │  │  • 🟠 Orange: 10-30 menit                          │         │
@@ -167,69 +167,53 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  7️⃣  SKENARIO SESSION TIMEOUT                                    │
-│                                                                  │
-│  📢 SISA 15 MENIT:                                               │
+│  7️.  SKENARIO SESSION TIMEOUT                                   │
+│                                                                 │
+│  SISA 15 MENIT:                                                 │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  • Toast notification muncul                        │         │
+│  │  • Toast notification muncul                       │         │
 │  │  • Pesan: "Sesi Akan Berakhir"                     │         │
 │  │  • Info: Simpan pekerjaan Anda                     │         │
 │  └────────────────────────────────────────────────────┘         │
-│                                                                  │
-│  ⚠️ SISA 10 MENIT:                                               │
+│                                                                 │
+│  SISA 10 MENIT:                                                 │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  • Modal dialog muncul (tidak bisa ditutup)         │         │
-│  │  • Countdown timer ditampilkan                      │         │
-│  │  • User diberi 2 pilihan:                           │         │
-│  │    ├─ [Perpanjang Sesi] → Extend 24 jam lagi       │         │
+│  │  • Modal dialog muncul (tidak bisa ditutup)        │         │
+│  │  • Countdown timer ditampilkan                     │         │
+│  │  • User diberi 2 pilihan:                          │         │
+│  │    ├─ [Perpanjang Sesi] → Extend 4 jam lagi        │         │
 │  │    └─ [Logout Sekarang] → Keluar dari aplikasi     │         │
 │  └────────────────────────────────────────────────────┘         │
-│                                                                  │
-│  ⏱️ SISA 0 MENIT (EXPIRED):                                      │
+│                                                                 │
+│  SISA 0 MENIT (EXPIRED):                                        │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  • Auto logout otomatis                             │         │
-│  │  • Token dihapus dari storage                       │         │
-│  │  • Redirect ke halaman Login                        │         │
+│  │  • Auto logout otomatis                            │         │
+│  │  • Token dihapus dari storage                      │         │
+│  │  • Redirect ke halaman Login                       │         │
 │  │  • Toast: "Sesi Berakhir, login kembali"           │         │
 │  └────────────────────────────────────────────────────┘         │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  8️⃣  LOGOUT MANUAL                                               │
+│  8️.  LOGOUT MANUAL                                              │
 │  ┌────────────────────────────────────────────────────┐         │
-│  │  User klik menu "Logout":                           │         │
-│  │  • AuthContext.logout() dipanggil                   │         │
-│  │  • User data dihapus dari state                     │         │
-│  │  • Token dihapus dari localStorage                  │         │
-│  │  • Redirect ke halaman Login                        │         │
-│  │  • Session monitoring dihentikan                    │         │
+│  │  User klik menu "Logout":                          │         │
+│  │  • AuthContext.logout() dipanggil                  │         │
+│  │  • User data dihapus dari state                    │         │
+│  │  • Token dihapus dari localStorage                 │         │
+│  │  • Redirect ke halaman Login                       │         │
+│  │  • Session monitoring dihentikan                   │         │
 │  └────────────────────────────────────────────────────┘         │
 └─────────────────────────────────────────────────────────────────┘
                                 ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│                     🏁 END: Kembali ke Login                     │
+│                      END: Kembali ke Login                      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔐 Access Control Matrix
-
-| Menu / Halaman | Staff (CSO) | Staff (Lainnya) | Admin | Super Admin |
-|----------------|-------------|-----------------|-------|-------------|
-| **Home** (Overview, KPI, Attendance) | ✅ | ✅ | ✅ | ✅ |
-| **My Tasks** (CSO Menu) | ✅ | ❌ | ✅ | ✅ |
-| **Admin** (Register User) | ❌ | ❌ | ✅ | ✅ |
-| **Profile** | ✅ | ✅ | ✅ | ✅ |
-| **Logout** | ✅ | ✅ | ✅ | ✅ |
-
-**Keterangan:**
-- ✅ = Bisa akses
-- ❌ = Tidak bisa akses (redirect ke /access-denied)
-
----
-
-## 📱 User Journey Scenarios
+## User Journey Scenarios
 
 ### Skenario 1: CSO Login Normal
 ```
@@ -250,10 +234,10 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 3. Login berhasil → Redirect ke /home
 4. Lihat dashboard
 5. Menu yang terlihat:
-   - Home ✅
-   - My Tasks (CSO) ✅ (karena admin bisa akses semua)
-   - Admin ✅ (khusus admin)
-   - Profile ✅
+   - Home
+   - My Tasks (CSO) (karena admin bisa akses semua)
+   - Admin (khusus admin)
+   - Profile
 6. Bisa register user baru di menu Admin
 7. Selesai → Logout
 ```
@@ -261,15 +245,15 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 ### Skenario 3: Session Timeout Warning
 ```
 1. User login dan kerja seperti biasa
-2. Setelah 7 jam 45 menit (sisa 15 menit):
+2. Setelah 8 jam 45 menit (sisa 15 menit):
    → Toast notification muncul
    → "Sesi Akan Berakhir dalam 15 menit"
-3. Setelah 7 jam 50 menit (sisa 10 menit):
+3. Setelah 8 jam 50 menit (sisa 10 menit):
    → Modal dialog muncul
    → Tidak bisa ditutup
    → 2 pilihan: [Perpanjang] atau [Logout]
 4. User klik "Perpanjang Sesi":
-   → Session diperpanjang 24 jam lagi
+   → Session diperpanjang 4 jam lagi
    → Badge timer reset ke hijau
    → Modal ditutup
    → User bisa lanjut kerja
@@ -279,7 +263,7 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 ```
 1. User login tapi tidak ada aktivitas
 2. Setelah warning 10 menit, user tidak respond
-3. Session expired (8 jam):
+3. Session expired (9 jam):
    → Auto logout otomatis
    → Token dihapus
    → Redirect ke Login
@@ -301,16 +285,16 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 
 ---
 
-## 🎨 Visual Indicators
+## Visual Indicators
 
 ### Session Timer Badge (di Navbar)
 
 ```
 ┌──────────────────────────────────────────┐
-│  🟢 8j 0m    │ Aman, masih banyak waktu   │
-│  🟡 1j 30m   │ Sisa 1.5 jam               │
-│  🟠 20m      │ Warning, segera expired    │
-│  🔴 5m       │ Urgent! Akan logout        │
+│  🟢 9j 0m    │ Aman, masih banyak waktu  │
+│  🟡 1j 30m   │ Sisa 1.5 jam              │
+│  🟠 20m      │ Warning, segera expired   │
+│  🔴 5m       │ Urgent! Akan logout       │
 └──────────────────────────────────────────┘
 ```
 
@@ -318,20 +302,20 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 
 ```
 ┌─────────────────────────────────────────┐
-│  ⏰ Sesi Akan Berakhir                   │
+│  Sesi Akan Berakhir                     │
 ├─────────────────────────────────────────┤
-│                                          │
+│                                         │
 │  Sesi login Anda akan berakhir dalam    │
-│  5 menit.                                │
-│                                          │
+│  5 menit.                               │
+│                                         │
 │  Untuk melanjutkan pekerjaan, silakan   │
 │  perpanjang sesi. Atau logout jika      │
-│  sudah selesai.                          │
-│                                          │
-│  💡 Tips: Simpan pekerjaan Anda          │
-│  terlebih dahulu untuk menghindari       │
-│  kehilangan data.                        │
-│                                          │
+│  sudah selesai.                         │
+│                                         │
+│  Tips: Simpan pekerjaan Anda            │
+│  terlebih dahulu untuk menghindari      │
+│  kehilangan data.                       │
+│                                         │
 ├─────────────────────────────────────────┤
 │  [Logout Sekarang]  [Perpanjang Sesi]   │
 └─────────────────────────────────────────┘
@@ -339,7 +323,7 @@ Sistem Carrot Academy Dashboard adalah aplikasi web untuk mengelola aktivitas ka
 
 ---
 
-## ⚙️ Technical Flow (Behind the Scenes)
+## Technical Flow (Behind the Scenes)
 
 ### 1. **Startup & Initialization**
 ```javascript
@@ -403,7 +387,7 @@ Setiap 5 menit:
 
 ---
 
-## 🔍 Data Flow Diagram
+## Data Flow Diagram
 
 ```
 ┌──────────────┐
@@ -457,62 +441,62 @@ Setiap 5 menit:
 
 ## 🎓 Glossary (Istilah Penting)
 
-| Istilah | Penjelasan | Contoh |
-|---------|------------|--------|
-| **Role** | Tingkat akses umum dalam sistem | admin, super_admin, staff |
-| **Jabatan** | Posisi spesifik karyawan | Customer Support Officer, Finance |
-| **Token** | Kunci akses yang disimpan setelah login | Data user + expiry time |
-| **Session** | Periode waktu user aktif sejak login | 8 jam sejak login terakhir |
-| **Expiry** | Waktu habis masa berlaku token | 8 jam setelah login |
-| **Protected Route** | Halaman yang dilindungi akses kontrol | Hanya CSO/Admin yang bisa akses |
-| **Context** | Wadah data global yang bisa diakses semua komponen | AuthContext menyimpan currentUser |
-| **localStorage** | Penyimpanan data di browser | Simpan token agar tidak perlu login terus |
+|       Istilah       |                      Penjelasan                    |                      Contoh               |
+|---------------------|----------------------------------------------------|-------------------------------------------|
+| **Role**            | Tingkat akses umum dalam sistem                    | admin, super_admin, staff                 |
+| **Jabatan**         | Posisi spesifik karyawan                           | Customer Support Officer, Finance         |
+| **Token**           | Kunci akses yang disimpan setelah login            | Data user + expiry time                   |
+| **Session**         | Periode waktu user aktif sejak login               | 9 jam sejak login terakhir                |
+| **Expiry**          | Waktu habis masa berlaku token                     | 9 jam setelah login                       |
+| **Protected Route** | Halaman yang dilindungi akses kontrol              | Hanya CSO/Admin yang bisa akses           |
+| **Context**         | Wadah data global yang bisa diakses semua komponen | AuthContext menyimpan currentUser         |
+| **localStorage**    | Penyimpanan data di browser                        | Simpan token agar tidak perlu login terus |
 
 ---
 
-## 📞 Support & Troubleshooting
+## Support & Troubleshooting
 
 ### Masalah Umum & Solusi
 
 #### 1. **Tidak bisa login**
-- ✅ Check email & password benar
-- ✅ Pastikan internet stabil
-- ✅ Clear browser cache
-- ✅ Coba browser lain
+- Check email & password benar
+- Pastikan internet stabil
+- Clear browser cache
+- Coba browser lain
 
 #### 2. **Sering auto logout**
-- ✅ Session expired (8 jam habis)
-- ✅ Perpanjang session sebelum habis
-- ✅ Jangan tutup browser tiba-tiba
+- Session expired (8 jam habis)
+- Perpanjang session sebelum habis
+- Jangan tutup browser tiba-tiba
 
 #### 3. **Menu tidak muncul**
-- ✅ Check role & jabatan user
-- ✅ Refresh halaman
-- ✅ Logout & login ulang
+- Check role & jabatan user
+- Refresh halaman
+- Logout & login ulang
 
 #### 4. **Access Denied**
-- ✅ User tidak punya hak akses ke halaman tersebut
-- ✅ Hubungi admin untuk update role/jabatan
+- User tidak punya hak akses ke halaman tersebut
+- Hubungi admin untuk update role/jabatan
 
 ---
 
-## 📊 Flow Summary Table
+## Flow Summary Table
 
-| Tahap | Aksi User | Sistem Response | Hasil |
-|-------|-----------|-----------------|-------|
-| **1. Login** | Input email & password | Validasi ke backend | Token disimpan 8 jam |
-| **2. Dashboard** | Otomatis setelah login | Load user data & widgets | Tampil overview |
-| **3. Navigasi** | Klik menu | Check akses permission | Tampil halaman atau denied |
-| **4. Session** | User bekerja normal | Monitor di background | Timer countdown |
-| **5. Warning** | Sisa 15 menit | Toast notification | User aware |
-| **6. Urgent** | Sisa 10 menit | Modal popup | User harus pilih |
-| **7. Extend** | Klik perpanjang | Update token expiry | Session +24 jam |
-| **8. Expired** | Session habis | Auto logout | Redirect login |
-| **9. Logout** | Klik logout manual | Clear all data | Kembali ke login |
+|       Tahap      |        Aksi User       |      Sistem Response     |            Hasil           |
+|------------------|------------------------|--------------------------|----------------------------|
+| **1. Login**     | Input email & password | Validasi ke backend      | Token disimpan 8 jam       |
+| **2. Dashboard** | Otomatis setelah login | Load user data & widgets | Tampil overview            |
+| **3. Navigasi**  | Klik menu              | Check akses permission   | Tampil halaman atau denied |
+| **4. Session**   | User bekerja normal    | Monitor di background    | Timer countdown            |
+| **5. Warning**   | Sisa 15 menit          | Toast notification       | User aware                 |
+| **6. Urgent**    | Sisa 10 menit          | Modal popup              | User harus pilih           |
+| **7. Extend**    | Klik perpanjang        | Update token expiry      | Session +24 jam            |
+| **8. Expired**   | Session habis          | Auto logout              | Redirect login             |
+| **9. Logout**    | Klik logout manual     | Clear all data           | Kembali ke login           |
 
 ---
 
-## 🚀 Best Practices untuk User
+## Best Practices untuk User
 
 1. **Login di awal hari kerja**
    - Pastikan email & password benar
@@ -536,19 +520,7 @@ Setiap 5 menit:
 
 ---
 
-## 📝 Changelog
-
-| Tanggal | Perubahan | Status |
-|---------|-----------|--------|
-| Dec 2024 | Implementasi RBAC | ✅ Production |
-| Dec 2024 | Token Expiry & Session Management | ✅ Production |
-| Dec 2024 | Session Timer Badge di Navbar | ✅ Production |
-| Dec 2024 | Session Timeout Modal | ✅ Production |
-| Dec 2024 | User Flow Documentation | ✅ Complete |
-
----
-
-**📌 Catatan Penting:**
+**Catatan Penting:**
 - Dokumentasi ini menjelaskan flow yang **sudah ada** dan **berjalan** di production
 - Semua fitur sudah terimplementasi dan tested
 - Update dokumentasi ini jika ada perubahan flow
