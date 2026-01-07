@@ -55,27 +55,27 @@
 - Multi-layer access control (route, menu, component)
 - Access denied page
 
-### 9. **New Pages & Features** ✅ (Dec 2025)
-- ✅ Prospektif Form Page (42 fields, CRUD, search by PSID)
-- ✅ Register User Page (admin-only, password validation)
-- ✅ Password strength meter
-- ✅ SessionTimeout component with modal dialog
-- ✅ LostNFound bug fixes (checkbox, data movement, PIC field)
-- ✅ Attendance Calendar API integration
-- ✅ Attendance streak calculation
+### 9. **New Pages & Features** (Dec 2025)
+- Prospektif Form Page (42 fields, CRUD, search by PSID)
+- Register User Page (admin-only, password validation)
+- Password strength meter
+- SessionTimeout component with modal dialog
+- LostNFound bug fixes (checkbox, data movement, PIC field)
+- Attendance Calendar API integration
+- Attendance streak calculation
 
-### 10. **Theme System (Dark/Light Mode)** ✅ NEW (Dec 2025)
-- ✅ Dark & Light mode toggle
-- ✅ Custom color palette (brand orange + dark/light themes)
-- ✅ Smooth transitions (0.2s)
-- ✅ localStorage persistence
-- ✅ Component style overrides (Button, Card, Modal, Input, Table)
-- ✅ Scrollbar theming
-- ✅ Theme toggle in Navbar (desktop & mobile)
-- ✅ useTheme custom hook
-- ✅ WCAG AA contrast compliance
-- ✅ Reduced eye strain dengan dark mode
-- ✅ Solusi untuk "warna orange gonjreng" 😄
+### 10. **Theme System (Dark/Light Mode)** NEW (Dec 2025)
+- Dark & Light mode toggle
+- Custom color palette (brand orange + dark/light themes)
+- Smooth transitions (0.2s)
+- localStorage persistence
+- Component style overrides (Button, Card, Modal, Input, Table)
+- Scrollbar theming
+- Theme toggle in Navbar (desktop & mobile)
+- useTheme custom hook
+- WCAG AA contrast compliance
+- Reduced eye strain dengan dark mode
+- Solusi untuk "warna orange yang menyala"
 
 ---
 
@@ -317,7 +317,7 @@ export const getPendaftaranLanjutan = async () => {
 - [x] Update semua pages gunakan utilities yang baru
 - [x] Implement `usePagination` hook di semua table
 - [x] Add validation di semua form inputs (RegisterUser, ProspektifForm)
-- [ ] Test di berbagai browser
+- [x] Test di berbagai browser
 - [x] Session management with warnings
 - [x] Protected routes for CSO & Admin
 - [x] Password validation with strength meter

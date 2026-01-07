@@ -152,6 +152,7 @@ function Navbar() {
             items: [
               { label: "Track Ticket From Me", path: "/eso/track-ticket-fme" },
               { label: "Ticketing Internal", path: "/eso/ticketing-internal" },
+              { label: "Cari Data Student Report", path: "/eso/cari-data-student-report" },
             ]
           }
         ],

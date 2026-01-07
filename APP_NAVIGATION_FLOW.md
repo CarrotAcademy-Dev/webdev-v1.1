@@ -1,11 +1,10 @@
-# 🗺️ Application Navigation Flow
+# Application Navigation Flow
 
 > **Peta navigasi lengkap aplikasi Carrot Academy Dashboard**  
 > Panduan visual: halaman apa saja yang ada & bagaimana cara mengaksesnya
-
 ---
 
-## 🎯 Overview - Struktur Aplikasi
+## Overview - Struktur Aplikasi
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -15,8 +14,8 @@
                             │
                             ↓
               ┌─────────────────────────┐
-              │     LOGIN PAGE          │
-              │   (Halaman Awal)        │
+              │       LOGIN PAGE        │
+              │     (Halaman Awal)      │
               └─────────────────────────┘
                             │
                             ↓ [Login Berhasil]
@@ -37,38 +36,39 @@
 
 ---
 
-## 📱 Complete Navigation Map
+## Complete Navigation Map
 
-### 🌐 Level 0: Public Pages (Tidak Perlu Login)
+### Level 0: Public Pages (Tidak Perlu Login)
 
 ```
-┌────────────────────────────────────────────────┐
-│  LOGIN PAGE                                     │
-│  URL: /                                         │
-│  ┌──────────────────────────────────────────┐  │
-│  │  • Form Email & Password                 │  │
-│  │  • Button Login                           │  │
-│  │  • Link Forgot Password (belum aktif)    │  │
-│  └──────────────────────────────────────────┘  │
-│                                                 │
-│  Action: Klik LOGIN                            │
-│  Result: ✅ Redirect ke /home                  │
-│          ❌ Error message jika gagal           │
-└────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│  LOGIN PAGE                                          │
+│  URL: /                                              │
+│  ┌────────────────────────────────────────────────┐  │
+│  │  • Form Email & Password                       │  │
+│  │  • Button Login                                │  │
+│  │  • Link Forgot Password (belum ditambahkan)    │  │
+│  └────────────────────────────────────────────────┘  │
+│                                                      │
+│  Action: Klik LOGIN                                  │
+│  Result: Redirect ke /home                           │
+│          Error message jika gagal                    │
+└──────────────────────────────────────────────────────┘
+
 ```
 
 ---
 
-### 🏠 Level 1: Main Dashboard (Semua User)
+### Level 1: Main Dashboard (Semua User)
 
 ```
-┌────────────────────────────────────────────────────────┐
-│  OVERVIEW PAGE (Dashboard Utama)                       │
+┌─────────────────────────────────────────────────────────┐
+│  OVERVIEW PAGE (Dashboard Utama)                        │
 │  URL: /home                                             │
-│  Access: ✅ Semua user yang sudah login                │
-│  ┌──────────────────────────────────────────────────┐  │
+│  Access: Semua user yang sudah login                    │
+│  ┌───────────────────────────────────────────────────┐  │
 │  │  TAMPILAN:                                        │  │
-│  │  • Header: "Hallo, [Nama]!"                      │  │
+│  │  • Header: "Hallo, [Nama]!"                       │  │
 │  │  • Info Card Profil                               │  │
 │  │  • Clock In/Out hari ini                          │  │
 │  │  • Attendance Streak                              │  │
@@ -76,44 +76,38 @@
 │  │  • Grafik Tasks Completed                         │  │
 │  │  • Kalender Absensi bulan ini                     │  │
 │  │  • Widget Reminders                               │  │
-│  └──────────────────────────────────────────────────┘  │
+│  └───────────────────────────────────────────────────┘  │
 │                                                         │
-│  Yang Bisa Diklik:                                     │
-│  → Navbar Menu (Home, My Tasks, Admin, Profile)       │
-│  → Kalender tanggal untuk detail absensi              │
-│  → Reminder items                                      │
-└────────────────────────────────────────────────────────┘
+│  Yang Bisa Diklik:                                      │
+│  → Navbar Menu (Home, My Tasks, Admin, Profile)         │
+│  → Kalender tanggal untuk detail absensi                │
+│  → Reminder items                                       │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### 📂 Level 2: Menu Categories
+### Level 2: Menu Categories
 
-#### 🏠 Menu 1: HOME (Semua User)
+#### Menu 1: HOME (Semua User)
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  HOME MENU                                               │
-│  Icon: 🏠                                                │
-│  Access: ✅ Semua user                                   │
+│  HOME MENU                                              │
+│  Icon: 🏠                                               │
+│  Access: Semua user                                     │
 └─────────────────────────────────────────────────────────┘
                             │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-        ↓                   ↓                   ↓
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│  OVERVIEW    │   │  ATTENDANCE  │   │ KPI DETAILS  │
-│              │   │              │   │              │
-│  URL: /home  │   │  URL: /att.. │   │ URL: /home/  │
-│              │   │              │   │      kpi     │
-└──────────────┘   └──────────────┘   └──────────────┘
-                                               │
-                                               ↓
-                                      ┌──────────────┐
-                                      │LEAVE REQUEST │
-                                      │              │
-                                      │ URL: /leave..│
-                                      └──────────────┘
+        ┌───────────────────┼───────────────────┌────────────────┌
+        │                   │                   │                │
+        ↓                   ↓                   ↓                ↓
+┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│  OVERVIEW    │   │  ATTENDANCE  │   │ KPI DETAILS  │   │LEAVE REQUEST │
+│              │   │              │   │              │   │              │
+│  URL: /home  │   │  URL: /att.. │   │ URL: /home/  │   │ URL: /leave..│
+│              │   │              │   │      kpi     │   │              │
+└──────────────┘   └──────────────┘   └──────────────┘   └──────────────┘                      
+                                      
 ```
 
 **Detail Menu HOME:**
@@ -140,13 +134,13 @@
 
 ---
 
-#### 💼 Menu 2: MY TASKS (CSO & Admin Only)
+#### Menu 2: MY TASKS
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  MY TASKS MENU                                           │
-│  Icon: 💼                                                │
-│  Access: ✅ CSO, ✅ Admin, ❌ Staff lainnya              │
+│  MY TASKS MENU                                          │
+│  Icon: 💼                                               │
+│  Access: Staff dan admin                                │
 └─────────────────────────────────────────────────────────┘
                             │
                 ┌───────────┴───────────┐
@@ -158,17 +152,17 @@
         └───────────────┘       └───────────────┘
                 │                       │
                 │                       │
-    [15 Menu Bersama]         [13 Menu Personal]
+         [Menu Bersama]         [Menu Personal]
 ```
 
 ---
 
-##### 📂 MY TASKS → BERSAMA (Shared Tasks)
+##### MY TASKS → BERSAMA (Shared Tasks)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  BERSAMA MENU (15 halaman)                                   │
-│  Access: ✅ CSO, ✅ Admin                                     │
+│  Access: Staff, Admin                                        │
 └──────────────────────────────────────────────────────────────┘
 
 1.  Statistik Prospektif
@@ -279,12 +273,12 @@
 
 ---
 
-##### 👤 MY TASKS → PERSONAL (Individual Tasks)
+##### MY TASKS → PERSONAL (Individual Tasks)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  PERSONAL MENU (13 halaman)                                  │
-│  Access: ✅ CSO, ✅ Admin                                     │
+│  Access: Staff, Admin                                        │
 └──────────────────────────────────────────────────────────────┘
 
 1.  Prospektif Form
@@ -381,13 +375,13 @@
 
 ---
 
-#### 🛡️ Menu 3: ADMIN (Admin & Super Admin Only)
+#### Menu 3: ADMIN (Admin & Super Admin Only)
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  ADMIN MENU                                              │
-│  Icon: 🛡️                                                │
-│  Access: ✅ Admin, ✅ Super Admin, ❌ Staff              │
+│  ADMIN MENU                                             │
+│  Icon: 🛡️                                              │
+│  Access: Admin, Super Admin, Staff                      │
 └─────────────────────────────────────────────────────────┘
                             │
                             ↓
@@ -407,32 +401,32 @@
    │  REGISTER USER PAGE                      │
    │  ┌────────────────────────────────────┐  │
    │  │  FORM FIELDS:                      │  │
-   │  │  • Nama                             │  │
-   │  │  • Email                            │  │
-   │  │  • Password                         │  │
-   │  │  • Jabatan (dropdown)               │  │
-   │  │  • Role (dropdown)                  │  │
-   │  │  • Status Aktif (checkbox)          │  │
-   │  │                                     │  │
-   │  │  [REGISTER USER BUTTON]             │  │
+   │  │  • Nama                            │  │
+   │  │  • Email                           │  │
+   │  │  • Password                        │  │
+   │  │  • Jabatan (dropdown)              │  │
+   │  │  • Role (dropdown)                 │  │
+   │  │  • Status Aktif (checkbox)         │  │
+   │  │                                    │  │
+   │  │  [REGISTER USER BUTTON]            │  │
    │  └────────────────────────────────────┘  │
-   │                                           │
+   │                                          │
    │  Action: Submit form                     │
-   │  Result: ✅ User baru terdaftar          │
-   │          ❌ Error jika data invalid      │
+   │  Result: User baru terdaftar             │
+   │          Error jika data invalid         │
    └──────────────────────────────────────────┘
    ```
 
 ---
 
-#### 👤 Menu 4: PROFILE (Semua User)
+#### Menu 4: PROFILE (Semua User)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  PROFILE MENU                                            │
-│  Icon: 👤                                                │
-│  Access: ✅ Semua user                                   │
-└─────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│  PROFILE MENU                                          │
+│  Icon: 👤                                              │
+│  Access: Semua user                                    │
+└────────────────────────────────────────────────────────┘
                             │
         ┌───────────────────┼───────────────────┐
         │                   │                   │
@@ -463,55 +457,55 @@
 
 ---
 
-### 🚪 Special Pages
+### Special Pages
 
-#### ❌ Access Denied Page
+#### Access Denied Page
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  ACCESS DENIED PAGE                                      │
-│  URL: /access-denied                                     │
+│  ACCESS DENIED PAGE                                     │
+│  URL: /access-denied                                    │
 │  ┌────────────────────────────────────────────────────┐ │
-│  │  🚫 Access Denied                                   │ │
-│  │                                                     │ │
+│  │  🚫 Access Denied                                  │ │
+│  │                                                    │ │
 │  │  You don't have permission to access this page.    │ │
-│  │                                                     │ │
-│  │  Required: [Role/Jabatan yang dibutuhkan]         │ │
-│  │  Your role: [Role/Jabatan user saat ini]          │ │
-│  │                                                     │ │
+│  │                                                    │ │
+│  │  Required: [Role/Jabatan yang dibutuhkan]          │ │
+│  │  Your role: [Role/Jabatan user saat ini]           │ │
+│  │                                                    │ │
 │  │           [← Back to Home]                         │ │
 │  └────────────────────────────────────────────────────┘ │
-│                                                          │
+│                                                         │
 │  Kapan muncul:                                          │
-│  • User coba akses halaman CSO tapi bukan CSO/Admin    │
-│  • User coba akses Admin menu tapi bukan Admin         │
-│  • URL diketik manual tapi tidak punya akses           │
+│  • User coba akses halaman CSO tapi bukan CSO/Admin     │
+│  • User coba akses Admin menu tapi bukan Admin          │
+│  • URL diketik manual tapi tidak punya akses            │
 └─────────────────────────────────────────────────────────┘
 ```
 
-#### 🔍 Not Found Page
+#### Not Found Page
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  NOT FOUND PAGE (404)                                    │
+│  NOT FOUND PAGE (404)                                   │
 │  URL: /* (halaman yang tidak ada)                       │
 │  ┌────────────────────────────────────────────────────┐ │
-│  │  🔍 Page Not Found                                  │ │
-│  │                                                     │ │
-│  │  The page you're looking for doesn't exist.       │ │
-│  │                                                     │ │
+│  │  Page Not Found                                    │ │
+│  │                                                    │ │
+│  │  The page you're looking for doesn't exist.        │ │
+│  │                                                    │ │
 │  │           [← Back to Home]                         │ │
 │  └────────────────────────────────────────────────────┘ │
-│                                                          │
+│                                                         │
 │  Kapan muncul:                                          │
-│  • User ketik URL yang salah/tidak exist               │
-│  • Klik link yang broken                               │
+│  • User ketik URL yang salah/tidak exist                │
+│  • Klik link yang broken                                │
 └─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🎬 User Journey - Navigasi Flow
+## User Journey - Navigasi Flow
 
 ### Journey 1: CSO Daily Workflow
 
@@ -559,7 +553,7 @@ START → Login
          ↓
       Klik "REGISTER USER"
          ↓
-      ✅ Success notification
+     Success notification
          ↓
       Back to /home atau register user lain
          ↓
@@ -576,17 +570,17 @@ START → Login
          ↓
       /home (Overview)
          │
-         ├─→ Klik "KPI Details" → /home/kpi ✅
+         ├─→ Klik "KPI Details" → /home/kpi
          │
-         ├─→ Klik "Attendance" → /attendance ✅
+         ├─→ Klik "Attendance" → /attendance
          │
-         ├─→ Klik "Profile" → /profile ✅
+         ├─→ Klik "Profile" → /profile
          │
          └─→ Coba akses /my-tasks/... (tidak ada di menu)
               ↓
               Type URL manual: /my-tasks/dashboard-prospektif
               ↓
-              ❌ Redirect to /access-denied
+              Redirect to /access-denied
               ↓
               Klik "Back to Home"
               ↓
@@ -598,61 +592,59 @@ END
 
 ---
 
-## 📊 Navigation Tree (Complete)
+## Navigation Tree (Complete)
 
 ```
 🥕 CARROT ACADEMY DASHBOARD
 │
-├─ / (Login) ──────────────────────────────┐
-│                                           │
-│                                  [Login Success]
-│                                           │
-└─────────────────────────────────────────→ /home (Overview)
-                                             │
-                    ┌────────────────────────┼────────────────────────┐
-                    │                        │                        │
-                    ↓                        ↓                        ↓
-              🏠 HOME MENU            💼 MY TASKS MENU          🛡️ ADMIN MENU
-              (Semua User)           (CSO & Admin)           (Admin Only)
-                    │                        │                        │
-         ┌──────────┼──────────┐            │                        │
-         │          │          │            │                        │
-         ↓          ↓          ↓            ↓                        ↓
-    /home      /attendance  /home/kpi   BERSAMA              /admin/register-user
-    (Overview)              (KPI)       PERSONAL
-         │
-         ↓
-    /leave-request
-                                             │
-                        ┌────────────────────┴────────────────────┐
-                        │                                          │
-                        ↓                                          ↓
-                   📂 BERSAMA (15)                           👤 PERSONAL (13)
-                        │                                          │
-         ┌──────────────┼──────────────┐            ┌─────────────┼─────────────┐
-         │              │              │            │             │             │
-         ↓              ↓              ↓            ↓             ↓             ↓
-    Statistik    Rekap Jadwal   Daftar Kelas  Prospektif  Dashboard  Dashboard
-    Prospektif      Mentor       Tersedia        Form     Prospektif  Reminder
-         │              │              │            │             │             │
-         ↓              ↓              ↓            ↓             ↓             ↓
-    Daftar        Daftar         Daftar        Dashboard   Dashboard Dashboard
-    Kirim Merch   Siswa Trial   Offboarding     Daily      Invoice   Portfolio
-         │              │              │            │             │             │
-         ↓              ↓              ↓            ↓             ↓             ↓
-    Daily         Janji Temu    Ticket        FD Student   Profil    Create
-    Story                       External       Identity     Siswa    Ticketing
-         │              │              │            │             │             │
-         ↓              ↓              ↓            ↓             ↓             ↓
-  Pendaftaran    Pendaftaran   Lost N        Ticketing  Track Ticket Review
-  Lanjutan       FD Course     Found          Internal    From Me    Karyawan
-         │              │              │                              │
-         ↓              ↓              ↓                              ↓
-   Prospektif    Partnership  Dashboard                        Dashboard
-   dari Marcom              Siswa Aktif                        Karyawan
+├─ / (Login) ────────────────────────────────────────────┐
+│                                                        │
+│                                                 [Login Success]
+│                                                        │
+└───────────────────────────────────────────────→ /home (Overview)
+                                                         │
+                    ┌────────────────────────────────────┼────────────────────────┐
+                    │                                    │                        │
+                    ↓                                    ↓                        ↓
+              🏠 HOME MENU                        💼 MY TASKS MENU          🛡️ ADMIN MENU
+              (Semua User)                           (CSO & Admin)             (Admin Only)
+                    │                                    │                        │
+         ┌──────────┼──────────┐───────────┐             │                        │
+         │          │          │           │             │                        │
+         ↓          ↓          ↓           ↓             ↓                        ↓
+    /home     /attendance  /home/kpi  /leave-request    BERSAMA             /admin/register-user
+    (Overview)              (KPI)                       PERSONAL
+        
+                                                         │
+                                    ┌────────────────────┴────────────────────┐
+                                    │                                         │
+                                    ↓                                         ↓
+                                BERSAMA (15)                             PERSONAL (13)
+                                    │                                         │
+                     ┌──────────────┼──────────────┐            ┌─────────────┼─────────────┐
+                     │              │              │            │             │             │
+                     ↓              ↓              ↓            ↓             ↓             ↓
+                    Statistik    Rekap Jadwal   Daftar Kelas  Prospektif  Dashboard  Dashboard
+                    Prospektif      Mentor       Tersedia        Form     Prospektif  Reminder
+                     │              │              │            │             │             │
+                     ↓              ↓              ↓            ↓             ↓             ↓
+                    Daftar        Daftar         Daftar        Dashboard   Dashboard Dashboard
+                    Kirim Merch   Siswa Trial   Offboarding     Daily      Invoice   Portfolio
+                     │              │              │            │             │             │
+                     ↓              ↓              ↓            ↓             ↓             ↓
+                    Daily         Janji Temu    Ticket        FD Student   Profil    Create
+                    Story                       External       Identity     Siswa    Ticketing
+                     │              │              │            │             │             │
+                     ↓              ↓              ↓            ↓             ↓             ↓
+                    Pendaftaran    Pendaftaran   Lost N        Ticketing  Track Ticket Review
+                    Lanjutan       FD Course     Found          Internal    From Me    Karyawan
+                     │              │              │                              │
+                     ↓              ↓              ↓                              ↓
+                    Prospektif    Partnership  Dashboard                        Dashboard
+                    dari Marcom              Siswa Aktif                        Karyawan
 
 
-                              👤 PROFILE MENU
+                            👤 PROFILE MENU
                               (Semua User)
                                     │
                          ┌──────────┼──────────┐
@@ -672,7 +664,7 @@ END
 
 ---
 
-## 🎯 Click Flow - Apa yang Terjadi Saat Klik Menu
+## Click Flow - Apa yang Terjadi Saat Klik Menu
 
 ### Scenario A: User Klik Menu "Overview"
 
@@ -702,7 +694,7 @@ Navigate to /home
     • Fetch reminders
     ↓
 [Render Page]
-    ✅ Dashboard Overview ditampilkan
+    Dashboard Overview ditampilkan
 ```
 
 ---
@@ -715,11 +707,11 @@ CSO user di halaman /home
 Klik icon 💼 (My Tasks) di Navbar
     ↓
 Dropdown menu muncul:
-    📂 Bersama
+    Bersama
         • Statistik Prospektif
         • Rekap Jadwal Mentor
         • ...
-    👤 Personal
+    Personal
         • Prospektif Form
         • Dashboard Prospektif ←
         • ...
@@ -738,8 +730,8 @@ Navigate to /my-tasks/dashboard-prospektif
     • Fetch status & filters
     ↓
 [Render Page]
-    ✅ Dashboard Prospektif ditampilkan
-    ✅ CSO bisa lihat & manage data prospektif
+    Dashboard Prospektif ditampilkan
+    CSO bisa lihat & manage data prospektif
 ```
 
 ---
@@ -749,7 +741,7 @@ Navigate to /my-tasks/dashboard-prospektif
 ```
 Finance user di halaman /home
     ↓
-User TIDAK LIHAT icon 💼 (My Tasks) di Navbar
+User TIDAK LIHAT menu Admin atau jabatan lain
     ↓
 [Reason]
     • showCSOMenu = false
@@ -758,7 +750,7 @@ User TIDAK LIHAT icon 💼 (My Tasks) di Navbar
     ↓
 [Menu yang terlihat di Navbar]
     ✅ 🏠 Home
-    ❌ 💼 My Tasks (HIDDEN)
+    ✅ 💼 My Tasks
     ❌ 🛡️ Admin (HIDDEN)
     ✅ 👤 Profile
     ✅ 🚪 Logout
@@ -783,7 +775,7 @@ Ketik di browser: /my-tasks/dashboard-prospektif
     Navigate to /access-denied
     ↓
 [Render Page]
-    ❌ Access Denied page ditampilkan
+    Access Denied page ditampilkan
     • Message: "You don't have permission"
     • Required: CSO or Admin
     • Your role: Finance Staff
@@ -800,7 +792,7 @@ Admin user di halaman /home
 Klik icon 🛡️ (Admin) di Navbar
     ↓
 Dropdown menu muncul:
-    📂 Admin
+    Admin
         • Register User ←
     ↓
 Klik "Register User"
@@ -813,7 +805,7 @@ Klik "Register User"
 Navigate to /admin/register-user
     ↓
 [Render Page]
-    ✅ Register User form ditampilkan
+    Register User form ditampilkan
     • Form fields: Nama, Email, Password, Jabatan, Role, Status
     • Button: REGISTER USER
 ```
@@ -840,13 +832,13 @@ Klik icon 🚪 (Logout) di Navbar
     Navigate to / (Login page)
     ↓
 [Render Page]
-    ✅ Login page ditampilkan
+    Login page ditampilkan
     • User harus login ulang untuk akses lagi
 ```
 
 ---
 
-## 🔄 Back Button & Navigation
+## Back Button & Navigation
 
 ### Browser Back Button
 
@@ -862,7 +854,7 @@ Navigate to: Previous page (misal: /home)
     ✓ Token valid? → Yes
     ↓
 [Render Page]
-    ✅ Halaman sebelumnya ditampilkan
+    Halaman sebelumnya ditampilkan
 ```
 
 ---
@@ -892,21 +884,21 @@ Try to navigate to: /my-tasks/dashboard-prospektif
 
 ---
 
-## 📱 Mobile vs Desktop Navigation
+## Mobile vs Desktop Navigation
 
 ### Desktop Navigation
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  🥕 Logo    [🟢 8j]  [☀️]  🏠 💼 🛡️ 👤 🚪      │
+│  🥕 Logo    [🟢 8j]  [☀️]  🏠 💼 🛡️ 👤 🚪       │
 └─────────────────────────────────────────────────────┘
-       │         │      │    │  │  │  │  │
-       │         │      │    │  │  │  │  └─ Logout
-       │         │      │    │  │  │  └─ Profile
-       │         │      │    │  │  └─ Admin
-       │         │      │    │  └─ My Tasks
-       │         │      │    └─ Home
-       │         │      └─ Theme Toggle
+       │         │        │    │   │  │   │  │
+       │         │        │    │   │  │   │  └─ Logout
+       │         │        │    │   │  │   └─ Profile
+       │         │        │    │   │  └─ Admin
+       │         │        │    │   └─ My Tasks
+       │         │        │    └─ Home
+       │         │        └─ Theme Toggle
        │         └─ Session Timer Badge
        └─ Brand Logo (klik → /home)
 
@@ -920,9 +912,9 @@ Try to navigate to: /my-tasks/dashboard-prospektif
 ### Mobile Navigation
 
 ```
-┌─────────────────────────────┐
-│  🥕 Logo  [🟢 8j] [☀️] [≡] │
-└─────────────────────────────┘
+┌──────────────────────────────┐
+│  🥕 Logo  [🟢 8j] [☀️] [≡]  │
+└──────────────────────────────┘
                             │
                             └─ Hamburger Menu
                                │
@@ -946,7 +938,7 @@ Try to navigate to: /my-tasks/dashboard-prospektif
 
 ---
 
-## 🎨 Visual Feedback - Apa yang User Lihat
+## Visual Feedback - Apa yang User Lihat
 
 ### Active Menu Indicator
 
@@ -982,7 +974,7 @@ User klik menu "Dashboard Prospektif"
     • New page fadein
     ↓
 [Page Rendered]
-    ✅ Dashboard Prospektif ditampilkan dengan data
+    Dashboard Prospektif ditampilkan dengan data
 ```
 
 ---
@@ -995,7 +987,7 @@ User klik menu, tapi API error
 [Error Handling]
     • Error message toast muncul
     ┌────────────────────────────────┐
-    │  ❌ Failed to load data        │
+    │  Failed to load data           │
     │  Please try again later        │
     └────────────────────────────────┘
     • Page tetap di halaman sebelumnya
@@ -1005,34 +997,7 @@ User klik menu, tapi API error
 
 ---
 
-## 📊 Menu Availability Matrix
-
-| Menu Category | Sub Menu | Staff (CSO) | Staff (Lain) | Admin | Super Admin |
-|---------------|----------|-------------|--------------|-------|-------------|
-| **🏠 HOME** |
-| | Overview | ✅ | ✅ | ✅ | ✅ |
-| | Attendance | ✅ | ✅ | ✅ | ✅ |
-| | KPI Details | ✅ | ✅ | ✅ | ✅ |
-| | Leave Request | ✅ | ✅ | ✅ | ✅ |
-| **💼 MY TASKS** |
-| | Bersama (15 menu) | ✅ | ❌ | ✅ | ✅ |
-| | Personal (13 menu) | ✅ | ❌ | ✅ | ✅ |
-| **🛡️ ADMIN** |
-| | Register User | ❌ | ❌ | ✅ | ✅ |
-| **👤 PROFILE** |
-| | Profile | ✅ | ✅ | ✅ | ✅ |
-| | Payment | ✅ | ✅ | ✅ | ✅ |
-| | Settings | ✅ | ✅ | ✅ | ✅ |
-| **🚪 LOGOUT** |
-| | Logout | ✅ | ✅ | ✅ | ✅ |
-
-**Legend:**
-- ✅ = Menu visible & accessible
-- ❌ = Menu hidden (tidak muncul di navbar)
-
----
-
-## 🎯 Summary - Yang Terjadi Saat Klik Menu
+## Summary - Yang Terjadi Saat Klik Menu
 
 1. **Klik Menu di Navbar**
    - Dropdown muncul (jika ada submenu)
@@ -1060,7 +1025,7 @@ User klik menu, tapi API error
 
 ---
 
-## 🔍 Quick Navigation Tips
+## Quick Navigation Tips
 
 ### Keyboard Shortcuts (Future Enhancement)
 ```

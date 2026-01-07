@@ -67,14 +67,14 @@ function MyComponent() {
 ### 5. Files yang Perlu Update Manual
 
 Files dengan banyak `bg="white"`:
-- [ ] src/pages/Staff/CSO/Personal/TrackTicketFmePage/index.jsx (4 instances)
-- [ ] src/pages/Staff/CSO/Personal/TicketingInternal/index.jsx (4 instances)
-- [ ] src/pages/Staff/CSO/Personal/ReviewKaryawanPage/index.jsx (2 instances)
-- [ ] src/pages/Staff/CSO/Personal/DashboardReminder/index.jsx (6 instances)
-- [ ] src/pages/Staff/CSO/Personal/ProfilSiswaPage/index.jsx (2 instances)
-- [ ] src/pages/Staff/CSO/Personal/DashboardProspektifPage/index.jsx
-- [ ] src/pages/Staff/CSO/Personal/DashboardPortfolioPage/index.jsx
-- [ ] src/pages/Staff/CSO/Personal/FdStudenIdentityPage/index.jsx
+- [x] src/pages/Staff/CSO/Personal/TrackTicketFmePage/index.jsx (4 instances)
+- [x] src/pages/Staff/CSO/Personal/TicketingInternal/index.jsx (4 instances)
+- [x] src/pages/Staff/CSO/Personal/ReviewKaryawanPage/index.jsx (2 instances)
+- [x] src/pages/Staff/CSO/Personal/DashboardReminder/index.jsx (6 instances)
+- [x] src/pages/Staff/CSO/Personal/ProfilSiswaPage/index.jsx (2 instances)
+- [x] src/pages/Staff/CSO/Personal/DashboardProspektifPage/index.jsx
+- [x] src/pages/Staff/CSO/Personal/DashboardPortfolioPage/index.jsx
+- [x] src/pages/Staff/CSO/Personal/FdStudenIdentityPage/index.jsx
 
 ### 6. Automated Fix
 

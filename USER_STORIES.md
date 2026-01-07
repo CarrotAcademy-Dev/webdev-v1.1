@@ -1,59 +1,59 @@
-# 📖 User Story - Journey Flow Carrot Academy Dashboard
+# User Story - Journey Flow Carrot Academy Dashboard
 
 > **Cerita perjalanan user dari login sampai logout**  
 > Dijelaskan dengan bahasa sederhana untuk non-technical stakeholder
 
 ---
 
-## 👤 Meet Our Users
+## Meet Our Users
 
-### Sari - Customer Support Officer (CSO)
+### Customer Support Officer (CSO)
 - **Role**: Staff
 - **Jabatan**: Customer Support Officer
 - **Kebutuhan**: Akses ke semua menu CSO untuk mengelola data siswa
 
-### Budi - Admin
+### Admin
 - **Role**: Admin
 - **Jabatan**: IT Developer
 - **Kebutuhan**: Akses ke semua menu + bisa register user baru
 
-### Ani - Finance Staff
+### Finance Staff
 - **Role**: Staff
 - **Jabatan**: Finance Accounting
 - **Kebutuhan**: Akses ke dashboard overview dan KPI
 
 ---
 
-## 📚 Story 1: Sari's Daily Workflow (CSO Normal Day)
+## Story 1: CSO's Daily Workflow (CSO Normal Day)
 
-### 🌅 Pagi Hari - Login ke Sistem
+### Pagi Hari - Login ke Sistem
 
 **Waktu: 08:00 WIB**
 
 ```
-Sari datang ke kantor, nyalakan laptop, buka browser
+CSO datang ke kantor, nyalakan laptop, buka browser
 → Ketik URL: carrotacademy.com
 → Muncul halaman login yang simpel dan clean
 ```
 
-**Layar yang dilihat Sari:**
+**Layar yang dilihat CSO Staff:**
 ```
 ┌───────────────────────────────────────┐
-│                                        │
-│         🥕 CARROT ACADEMY              │
-│                                        │
-│     Welcome Back Team!                 │
-│                                        │
-│     Email: [sari@carrot.com    ]      │
+│                                       │
+│         🥕 CARROT ACADEMY             │
+│                                       │
+│     Welcome Back Team!                │
+│                                       │
+│     Email: [cso@carrot.com    ]       │
 │     Password: [••••••••••••    ]      │
-│                                        │
-│              [LOGIN →]                 │
-│                                        │
+│                                       │
+│              [LOGIN →]                │
+│                                       │
 └───────────────────────────────────────┘
 ```
 
-**Sari's Action:**
-1. Input email: `sari@carrot.com`
+**CSO's Action:**
+1. Input email: `cso@carrot.com`
 2. Input password: `Password123!`
 3. Klik tombol **LOGIN**
 4. Loading 2 detik...
@@ -61,73 +61,73 @@ Sari datang ke kantor, nyalakan laptop, buka browser
 **Result:**
 ✅ Login berhasil!  
 ✅ Redirect otomatis ke `/home`  
-✅ Session dibuat untuk 8 jam  
+✅ Session dibuat untuk 9 jam  
 
 ---
 
-### 🏠 Dashboard Overview - Sambutan Pagi
+### Dashboard Overview - Sambutan Pagi
 
 **Waktu: 08:01 WIB**
 
-Sari melihat dashboard yang menampilkan:
+CSO melihat dashboard yang menampilkan:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  🥕 Carrot Academy         [🟢 8j 0m]  [☀️ Theme] [≡]  │
 ├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  Hallo, Sari! 👋                                        │
+│                                                         │
+│  Hallo, CSO! 👋                                         │
 │  Customer Support Officer                               │
-│                                                          │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
+│                                                         │
+│  ┌─────────────┐  ┌───────────────┐  ┌─────────────┐    │
 │  │  👤 Profile │  │  🕐 Clock In │  │  ⭐ Points  │    │
-│  │             │  │  08:00       │  │  50 pts     │    │
-│  │  Sari       │  │  5 day       │  │  #1 place   │    │
-│  │             │  │  streak!     │  │             │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘    │
-│                                                          │
+│  │             │  │  08:00        │  │  50 pts     │    │
+│  │  CSO        │  │  5 day        │  │  #1 place   │    │
+│  │             │  │  streak!      │  │             │    │
+│  └─────────────┘  └───────────────┘  └─────────────┘    │
+│                                                         │
 │  Task Summary - Today                                   │
-│  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────────┐          │
-│  │ 📝 50 │ │ ✅ 2  │ │ 🔄 18 │ │ 📊 10%    │          │
-│  │ Total │ │ Done  │ │ WIP   │ │ Complete  │          │
-│  └───────┘ └───────┘ └───────┘ └───────────┘          │
-│                                                          │
+│  ┌───────┐ ┌───────┐ ┌───────┐ ┌───────────┐            │
+│  │ 📝 50 │ │ ✅ 2  │ │ 🔄 18 │ │ 📊 10%  │            │
+│  │ Total │ │ Done  │ │ WIP   │ │ Complete  │            │
+│  └───────┘ └───────┘ └───────┘ └───────────┘            │
+│                                                         │
 │  [Grafik Tasks Completed]                               │
-│                                                          │
+│                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Sari's Reaction:**
+**CSO's Reaction:**
 😊 "Wah, dashboard-nya bagus! Langsung keliatan ada 50 tasks hari ini"  
 💭 "Masih ada 18 on progress, harus diselesaikan nih"
 
 ---
 
-### 💼 Mulai Bekerja - Akses Menu CSO
+### Mulai Bekerja - Akses Menu CSO
 
 **Waktu: 08:15 WIB**
 
-Sari perlu check dashboard prospektif untuk follow up calon siswa.
+CSO perlu check dashboard prospektif untuk follow up calon siswa.
 
-**Sari's Action:**
+**CSO's Action:**
 1. Klik icon **💼** (briefcase) di navbar
 2. Menu dropdown muncul:
 
 ```
 ┌────────────────────────────────┐
-│  💼 My Tasks                    │
+│  💼 My Tasks                   │
 ├────────────────────────────────┤
-│  📂 Bersama (Shared)           │
+│  Bersama (Shared)              │
 │    • Statistik Prospektif      │
 │    • Rekap Jadwal Mentor       │
 │    • Daftar Kelas Tersedia     │
 │    • Daftar Kirim Merch        │
 │    • ...                       │
 │                                │
-│  👤 Personal                    │
-│    • Dashboard Prospektif ←   │
+│  Personal                      │
+│    • Dashboard Prospektif ←    │
 │    • Dashboard Reminder        │
-│    • Profil Siswa             │
+│    • Profil Siswa              │
 │    • ...                       │
 └────────────────────────────────┘
 ```
@@ -137,101 +137,101 @@ Sari perlu check dashboard prospektif untuk follow up calon siswa.
 **System Check (Behind the Scenes):**
 ```
 ProtectedRoute checking...
-→ User logged in? ✅ Yes (Sari)
-→ Check jabatan: "Customer Support Officer" ✅
-→ Access allowed: CSO_OR_ADMIN ✅
+→ User logged in? Yes (CSO)
+→ Check jabatan: "Customer Support Officer"
+→ Access allowed: CSO_OR_ADMIN
 → Render page: DashboardProspektifPage
 ```
 
 **Result:**
-✅ Halaman Dashboard Prospektif terbuka  
-✅ Sari bisa lihat semua data prospektif  
-✅ Bisa filter, export, update status  
+Halaman Dashboard Prospektif terbuka  
+CSO bisa lihat semua data prospektif  
+Bisa filter, export, update status  
 
-**Sari's Reaction:**
-👍 "Perfect! Ada 10 prospektif baru yang perlu di-follow up"
+**CSO's Reaction:**
+"Perfect! Ada 10 prospektif baru yang perlu di-follow up"
 
 ---
 
-### ⏰ Session Warning - Siang Hari
+### Session Warning - Siang Hari
 
-**Waktu: 15:45 WIB (sudah kerja 7 jam 45 menit)**
+**Waktu: 17:45 WIB (sudah kerja 8 jam 45 menit)**
 
-Sari masih fokus kerja, tiba-tiba muncul notifikasi:
+CSO masih fokus kerja, tiba-tiba muncul notifikasi:
 
 ```
 ┌────────────────────────────────────┐
-│  ⏰ Notification                    │
+│  Notification                      │
 ├────────────────────────────────────┤
 │  Sesi Akan Berakhir                │
-│                                     │
+│                                    │
 │  Sesi login Anda akan berakhir     │
 │  dalam 15 menit. Simpan pekerjaan  │
-│  Anda.                              │
-│                                     │
-│              [OK]                   │
+│  Anda.                             │
+│                                    │
+│              [OK]                  │
 └────────────────────────────────────┘
 ```
 
-**Sari's Reaction:**
+**CSO's Reaction:**
 😮 "Oh ya, hampir lupa! Masih 15 menit lagi"  
 💭 "Selesaikan yang penting dulu, nanti perpanjang"
 
-**Sari juga notice:**
+**CSO juga notice:**
 Badge di navbar berubah: **[🟠 15m]** (dari hijau jadi orange)
 
 ---
 
-### 🔔 Critical Warning - Harus Pilih!
+### Critical Warning - Harus Pilih!
 
-**Waktu: 15:50 WIB (tinggal 10 menit)**
+**Waktu: 17:50 WIB (tinggal 10 menit)**
 
 Modal muncul di tengah layar (tidak bisa ditutup):
 
 ```
 ┌─────────────────────────────────────────┐
-│  ⏰ Sesi Akan Berakhir                   │
+│  Sesi Akan Berakhir                     │
 ├─────────────────────────────────────────┤
-│                                          │
+│                                         │
 │  Sesi login Anda akan berakhir dalam    │
-│  10 menit.                               │
-│                                          │
+│  10 menit.                              │
+│                                         │
 │  Untuk melanjutkan pekerjaan, silakan   │
 │  perpanjang sesi. Atau logout jika      │
-│  sudah selesai.                          │
-│                                          │
-│  💡 Tips: Simpan pekerjaan Anda          │
-│  terlebih dahulu untuk menghindari       │
-│  kehilangan data.                        │
-│                                          │
+│  sudah selesai.                         │
+│                                         │
+│  Tips: Simpan pekerjaan Anda            │
+│  terlebih dahulu untuk menghindari      │
+│  kehilangan data.                       │
+│                                         │
 ├─────────────────────────────────────────┤
 │  [Logout Sekarang]  [Perpanjang Sesi]   │
 └─────────────────────────────────────────┘
 ```
 
-**Sari's Action:**
+**CSO's Action:**
 1. Klik **Perpanjang Sesi**
 
 **System Response:**
 ```
-→ Token expiry di-update +24 jam
+→ Token expiry di-update +4 jam
 → Modal ditutup
-→ Toast success: "Sesi Diperpanjang 24 Jam"
-→ Badge di navbar: [🟢 24j 0m]
+→ Toast success: "Sesi Diperpanjang 4 Jam"
+→ Badge di navbar: [🟢 4j 0m]
 ```
 
-**Sari's Reaction:**
+**CSO's Reaction:**
 😌 "Lega! Bisa lanjut kerja tanpa khawatir"
 
 ---
 
-### 🏁 Selesai Kerja - Logout
+### Selesai Kerja - Logout
 
-**Waktu: 17:00 WIB**
+**Waktu: 18:00 WIB**
 
-Sari sudah selesai semua tasks hari ini.
+CSO sudah selesai semua tasks hari ini.
 
-**Sari's Action:**
+**CSO's Action:**
 1. Klik icon **🚪** (logout) di navbar
 2. Confirm logout
 
@@ -244,42 +244,42 @@ AuthContext.logout() called
 → Redirect to /
 ```
 
-**Screen yang dilihat Sari:**
+**Screen yang dilihat CSO:**
 ```
 ┌───────────────────────────────────────┐
-│                                        │
-│         🥕 CARROT ACADEMY              │
-│                                        │
-│     Welcome Back Team!                 │
-│                                        │
-│     Email: [                    ]      │
-│     Password: [                 ]      │
-│                                        │
-│              [LOGIN →]                 │
-│                                        │
+│                                       │
+│         🥕 CARROT ACADEMY             │
+│                                       │
+│     Welcome Back Team!                │
+│                                       │
+│     Email   : [                ]      │
+│     Password: [                ]      │
+│                                       │
+│              [LOGIN →]                │
+│                                       │
 └───────────────────────────────────────┘
 ```
 
-**Sari's Reaction:**
+**CSO's Reaction:**
 ✅ "Great! Besok tinggal login lagi"  
 👋 "Selamat sore, sampai jumpa besok!"
 
 ---
 
-## 📚 Story 2: Budi's Admin Task (Register New User)
+## Story 2: Admin's Task (Register New User)
 
-### 🔐 Admin Login
+### Admin Login
 
 **Waktu: 09:00 WIB**
 
-Budi (Admin) login seperti biasa:
+Admin login seperti biasa:
 
 ```
 Login → Dashboard Overview
-Badge: [🟢 8j 0m]
+Badge: [🟢 9j 0m]
 ```
 
-**Menu yang dilihat Budi:**
+**Menu yang dilihat Admin:**
 ```
 Navbar:
 ├─ 🏠 Home (sama seperti staff)
@@ -292,69 +292,69 @@ Navbar:
 
 ---
 
-### 👥 Register User Baru
+### Register User Baru
 
 **Waktu: 09:15 WIB**
 
-Ada karyawan baru (Deni) yang perlu dibuatkan akun.
+Ada karyawan baru yang perlu dibuatkan akun.
 
-**Budi's Action:**
+**Admin's Action:**
 1. Klik **🛡️ Admin** di navbar
 2. Pilih **Register User**
 
 **System Check:**
 ```
 ProtectedRoute checking...
-→ User logged in? ✅ Yes (Budi)
-→ Check role: "admin" ✅
-→ Access allowed: ADMIN_ONLY ✅
+→ User logged in? Yes (Admin)
+→ Check role: "admin"
+→ Access allowed: ADMIN_ONLY
 → Render page: RegisterUserPage
 ```
 
-**Form yang dilihat Budi:**
+**Form yang dilihat Admin:**
 ```
 ┌─────────────────────────────────────┐
 │  Register New User                  │
 ├─────────────────────────────────────┤
-│  Nama:        [Deni Pratama    ]   │
-│  Email:       [deni@carrot.com ]   │
-│  Password:    [••••••••••••    ]   │
-│  Jabatan:     [Finance ▼]          │
-│  Role:        [staff ▼]            │
-│  Status:      [✓ Aktif]            │
+│  Nama:        [Deni Pratama    ]    │
+│  Email:       [deni@carrot.com ]    │
+│  Password:    [••••••••••••    ]    │
+│  Jabatan:     [Finance ▼]           │
+│  Role:        [staff ▼]             │
+│  Status:      [✓ Aktif]             │
 │                                     │
 │           [REGISTER USER]           │
 └─────────────────────────────────────┘
 ```
 
-**Budi's Action:**
+**Admin's Action:**
 1. Isi semua data Deni
 2. Password: `SecurePass123!` (memenuhi syarat: huruf besar, kecil, angka, simbol)
 3. Klik **REGISTER USER**
 
 **System Response:**
 ```
-→ Validasi password ✅
+→ Validasi password
 → POST request ke backend
 → User created successfully
 → Toast: "User berhasil didaftarkan!"
 ```
 
-**Budi's Reaction:**
+**Admin's Reaction:**
 ✅ "Done! Deni sudah bisa login besok"  
 📧 "Nanti kirim email ke Deni dengan credentials-nya"
 
 ---
 
-## 📚 Story 3: Ani's Limited Access (Finance Staff)
+## Story 3: Finance's Limited Access (Finance Staff)
 
-### 🚫 Access Denied Scenario
+### Access Denied Scenario
 
-**Waktu: 10:00 WIB**
+**Waktu: 09:00 WIB**
 
-Ani (Finance) login dan coba iseng akses menu CSO.
+Finance login dan coba iseng akses menu CSO.
 
-**Ani's Action:**
+**Finance's Action:**
 1. Login berhasil → Dashboard Overview
 2. Notice: Tidak ada menu **💼 My Tasks** di navbar
 3. Coba akses langsung via URL: `/my-tasks/dashboard-prospektif`
@@ -362,38 +362,38 @@ Ani (Finance) login dan coba iseng akses menu CSO.
 **System Check:**
 ```
 ProtectedRoute checking...
-→ User logged in? ✅ Yes (Ani)
-→ Check jabatan: "Finance Accounting" ❌
-→ Check role: "staff" ❌
-→ Access allowed: CSO_OR_ADMIN ❌
+→ User logged in? Yes (Finance)
+→ Check jabatan: "Finance Accounting"
+→ Check role: "staff"
+→ Access allowed: CSO_OR_ADMIN
 → Redirect to: /access-denied
 ```
 
-**Screen yang dilihat Ani:**
+**Screen yang dilihat Finance:**
 ```
 ┌─────────────────────────────────────┐
-│         🚫 Access Denied             │
+│         🚫 Access Denied            │
 ├─────────────────────────────────────┤
-│                                      │
-│  You don't have permission to        │
-│  access this page.                   │
-│                                      │
-│  Required: CSO or Admin              │
-│  Your role: Finance Staff            │
-│                                      │
-│         [← Back to Home]             │
-│                                      │
+│                                     │
+│  You don't have permission to       │
+│  access this page.                  │
+│                                     │
+│  Required: CSO or Admin             │
+│  Your role: Finance Staff           │
+│                                     │
+│         [← Back to Home]            │
+│                                     │
 └─────────────────────────────────────┘
 ```
 
-**Ani's Reaction:**
+**Finance's Reaction:**
 🤔 "Oh iya, saya kan bukan CSO"  
 👍 "Oke, balik ke dashboard saja"
 
-**Ani's Action:**
+**Finance's Action:**
 Klik **Back to Home** → Kembali ke Overview
 
-**Ani's Available Menu:**
+**Finance's Available Menu:**
 ```
 Navbar:
 ├─ 🏠 Home
@@ -404,27 +404,27 @@ Navbar:
 ├─ 👤 Profile ✅
 └─ 🚪 Logout ✅
 
-(Tidak ada My Tasks, tidak ada Admin menu)
+(Tidak ada Admin menu)
 ```
 
 ---
 
-## 📚 Story 4: Auto Logout Scenario
+## Story 4: Auto Logout Scenario
 
-### 😴 User Lupa Logout
+### User Lupa Logout
 
-**Character**: Rina (CSO)  
-**Waktu**: 17:00 WIB
+**Character**: CSO  
+**Waktu**: 18:00 WIB
 
-Rina selesai kerja tapi lupa logout, langsung pulang.
+CSO selesai kerja tapi lupa logout, langsung pulang.
 
 **Timeline:**
 
 ```
-17:00 → Rina pulang (laptop masih on, browser masih buka)
-17:10 → Session warning (Rina tidak di tempat)
-17:15 → Modal timeout muncul (Rina tidak lihat)
-17:25 → Session expired (8 jam sejak login)
+18:00 → CSO pulang (laptop masih on, browser masih buka)
+18:10 → Session warning (CSO tidak di tempat)
+18:15 → Modal timeout muncul (CSO tidak lihat)
+18:25 → Session expired (9 jam sejak login)
 ```
 
 **System Auto Process:**
@@ -438,37 +438,37 @@ CheckTokenExpiry() deteksi expired
 
 ---
 
-**Keesokan harinya - 08:00 WIB**
+**Keesokan harinya - 09:00 WIB**
 
-Rina buka laptop yang masih menyala.
+CSO buka laptop yang masih menyala.
 
-**Screen yang dilihat Rina:**
+**Screen yang dilihat CSO:**
 ```
 ┌───────────────────────────────────────┐
-│                                        │
-│         🥕 CARROT ACADEMY              │
-│                                        │
-│     Welcome Back Team!                 │
-│                                        │
-│     Email: [                    ]      │
-│     Password: [                 ]      │
-│                                        │
-│              [LOGIN →]                 │
-│                                        │
-│  💡 Your session has expired.          │
-│     Please login again.                │
+│                                       │
+│         🥕 CARROT ACADEMY             │
+│                                       │
+│     Welcome Back Team!                │
+│                                       │
+│     Email   : [                ]      │
+│     Password: [                 ]     │
+│                                       │
+│              [LOGIN →]                │
+│                                       │
+│     Your session has expired          │
+│     Please login again.               │
 └───────────────────────────────────────┘
 ```
 
-**Rina's Reaction:**
+**CSO's Reaction:**
 💭 "Oh iya kemarin lupa logout"  
 ✅ "No problem, login lagi saja"
 
 ---
 
-## 🎯 Key Takeaways untuk Stakeholder
+## Key Takeaways untuk Stakeholder
 
-### ✅ Yang Berjalan Otomatis (User Tidak Perlu Pikir)
+### Yang Berjalan Otomatis (User Tidak Perlu Pikir)
 
 1. **Session Monitoring**
    - Sistem auto-check setiap 5 menit
@@ -484,7 +484,7 @@ Rina buka laptop yang masih menyala.
    - Jika user lupa logout, sistem auto-logout setelah 8 jam
    - Data aman, tidak bisa diakses lagi tanpa login ulang
 
-### 🎨 Visual Feedback yang Jelas
+### Visual Feedback yang Jelas
 
 1. **Session Timer Badge**
    - 🟢 Hijau = Aman (> 2 jam)
@@ -500,16 +500,16 @@ Rina buka laptop yang masih menyala.
    - Hanya menu yang bisa diakses yang muncul
    - Tidak confuse user dengan menu yang tidak bisa dipakai
 
-### 🔒 Security Features
+### Security Features
 
 1. **Token Expiry**
-   - Default 8 jam (balance antara security & convenience)
-   - Bisa diperpanjang +24 jam jika user masih aktif
+   - Default 9 jam (balance antara security & convenience)
+   - Bisa diperpanjang +4 jam jika user masih aktif
    - Auto-clear jika expired
 
 2. **Role-Based Access**
    - Multi-layer protection (frontend + backend)
-   - Tidak bisa bypass dengan URL manipulation
+   - Tidak bisa bypass dengan URL mFinancepulation
 
 3. **Session Management**
    - One session per login
@@ -518,61 +518,61 @@ Rina buka laptop yang masih menyala.
 
 ---
 
-## 📊 User Satisfaction Metrics
+## User Satisfaction Metrics
 
 ### What Users Love ❤️
 
-✅ **Sari (CSO)**: "Dashboard-nya informatif, langsung tahu apa yang harus dikerjakan"  
-✅ **Budi (Admin)**: "Register user baru cepat dan mudah"  
-✅ **Ani (Finance)**: "Menu yang muncul sesuai dengan pekerjaan saya, tidak bingung"
+**CSO**: "Dashboard-nya informatif, langsung tahu apa yang harus dikerjakan"  
+**Admin**: "Register user baru cepat dan mudah"  
+**Finance**: "Menu yang muncul sesuai dengan pekerjaan saya, tidak bingung"
 
-### Pain Points Solved 🎯
+### Pain Points Solved
 
-❌ **Before**: User sering lupa logout → Data security risk  
-✅ **After**: Auto logout setelah 8 jam → Aman
+**Before**: User sering lupa logout → Data security risk  
+**After**: Auto logout setelah 9 jam → Aman
 
-❌ **Before**: User bisa akses halaman yang tidak seharusnya  
-✅ **After**: Access control ketat → Hanya bisa akses sesuai role/jabatan
+**Before**: User bisa akses halaman yang tidak seharusnya  
+**After**: Access control ketat → Hanya bisa akses sesuai role/jabatan
 
-❌ **Before**: Tidak tahu session kapan habis → Kaget tiba-tiba logout  
-✅ **After**: Warning 15 menit & 10 menit sebelumnya → User prepared
-
----
-
-## 🎓 Best Practices for Users
-
-### 📌 DO's ✅
-
-- ✅ Login di awal hari kerja
-- ✅ Perhatikan session timer badge
-- ✅ Perpanjang session jika masih lama kerjanya
-- ✅ Simpan pekerjaan berkala (jangan tunggu session timeout)
-- ✅ Logout manual saat selesai kerja
-
-### 📌 DON'Ts ❌
-
-- ❌ Jangan share password dengan orang lain
-- ❌ Jangan tinggalkan laptop dalam keadaan login
-- ❌ Jangan ignore warning notification
-- ❌ Jangan paksa akses halaman yang tidak authorized
+**Before**: Tidak tahu session kapan habis → Kaget tiba-tiba logout  
+**After**: Warning 15 menit & 10 menit sebelumnya → User prepared
 
 ---
 
-## 🎬 The End
+## Best Practices for Users
+
+### DO's
+
+- Login di awal hari kerja
+- Perhatikan session timer badge
+- Perpanjang session jika masih lama kerjanya
+- Simpan pekerjaan berkala (jangan tunggu session timeout)
+- Logout manual saat selesai kerja
+
+### DON'Ts
+
+- Jangan share password dengan orang lain
+- Jangan tinggalkan laptop dalam keadaan login
+- Jangan ignore warning notification
+- Jangan paksa akses halaman yang tidak authorized
+
+---
+
+## The End
 
 **Summary:**
-- 🔐 Login mudah & aman
-- 📊 Dashboard informatif
-- 💼 Menu sesuai role/jabatan
-- ⏰ Session management otomatis
-- 🔒 Security terjamin
-- 🚪 Logout manual/auto
+- Login mudah & aman
+- Dashboard informatif
+- Menu sesuai role/jabatan
+- Session management otomatis
+- Security terjamin
+- Logout manual/auto
 
 **Result:**
-✅ User bekerja dengan efisien  
-✅ Data aman & terlindungi  
-✅ No confusion, clear access control  
-✅ Happy users, happy stakeholders! 🎉
+User bekerja dengan efisien  
+Data aman & terlindungi  
+No confusion, clear access control  
+Happy users, happy stakeholders! 🎉
 
 ---
 
