@@ -234,7 +234,7 @@ export const getJabatanAbbreviation = (jabatan) => {
     
     // Map jabatan to abbreviation
     const abbreviationMap = {
-        'customer service officer': 'CSO',
+        'customer support officer': 'CSO',
         'it developer': 'JSD',
         'education support officer': 'ESO',
         'illustration drawing teacher': 'MTR',
@@ -250,7 +250,15 @@ export const getJabatanAbbreviation = (jabatan) => {
         'customer support administration': 'CSA',
     };
     
-    return abbreviationMap[jabatanLower] || jabatan.toUpperCase();
+    // Return abbreviation or first letters of each word if not found
+    const abbr = abbreviationMap[jabatanLower];
+    if (abbr) return abbr;
+    
+    // Fallback: Create abbreviation from first letters of each word
+    return jabatan
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase())
+        .join('');
 };
 
 export default {
