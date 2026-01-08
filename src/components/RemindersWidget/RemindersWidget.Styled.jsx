@@ -71,6 +71,24 @@ const StyledRemindersWidget = styled.div`
         padding: 2rem 0;
         font-style: italic;
     }
+    
+    /* Quick action buttons */
+    .quick-action-btn {
+        transition: transform 0.2s ease;
+        
+        &:hover {
+            transform: scale(1.1);
+        }
+        
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+    
+    /* Collapse animation enhancement */
+    .chakra-collapse {
+        overflow: visible !important;
+    }
 `;
 
 export default StyledRemindersWidget;
