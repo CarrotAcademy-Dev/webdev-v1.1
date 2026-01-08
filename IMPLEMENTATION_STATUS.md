@@ -706,4 +706,318 @@ const expiringSoon = auth.isTokenExpiringSoon(); // boolean
 - Git Workflow: `GIT_WORKFLOW.md`
 - Project Improvements: `IMPROVEMENTS.md`
 
+---
+
+### 17. **Task Summary Hook** IMPLEMENTED
+**File**: `src/hooks/useTaskSummary.js`
+
+**Purpose**:
+Aggregate task data dari multiple API endpoints untuk ditampilkan di Overview Dashboard. Menghitung total assigned, completed, on progress tasks, dan completion rate berdasarkan jabatan user.
+
+**Digunakan di**:
+- `src/pages/Staff/OverviewPage.jsx` - Task Summary cards (Assigned, Completed, On Progress, Completion Rate)
+
+**Current Implementation**:
+
+**CSO (Customer Support Officer)**:
+- **Janji Temu**: Appointments untuk hari ini (dataOpen & dataDone)
+- **Foundation Naik Modul**: Students ready to level up
+- **Prospektif Follow Up**: Gabungan FU1 + FU2 + FU3 yang ongoing
+
+**ESO (Educational Service Officer)**:
+- **Ticketing Internal**: All tickets (Open, Progress, Done)
+
+**Architecture**:
+```javascript
+// React Query useQueries - Parallel fetch untuk efficiency
+const queries = useQueries({
+    queries: [
+        { queryKey, queryFn, enabled: jabatan === JABATAN.CSO },
+        { queryKey, queryFn, enabled: jabatan === JABATAN.ESO },
+        // ... more queries
+    ]
+});
+
+// Enabled condition mencegah unnecessary API calls
+// Hanya fetch data yang relevan dengan jabatan user
+```
+
+**Return Values**:
+- `assigned`: Total tasks yang perlu dikerjakan
+- `completed`: Tasks yang sudah selesai
+- `onProgress`: Tasks yang sedang dikerjakan
+- `completionRate`: Persentase completion (0-100)
+- `isLoading`: Loading state dari semua queries
+- `hasData`: Boolean apakah ada task data
+
+---
+
+## 📘 Cara Extend Task Summary Hook
+
+### ✅ Menambah Endpoint Task Baru untuk CSO/ESO
+
+**Scenario**: Tambah "Kirim Merch" ke task summary CSO
+
+**Step 1: Import API Function**
+```javascript
+import {
+    getJanjiTemu,
+    getReminderFoundationNaikModul,
+    getDashboardProspektifPersonal,
+    getTicketingInternal,
+    getKirimMerch  // ← API baru
+} from '@/features/cso/csoApiService';
+```
+
+**Step 2: Tambah Query di useQueries Array**
+```javascript
+const queries = useQueries({
+    queries: [
+        // ... existing queries
+        {
+            queryKey: ['kirimMerch', today],
+            queryFn: () => getKirimMerch(today),
+            enabled: jabatan === JABATAN.CSO,  // ← Hanya untuk CSO
+            staleTime: 1000 * 60 * 5  // 5 menit cache
+        }
+    ]
+});
+```
+
+**Step 3: Destructure Query Result**
+```javascript
+const [
+    janjiTemuQuery, 
+    foundationQuery, 
+    prospektifQuery, 
+    ticketQuery,
+    kirimMerchQuery  // ← Tambahkan
+] = queries;
+```
+
+**Step 4: Update Calculation Logic**
+```javascript
+if (jabatan === JABATAN.CSO) {
+    // ... existing calculations
+    
+    // Kirim Merch count
+    const kirimMerchCount = kirimMerchQuery.data?.length || 0;
+    
+    // Update assigned total
+    const assigned = janjiTemuToday.length + foundationCount + prospektifCount + kirimMerchCount;
+    
+    // ... rest of logic
+}
+```
+
+---
+
+### ✅ Menambah Jabatan Baru (contoh: ADMIN)
+
+**Scenario**: Buat task summary untuk jabatan Admin
+
+**Step 1: Pastikan JABATAN Constant Ada**
+```javascript
+// di src/utils/constants/accessControl.js
+export const JABATAN = {
+    CSO: 'Customer Support Officer',
+    ESO: 'Educational Service Officer',
+    ADMIN: 'Admin',  // ← Tambahkan
+};
+```
+
+**Step 2: Import API Functions**
+```javascript
+import {
+    // ... existing imports
+    getTaskAdmin,
+    getReportAdmin
+} from '@/features/admin/adminApiService';
+```
+
+**Step 3: Tambah Queries dengan Enabled Condition**
+```javascript
+const queries = useQueries({
+    queries: [
+        // ... CSO queries
+        // ... ESO queries
+        {
+            queryKey: ['taskAdmin'],
+            queryFn: getTaskAdmin,
+            enabled: jabatan === JABATAN.ADMIN,  // ← Enabled hanya untuk Admin
+            staleTime: 1000 * 60 * 5
+        },
+        {
+            queryKey: ['reportAdmin'],
+            queryFn: getReportAdmin,
+            enabled: jabatan === JABATAN.ADMIN,
+            staleTime: 1000 * 60 * 5
+        }
+    ]
+});
+```
+
+**Step 4: Destructure dengan Spread**
+```javascript
+// Karena queries jadi banyak, bisa pakai approach lain:
+const [janjiTemuQuery, foundationQuery, prospektifQuery, ticketQuery, adminTaskQuery, adminReportQuery] = queries;
+
+// Atau pakai named destructuring:
+const adminTaskQuery = queries.find(q => q.queryKey[0] === 'taskAdmin');
+```
+
+**Step 5: Tambah if Block di calculateTaskSummary()**
+```javascript
+const calculateTaskSummary = () => {
+    if (jabatan === JABATAN.CSO) {
+        // ... CSO logic
+    }
+
+    if (jabatan === JABATAN.ESO) {
+        // ... ESO logic
+    }
+
+    // ← TAMBAH BLOCK BARU
+    if (jabatan === JABATAN.ADMIN) {
+        const allTasks = adminTaskQuery.data || [];
+        const allReports = adminReportQuery.data || [];
+        
+        // Filter berdasarkan status
+        const completedTasks = allTasks.filter(t => t.status === 'Done');
+        const progressTasks = allTasks.filter(t => t.status === 'Progress');
+        const pendingReports = allReports.filter(r => r.status === 'Pending');
+        
+        // Calculate totals
+        const assigned = allTasks.length + pendingReports.length;
+        const completed = completedTasks.length;
+        const onProgress = progressTasks.length;
+        const completionRate = assigned > 0 ? Math.round((completed / assigned) * 100) : 0;
+        
+        return {
+            assigned,
+            completed,
+            onProgress,
+            completionRate
+        };
+    }
+
+    // Default fallback
+    return {
+        assigned: 0,
+        completed: 0,
+        onProgress: 0,
+        completionRate: 0
+    };
+};
+```
+
+---
+
+## 🎯 Best Practices & Tips
+
+### Performance Optimization:
+1. **useQueries dengan enabled condition**: Prevents unnecessary API calls
+   ```javascript
+   enabled: jabatan === JABATAN.CSO  // Hanya fetch jika user CSO
+   ```
+
+2. **staleTime caching**: Reduce API calls untuk data yang jarang berubah
+   ```javascript
+   staleTime: 1000 * 60 * 5  // 5 menit cache
+   ```
+
+3. **Parallel fetching**: useQueries fetch semua data sekaligus, bukan sequential
+
+### Data Structure Consistency:
+- **Return object HARUS selalu punya 4 keys**:
+  ```javascript
+  return {
+      assigned: number,
+      completed: number,
+      onProgress: number,
+      completionRate: number  // 0-100
+  }
+  ```
+
+### Date Filtering:
+- **Prospektif API**: Format tanggal `yyyy-MM-dd` (2026-01-08)
+  ```javascript
+  const today = format(new Date(), 'yyyy-MM-dd');
+  ```
+  
+- **Janji Temu filter**: Gunakan date string matching
+  ```javascript
+  const todayStr = format(new Date(), 'd MMMM yyyy');
+  janjiTemuOpen.filter(item => item.tanggal.includes(todayStr.split(' ')[0]))
+  ```
+
+### Error Handling:
+- Gunakan fallback values untuk prevent crashes:
+  ```javascript
+  const taskCount = taskQuery.data?.length || 0;  // ← fallback ke 0
+  const items = response.data?.items || [];       // ← fallback ke []
+  ```
+
+### Debugging:
+- Aktifkan React Query DevTools di development:
+  ```javascript
+  import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+  ```
+
+---
+
+## ⚠️ Common Pitfalls
+
+1. **Lupa enabled condition**: API akan di-call untuk semua jabatan
+   ```javascript
+   // ❌ SALAH - akan fetch untuk semua user
+   { queryKey: ['taskCSO'], queryFn: getTaskCSO }
+   
+   // ✅ BENAR - hanya fetch untuk CSO
+   { queryKey: ['taskCSO'], queryFn: getTaskCSO, enabled: jabatan === JABATAN.CSO }
+   ```
+
+2. **Format tanggal tidak match**: API return empty karena filter salah
+   ```javascript
+   // ❌ SALAH untuk API prospektif
+   const today = format(new Date(), 'MMM yyyy');  // "Jan 2026"
+   
+   // ✅ BENAR
+   const today = format(new Date(), 'yyyy-MM-dd');  // "2026-01-08"
+   ```
+
+3. **Destructure order salah**: Query results akan mixed up
+   ```javascript
+   // Pastikan urutan sama dengan useQueries array!
+   const [query1, query2, query3] = queries;
+   ```
+
+4. **Lupa return di if block**: Default return akan di-call
+   ```javascript
+   // ❌ SALAH - lupa return
+   if (jabatan === JABATAN.CSO) {
+       const assigned = 10;
+       // Lupa return!
+   }
+   
+   // ✅ BENAR
+   if (jabatan === JABATAN.CSO) {
+       const assigned = 10;
+       return { assigned, completed, onProgress, completionRate };
+   }
+   ```
+
+---
+
+**Status**: Production Ready
+
+**Manfaat**:
+- Dynamic task summary per jabatan
+- Efficient parallel data fetching
+- Easy to extend dengan task baru atau jabatan baru
+- Automatic caching & loading states
+- Type-safe calculations
+
+**Last Updated**: January 8, 2026
+
 **Next Review**: After implementing additional dashboard features
