@@ -1,6 +1,6 @@
 # Status Implementasi Utilities
 
-**Last Updated**: January 7, 2026
+**Last Updated**: January 8, 2026
 
 ## Utilities yang Sudah Diimplementasikan
 
@@ -67,16 +67,39 @@
 
 ---
 
-### 5. **Date Formatter** IMPLEMENTED
+### 5. **Formatters Utility** IMPLEMENTED + ENHANCED
 **File**: `src/utils/formatters.js`
 
 **Digunakan di**:
 - `src/pages/Staff/CSO/Bersama/PendaftaranLanjutanPage/index.jsx` - formatDate.toShortDate
+- `src/features/cso/csoApiService.jsx` - getJabatanAbbreviation untuk PIC formatting
+- Multiple pages - formatCurrency, formatNumber, formatPhoneNumber
+
+**Features**:
+- **Date Formatting**: DD/MM/YYYY, DD MMM YYYY, relative time, YYYY-MM-DD
+- **Currency Formatting**: Rupiah dengan separator
+- **Number Formatting**: Decimal control
+- **Phone Number Formatting**: +62 format
+- **Text Utilities**: truncate, capitalize, titleCase
+- **Percentage Formatting**: With decimals
+- **NIS Formatting**: Leading zeros
+- **Query Params**: Parse & build utilities
+- **Jabatan Abbreviation** (NEW - Jan 2026):
+  - Maps full job titles to abbreviations (e.g., "Customer Support Officer" → "CSO")
+  - Smart fallback: Creates abbreviation from first letters if not in map
+  - Supports all company jabatan (CSO, ESO, JSD, MTR, Marcom, dll)
+
+**Recent Updates (January 8, 2026)**:
+- Fixed jabatan name: "Customer Support Officer" (not "Customer Service Officer")
+- Improved fallback logic: Creates smart abbreviations instead of full uppercase
+- Removed deprecated `formatPIC` function (handled at API level)
 
 **Manfaat**:
-- Consistent date formatting
-- Multiple format options (DD/MM/YYYY, DD MMM YYYY, relative time)
-- Easy to extend
+- Consistent formatting across the app
+- Multiple format options available
+- Easy to extend with new formats
+- **Clean PIC display** (e.g., "CSO - CM" instead of "CUSTOMER SUPPORT OFFICER - CM")
+- Centralized jabatan management
 
 ---
 
@@ -203,7 +226,68 @@
 
 ---
 
-### 16. **Theme System (Dark/Light Mode)** NEW (Dec 2025)
+### 16. **RemindersWidget Component** IMPLEMENTED (Phase 1 & 2)
+**File**: `src/components/RemindersWidget/index.jsx`
+
+**Digunakan di**:
+- `src/pages/Staff/OverviewPage.jsx` - Dashboard overview
+
+**Phase 1 Features** (January 7, 2026):
+- Real API integration (replaced dummy data)
+- Personalized reminders per jabatan:
+  - **CSO**: Janji Temu hari ini, Foundation Naik Modul, Prospektif Follow Up
+  - **ESO**: Ticket Internal Open
+- Count badges per reminder type (orange/blue/purple/red)
+- "View Detail" buttons linking to respective dashboards
+- Loading state with Spinner
+- Empty state with emoji ("All caught up!")
+- Dark mode support
+
+**Phase 2 Features** (January 8, 2026):
+- **Collapsible sections** with localStorage persistence
+- **Quick action buttons**:
+  - Phone button (tel: link) for direct calls
+  - WhatsApp button with pre-filled message
+- **Priority badges** for ESO tickets (High/Medium/Normal with color coding)
+- **Enhanced display**:
+  - Student details in Foundation reminders (name + module progression)
+  - Better item spacing with borders
+  - Hover animations on action buttons
+- **User preferences**: Expand/collapse state saved per section
+- IconButton toggles with chevron icons (up/down)
+
+**API Integration**:
+```jsx
+// CSO Reminders
+getJanjiTemu() // Janji temu hari ini (open status)
+getReminderFoundationNaikModul(month) // Siswa siap naik level
+getDashboardProspektifPersonal(month) // Prospektif perlu follow up
+
+// ESO Reminders  
+getTicketingInternal() // Open tickets
+```
+
+**Technical Implementation**:
+- `useLocalStorage` hook for persistence
+- Chakra UI `Collapse` component with `animateOpacity`
+- WhatsApp integration: `formatWhatsAppNumber()` helper
+- Priority color coding: red (High), orange (Medium), blue (Normal)
+- Max 3 items per section for clean UI
+- Responsive design with dark mode support
+
+**Manfaat**:
+- Personalized daily task overview per jabatan
+- Quick access to important contacts (call/WhatsApp)
+- Visual priority indicators for urgent tasks
+- User-controlled UI (collapsible sections)
+- Persistent preferences across sessions
+- Improved productivity with actionable reminders
+
+**Status**: Production Ready
+
+---
+
+### 17. **Theme System (Dark/Light Mode)** IMPLEMENTED (Dec 2025)
 **Files**:
 - `src/components/ui/provider.jsx` - Extended theme configuration
 - `src/components/ThemeToggle/index.jsx` - Toggle button component
@@ -605,12 +689,21 @@ const expiringSoon = auth.isTokenExpiringSoon(); // boolean
   - Cari Data Student Report (Search student report dengan keyboard navigation)
 - **Dashboard Auto-refetch** - Auto refresh setelah edit data prospektif
 - **Keyboard Navigation** - Arrow keys + Enter support di dropdown components
+- **RemindersWidget Phase 2** (January 8, 2026):
+  - Collapsible sections with localStorage
+  - Quick action buttons (Phone & WhatsApp)
+  - Priority badges untuk tickets
+  - Enhanced UI/UX dengan animations
+- **Formatter Utility Enhanced** (January 8, 2026):
+  - Jabatan abbreviation function improved
+  - Smart fallback untuk unknown jabatan
+  - PIC formatting fixed (CSO instead of CUSTOMER SUPPORT OFFICER)
 
 **Documentation References**:
 - Token Expiry: `TOKEN_EXPIRY_GUIDE.md`
-- RBAC Details: code comments
+- RBAC Details: `RBAC_GUIDE.md`
 - Dashboard Guides: `DASHBOARD_PROSPEKTIF_GUIDE.md`, `DASHBOARD_REMINDER_GUIDE.md`
 - Git Workflow: `GIT_WORKFLOW.md`
 - Project Improvements: `IMPROVEMENTS.md`
 
-**Next Review**: After implementing Priority 4-5 tasks (Formatters & Debounce)
+**Next Review**: After implementing additional dashboard features
