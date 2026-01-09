@@ -12,12 +12,68 @@ const StyledInfoCard = styled.div`
   justify-content: center;
   gap: 0.5rem;
   background-color: var(--chakra-colors-chakra-body-bg);
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  
+  /* Hover effects - only when $hoverable or $clickable */
+  ${props => (props.$hoverable || props.$clickable) && `
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(254, 119, 67, 0.2);
+      border-color: var(--chakra-colors-brand-600);
+    }
+    
+    &:active {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(254, 119, 67, 0.15);
+    }
+  `}
+  
+  /* Clickable cursor */
+  ${props => props.$clickable && `
+    cursor: pointer;
+    user-select: none;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(254, 119, 67, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    &:active::before {
+      width: 300px;
+      height: 300px;
+    }
+  `}
+  
+  /* Focus state for keyboard navigation */
+  ${props => props.$clickable && `
+    &:focus {
+      outline: 2px solid var(--chakra-colors-brand-500);
+      outline-offset: 2px;
+    }
+  `}
   
   img {
     width: 70px;  
     height: 70px;
+    transition: transform 0.3s ease;
   }
+  
+  ${props => props.$hoverable && `
+    &:hover img {
+      transform: scale(1.1);
+    }
+  `}
+  
   p {
     font-size: 0.875rem;
     font-weight: 500;
