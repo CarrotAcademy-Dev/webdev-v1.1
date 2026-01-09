@@ -1,6 +1,6 @@
 # Status Implementasi Utilities
 
-**Last Updated**: January 7, 2026
+**Last Updated**: January 8, 2026
 
 ## Utilities yang Sudah Diimplementasikan
 
@@ -67,16 +67,39 @@
 
 ---
 
-### 5. **Date Formatter** IMPLEMENTED
+### 5. **Formatters Utility** IMPLEMENTED + ENHANCED
 **File**: `src/utils/formatters.js`
 
 **Digunakan di**:
 - `src/pages/Staff/CSO/Bersama/PendaftaranLanjutanPage/index.jsx` - formatDate.toShortDate
+- `src/features/cso/csoApiService.jsx` - getJabatanAbbreviation untuk PIC formatting
+- Multiple pages - formatCurrency, formatNumber, formatPhoneNumber
+
+**Features**:
+- **Date Formatting**: DD/MM/YYYY, DD MMM YYYY, relative time, YYYY-MM-DD
+- **Currency Formatting**: Rupiah dengan separator
+- **Number Formatting**: Decimal control
+- **Phone Number Formatting**: +62 format
+- **Text Utilities**: truncate, capitalize, titleCase
+- **Percentage Formatting**: With decimals
+- **NIS Formatting**: Leading zeros
+- **Query Params**: Parse & build utilities
+- **Jabatan Abbreviation** (NEW - Jan 2026):
+  - Maps full job titles to abbreviations (e.g., "Customer Support Officer" → "CSO")
+  - Smart fallback: Creates abbreviation from first letters if not in map
+  - Supports all company jabatan (CSO, ESO, JSD, MTR, Marcom, dll)
+
+**Recent Updates (January 8, 2026)**:
+- Fixed jabatan name: "Customer Support Officer" (not "Customer Service Officer")
+- Improved fallback logic: Creates smart abbreviations instead of full uppercase
+- Removed deprecated `formatPIC` function (handled at API level)
 
 **Manfaat**:
-- Consistent date formatting
-- Multiple format options (DD/MM/YYYY, DD MMM YYYY, relative time)
-- Easy to extend
+- Consistent formatting across the app
+- Multiple format options available
+- Easy to extend with new formats
+- **Clean PIC display** (e.g., "CSO - CM" instead of "CUSTOMER SUPPORT OFFICER - CM")
+- Centralized jabatan management
 
 ---
 
@@ -203,7 +226,68 @@
 
 ---
 
-### 16. **Theme System (Dark/Light Mode)** NEW (Dec 2025)
+### 16. **RemindersWidget Component** IMPLEMENTED (Phase 1 & 2)
+**File**: `src/components/RemindersWidget/index.jsx`
+
+**Digunakan di**:
+- `src/pages/Staff/OverviewPage.jsx` - Dashboard overview
+
+**Phase 1 Features** (January 7, 2026):
+- Real API integration (replaced dummy data)
+- Personalized reminders per jabatan:
+  - **CSO**: Janji Temu hari ini, Foundation Naik Modul, Prospektif Follow Up
+  - **ESO**: Ticket Internal Open
+- Count badges per reminder type (orange/blue/purple/red)
+- "View Detail" buttons linking to respective dashboards
+- Loading state with Spinner
+- Empty state with emoji ("All caught up!")
+- Dark mode support
+
+**Phase 2 Features** (January 8, 2026):
+- **Collapsible sections** with localStorage persistence
+- **Quick action buttons**:
+  - Phone button (tel: link) for direct calls
+  - WhatsApp button with pre-filled message
+- **Priority badges** for ESO tickets (High/Medium/Normal with color coding)
+- **Enhanced display**:
+  - Student details in Foundation reminders (name + module progression)
+  - Better item spacing with borders
+  - Hover animations on action buttons
+- **User preferences**: Expand/collapse state saved per section
+- IconButton toggles with chevron icons (up/down)
+
+**API Integration**:
+```jsx
+// CSO Reminders
+getJanjiTemu() // Janji temu hari ini (open status)
+getReminderFoundationNaikModul(month) // Siswa siap naik level
+getDashboardProspektifPersonal(month) // Prospektif perlu follow up
+
+// ESO Reminders  
+getTicketingInternal() // Open tickets
+```
+
+**Technical Implementation**:
+- `useLocalStorage` hook for persistence
+- Chakra UI `Collapse` component with `animateOpacity`
+- WhatsApp integration: `formatWhatsAppNumber()` helper
+- Priority color coding: red (High), orange (Medium), blue (Normal)
+- Max 3 items per section for clean UI
+- Responsive design with dark mode support
+
+**Manfaat**:
+- Personalized daily task overview per jabatan
+- Quick access to important contacts (call/WhatsApp)
+- Visual priority indicators for urgent tasks
+- User-controlled UI (collapsible sections)
+- Persistent preferences across sessions
+- Improved productivity with actionable reminders
+
+**Status**: Production Ready
+
+---
+
+### 17. **Theme System (Dark/Light Mode)** IMPLEMENTED (Dec 2025)
 **Files**:
 - `src/components/ui/provider.jsx` - Extended theme configuration
 - `src/components/ThemeToggle/index.jsx` - Toggle button component
@@ -605,12 +689,335 @@ const expiringSoon = auth.isTokenExpiringSoon(); // boolean
   - Cari Data Student Report (Search student report dengan keyboard navigation)
 - **Dashboard Auto-refetch** - Auto refresh setelah edit data prospektif
 - **Keyboard Navigation** - Arrow keys + Enter support di dropdown components
+- **RemindersWidget Phase 2** (January 8, 2026):
+  - Collapsible sections with localStorage
+  - Quick action buttons (Phone & WhatsApp)
+  - Priority badges untuk tickets
+  - Enhanced UI/UX dengan animations
+- **Formatter Utility Enhanced** (January 8, 2026):
+  - Jabatan abbreviation function improved
+  - Smart fallback untuk unknown jabatan
+  - PIC formatting fixed (CSO instead of CUSTOMER SUPPORT OFFICER)
 
 **Documentation References**:
 - Token Expiry: `TOKEN_EXPIRY_GUIDE.md`
-- RBAC Details: code comments
+- RBAC Details: `RBAC_GUIDE.md`
 - Dashboard Guides: `DASHBOARD_PROSPEKTIF_GUIDE.md`, `DASHBOARD_REMINDER_GUIDE.md`
 - Git Workflow: `GIT_WORKFLOW.md`
 - Project Improvements: `IMPROVEMENTS.md`
 
-**Next Review**: After implementing Priority 4-5 tasks (Formatters & Debounce)
+---
+
+### 17. **Task Summary Hook** IMPLEMENTED
+**File**: `src/hooks/useTaskSummary.js`
+
+**Purpose**:
+Aggregate task data dari multiple API endpoints untuk ditampilkan di Overview Dashboard. Menghitung total assigned, completed, on progress tasks, dan completion rate berdasarkan jabatan user.
+
+**Digunakan di**:
+- `src/pages/Staff/OverviewPage.jsx` - Task Summary cards (Assigned, Completed, On Progress, Completion Rate)
+
+**Current Implementation**:
+
+**CSO (Customer Support Officer)**:
+- **Janji Temu**: Appointments untuk hari ini (dataOpen & dataDone)
+- **Foundation Naik Modul**: Students ready to level up
+- **Prospektif Follow Up**: Gabungan FU1 + FU2 + FU3 yang ongoing
+
+**ESO (Educational Service Officer)**:
+- **Ticketing Internal**: All tickets (Open, Progress, Done)
+
+**Architecture**:
+```javascript
+// React Query useQueries - Parallel fetch untuk efficiency
+const queries = useQueries({
+    queries: [
+        { queryKey, queryFn, enabled: jabatan === JABATAN.CSO },
+        { queryKey, queryFn, enabled: jabatan === JABATAN.ESO },
+        // ... more queries
+    ]
+});
+
+// Enabled condition mencegah unnecessary API calls
+// Hanya fetch data yang relevan dengan jabatan user
+```
+
+**Return Values**:
+- `assigned`: Total tasks yang perlu dikerjakan
+- `completed`: Tasks yang sudah selesai
+- `onProgress`: Tasks yang sedang dikerjakan
+- `completionRate`: Persentase completion (0-100)
+- `isLoading`: Loading state dari semua queries
+- `hasData`: Boolean apakah ada task data
+
+---
+
+## 📘 Cara Extend Task Summary Hook
+
+### ✅ Menambah Endpoint Task Baru untuk CSO/ESO
+
+**Scenario**: Tambah "Kirim Merch" ke task summary CSO
+
+**Step 1: Import API Function**
+```javascript
+import {
+    getJanjiTemu,
+    getReminderFoundationNaikModul,
+    getDashboardProspektifPersonal,
+    getTicketingInternal,
+    getKirimMerch  // ← API baru
+} from '@/features/cso/csoApiService';
+```
+
+**Step 2: Tambah Query di useQueries Array**
+```javascript
+const queries = useQueries({
+    queries: [
+        // ... existing queries
+        {
+            queryKey: ['kirimMerch', today],
+            queryFn: () => getKirimMerch(today),
+            enabled: jabatan === JABATAN.CSO,  // ← Hanya untuk CSO
+            staleTime: 1000 * 60 * 5  // 5 menit cache
+        }
+    ]
+});
+```
+
+**Step 3: Destructure Query Result**
+```javascript
+const [
+    janjiTemuQuery, 
+    foundationQuery, 
+    prospektifQuery, 
+    ticketQuery,
+    kirimMerchQuery  // ← Tambahkan
+] = queries;
+```
+
+**Step 4: Update Calculation Logic**
+```javascript
+if (jabatan === JABATAN.CSO) {
+    // ... existing calculations
+    
+    // Kirim Merch count
+    const kirimMerchCount = kirimMerchQuery.data?.length || 0;
+    
+    // Update assigned total
+    const assigned = janjiTemuToday.length + foundationCount + prospektifCount + kirimMerchCount;
+    
+    // ... rest of logic
+}
+```
+
+---
+
+### ✅ Menambah Jabatan Baru (contoh: ADMIN)
+
+**Scenario**: Buat task summary untuk jabatan Admin
+
+**Step 1: Pastikan JABATAN Constant Ada**
+```javascript
+// di src/utils/constants/accessControl.js
+export const JABATAN = {
+    CSO: 'Customer Support Officer',
+    ESO: 'Educational Service Officer',
+    ADMIN: 'Admin',  // ← Tambahkan
+};
+```
+
+**Step 2: Import API Functions**
+```javascript
+import {
+    // ... existing imports
+    getTaskAdmin,
+    getReportAdmin
+} from '@/features/admin/adminApiService';
+```
+
+**Step 3: Tambah Queries dengan Enabled Condition**
+```javascript
+const queries = useQueries({
+    queries: [
+        // ... CSO queries
+        // ... ESO queries
+        {
+            queryKey: ['taskAdmin'],
+            queryFn: getTaskAdmin,
+            enabled: jabatan === JABATAN.ADMIN,  // ← Enabled hanya untuk Admin
+            staleTime: 1000 * 60 * 5
+        },
+        {
+            queryKey: ['reportAdmin'],
+            queryFn: getReportAdmin,
+            enabled: jabatan === JABATAN.ADMIN,
+            staleTime: 1000 * 60 * 5
+        }
+    ]
+});
+```
+
+**Step 4: Destructure dengan Spread**
+```javascript
+// Karena queries jadi banyak, bisa pakai approach lain:
+const [janjiTemuQuery, foundationQuery, prospektifQuery, ticketQuery, adminTaskQuery, adminReportQuery] = queries;
+
+// Atau pakai named destructuring:
+const adminTaskQuery = queries.find(q => q.queryKey[0] === 'taskAdmin');
+```
+
+**Step 5: Tambah if Block di calculateTaskSummary()**
+```javascript
+const calculateTaskSummary = () => {
+    if (jabatan === JABATAN.CSO) {
+        // ... CSO logic
+    }
+
+    if (jabatan === JABATAN.ESO) {
+        // ... ESO logic
+    }
+
+    // ← TAMBAH BLOCK BARU
+    if (jabatan === JABATAN.ADMIN) {
+        const allTasks = adminTaskQuery.data || [];
+        const allReports = adminReportQuery.data || [];
+        
+        // Filter berdasarkan status
+        const completedTasks = allTasks.filter(t => t.status === 'Done');
+        const progressTasks = allTasks.filter(t => t.status === 'Progress');
+        const pendingReports = allReports.filter(r => r.status === 'Pending');
+        
+        // Calculate totals
+        const assigned = allTasks.length + pendingReports.length;
+        const completed = completedTasks.length;
+        const onProgress = progressTasks.length;
+        const completionRate = assigned > 0 ? Math.round((completed / assigned) * 100) : 0;
+        
+        return {
+            assigned,
+            completed,
+            onProgress,
+            completionRate
+        };
+    }
+
+    // Default fallback
+    return {
+        assigned: 0,
+        completed: 0,
+        onProgress: 0,
+        completionRate: 0
+    };
+};
+```
+
+---
+
+## 🎯 Best Practices & Tips
+
+### Performance Optimization:
+1. **useQueries dengan enabled condition**: Prevents unnecessary API calls
+   ```javascript
+   enabled: jabatan === JABATAN.CSO  // Hanya fetch jika user CSO
+   ```
+
+2. **staleTime caching**: Reduce API calls untuk data yang jarang berubah
+   ```javascript
+   staleTime: 1000 * 60 * 5  // 5 menit cache
+   ```
+
+3. **Parallel fetching**: useQueries fetch semua data sekaligus, bukan sequential
+
+### Data Structure Consistency:
+- **Return object HARUS selalu punya 4 keys**:
+  ```javascript
+  return {
+      assigned: number,
+      completed: number,
+      onProgress: number,
+      completionRate: number  // 0-100
+  }
+  ```
+
+### Date Filtering:
+- **Prospektif API**: Format tanggal `yyyy-MM-dd` (2026-01-08)
+  ```javascript
+  const today = format(new Date(), 'yyyy-MM-dd');
+  ```
+  
+- **Janji Temu filter**: Gunakan date string matching
+  ```javascript
+  const todayStr = format(new Date(), 'd MMMM yyyy');
+  janjiTemuOpen.filter(item => item.tanggal.includes(todayStr.split(' ')[0]))
+  ```
+
+### Error Handling:
+- Gunakan fallback values untuk prevent crashes:
+  ```javascript
+  const taskCount = taskQuery.data?.length || 0;  // ← fallback ke 0
+  const items = response.data?.items || [];       // ← fallback ke []
+  ```
+
+### Debugging:
+- Aktifkan React Query DevTools di development:
+  ```javascript
+  import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+  ```
+
+---
+
+## ⚠️ Common Pitfalls
+
+1. **Lupa enabled condition**: API akan di-call untuk semua jabatan
+   ```javascript
+   // ❌ SALAH - akan fetch untuk semua user
+   { queryKey: ['taskCSO'], queryFn: getTaskCSO }
+   
+   // ✅ BENAR - hanya fetch untuk CSO
+   { queryKey: ['taskCSO'], queryFn: getTaskCSO, enabled: jabatan === JABATAN.CSO }
+   ```
+
+2. **Format tanggal tidak match**: API return empty karena filter salah
+   ```javascript
+   // ❌ SALAH untuk API prospektif
+   const today = format(new Date(), 'MMM yyyy');  // "Jan 2026"
+   
+   // ✅ BENAR
+   const today = format(new Date(), 'yyyy-MM-dd');  // "2026-01-08"
+   ```
+
+3. **Destructure order salah**: Query results akan mixed up
+   ```javascript
+   // Pastikan urutan sama dengan useQueries array!
+   const [query1, query2, query3] = queries;
+   ```
+
+4. **Lupa return di if block**: Default return akan di-call
+   ```javascript
+   // ❌ SALAH - lupa return
+   if (jabatan === JABATAN.CSO) {
+       const assigned = 10;
+       // Lupa return!
+   }
+   
+   // ✅ BENAR
+   if (jabatan === JABATAN.CSO) {
+       const assigned = 10;
+       return { assigned, completed, onProgress, completionRate };
+   }
+   ```
+
+---
+
+**Status**: Production Ready
+
+**Manfaat**:
+- Dynamic task summary per jabatan
+- Efficient parallel data fetching
+- Easy to extend dengan task baru atau jabatan baru
+- Automatic caching & loading states
+- Type-safe calculations
+
+**Last Updated**: January 8, 2026
+
+**Next Review**: After implementing additional dashboard features
