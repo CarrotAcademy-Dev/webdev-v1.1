@@ -309,6 +309,11 @@ function ProspektifFormPage() {
 
         // Convert date fields dari YYYY-MM-DD ke ISO timestamp untuk backend
         const dataToSubmit = { ...editedData };
+        
+        // EXCLUDE prefilled_link_form karena di-generate otomatis oleh formula di sheet
+        // Kalo dikirim, bakal overwrite formula dan jadi nilai statis
+        delete dataToSubmit.prefilled_link_form;
+        
         const dateFields = [
             'first_contact_date',
             'trial_date',
@@ -360,15 +365,19 @@ function ProspektifFormPage() {
             ? formatDateForDisplay(value) 
             : (value || '-');
         
-        // Special handling untuk link fields
+        // Special handling untuk link fields - SELALU READ ONLY
         const isLinkField = field === 'prefilled_link_form';
+        
+        // Force read-only untuk link field even in edit mode
+        const forceReadOnly = isLinkField;
 
         return (
             <div className="form-field">
                 <label className="field-label">
                     {label} {required && <span style={{ color: '#FE7743' }}>*</span>}
+                    {forceReadOnly && <span style={{ color: '#718096', fontSize: '0.85em', marginLeft: '8px' }}>(Auto-generated)</span>}
                 </label>
-                {isEditMode ? (
+                {isEditMode && !forceReadOnly ? (
                     type === 'textarea' ? (
                         <Textarea
                             value={value}
