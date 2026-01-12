@@ -623,6 +623,11 @@ function ProspektifFormPage() {
                                     {/* Follow Up Progress */}
                                     <div className="form-section">
                                         <h3 className="section-title">Progress Follow Up</h3>
+                                        <div className="form-grid">
+                                            {renderField('FU1 Date', 'fu1_date', 'date')}
+                                            {renderField('FU2 Date', 'fu2_date', 'date')}
+                                            {renderField('FU3 Date', 'fu3_date', 'date')}
+                                        </div>
                                         <div className="checkbox-grid">
                                             {renderCheckbox('FU1 Ceklis', 'fu1_ceklis')}
                                             {renderCheckbox('FU2 Ceklis', 'fu2_ceklis')}

@@ -10,6 +10,7 @@ import { ACCESS_GROUPS } from './utils/constants/accessControl';
 const Login = lazy(() => import('./components/Login'));
 const OverviewPage = lazy(() => import('./pages/Staff/OverviewPage'));
 const KpiDetailsPage = lazy(() => import('./pages/Staff/KpiDetailsPage'));
+const AttendancePage = lazy(() => import('./pages/Staff/AttendancePage'));
 const NotFoundPage = lazy(() => import('./pages/NotFound'));
 const DaftarKirimMerchPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarKirimMerchPage'));
 const DaftarSiswaTrialPage = lazy(() => import('./pages/Staff/CSO/Bersama/DaftarSiswaTrialPage'));
@@ -74,6 +75,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <KpiDetailsPage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/attendance" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <AttendancePage />
               </Layout>
             </ProtectedRoute>
           } 
