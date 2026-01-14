@@ -811,7 +811,7 @@ export const getTicketExternal = async () => {
     }
 };
 
-export const postTicketExternal = async ({ rowData }) => {
+export const postTicketExternal = async ({ rowData, result }) => {
     // Ambil codeName dari user yang login
     const userData = auth.getUser();
     const pic = userData?.codeName || userData?.name || 'Unknown';
@@ -820,6 +820,7 @@ export const postTicketExternal = async ({ rowData }) => {
         action: 'done-ticketexternal',
         id_ticket: rowData.idTicket,
         pic: pic,
+        result: result || ''
     });
 
     try {
