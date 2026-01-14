@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, Input, Select, Textarea, useToast, Checkbox, useColorMode, IconButton, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Input, Select, Textarea, useToast, Checkbox, useColorMode, IconButton, Tooltip, Table, Thead, Tbody, Tr, Th, Td, Badge, Spinner } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getDataProspektif, submitProspektifForm, editDataProspektif } from '@/features/cso/csoApiService';
+import { getDataProspektif, submitProspektifForm, editDataProspektif, searchProspektif } from '@/features/cso/csoApiService';
 import ContainerCarrot from '@/components/Container';
 import { StyledProspektifFormPage } from './ProspektifForm.styled';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { FiCopy, FiExternalLink } from 'react-icons/fi';
+import { FiCopy, FiExternalLink, FiSearch } from 'react-icons/fi';
 
 function ProspektifFormPage() {
     const { colorMode } = useColorMode();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [searchPsid, setSearchPsid] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [showSearchResults, setShowSearchResults] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
     const [currentPsid, setCurrentPsid] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
     const [isNewMode, setIsNewMode] = useState(false);
@@ -23,10 +26,11 @@ function ProspektifFormPage() {
     useEffect(() => {
         const psidFromUrl = searchParams.get('psid');
         if (psidFromUrl && psidFromUrl !== currentPsid) {
-            setSearchPsid(psidFromUrl);
+            setSearchQuery(psidFromUrl);
             setCurrentPsid(psidFromUrl);
             setIsNewMode(false);
             setIsEditMode(false);
+            setShowSearchResults(false);
         }
     }, [searchParams, currentPsid]);
 
@@ -125,20 +129,91 @@ function ProspektifFormPage() {
         }
     });
 
-    const handleSearch = () => {
-        if (searchPsid.trim()) {
-            setCurrentPsid(searchPsid.trim());
-            setIsNewMode(false);
-            setIsEditMode(false);
-            setEditedData({});
-        } else {
+    const handleSearch = async () => {
+        const query = searchQuery.trim();
+        
+        if (!query) {
             toast({
-                title: 'PSID harus diisi',
+                title: 'Field pencarian kosong',
+                description: 'Masukkan PSID, nama, atau nomor telepon',
                 status: 'warning',
                 duration: 2000,
                 isClosable: true
             });
+            return;
         }
+
+        // Check if query looks like PSID (starts with PS-)
+        // If yes, langsung load by PSID (existing behavior)
+        if (query.toUpperCase().startsWith('PS-')) {
+            setCurrentPsid(query);
+            setIsNewMode(false);
+            setIsEditMode(false);
+            setShowSearchResults(false);
+            setSearchResults([]);
+            return;
+        }
+
+        // Otherwise, search by name/phone
+        if (query.length < 3) {
+            toast({
+                title: 'Keyword terlalu pendek',
+                description: 'Minimal 3 karakter untuk pencarian',
+                status: 'warning',
+                duration: 2000,
+                isClosable: true
+            });
+            return;
+        }
+
+        setIsSearching(true);
+        try {
+            const result = await searchProspektif(query);
+            
+            if (result.total === 0) {
+                toast({
+                    title: 'Data tidak ditemukan',
+                    description: 'Coba gunakan kata kunci lain',
+                    status: 'info',
+                    duration: 2000,
+                    isClosable: true
+                });
+                setSearchResults([]);
+                setShowSearchResults(false);
+                setCurrentPsid('');
+            } else if (result.total === 1) {
+                // Single result, langsung load
+                setCurrentPsid(result.data[0].psid);
+                setShowSearchResults(false);
+                setSearchResults([]);
+                setIsNewMode(false);
+                setIsEditMode(false);
+            } else {
+                // Multiple results, show table
+                setSearchResults(result.data);
+                setShowSearchResults(true);
+                setCurrentPsid('');
+            }
+        } catch (error) {
+            toast({
+                title: 'Gagal melakukan pencarian',
+                description: error.message,
+                status: 'error',
+                duration: 3000,
+                isClosable: true
+            });
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    const handleSelectResult = (psid) => {
+        setCurrentPsid(psid);
+        setSearchQuery(psid);
+        setShowSearchResults(false);
+        setSearchResults([]);
+        setIsNewMode(false);
+        setIsEditMode(false);
     };
 
     const handleKeyPress = (e) => {
@@ -520,14 +595,17 @@ function ProspektifFormPage() {
                     <div className="search-section">
                         <div className="search-input-wrapper">
                             <Box>
-                                <label className="field-label">Search By PSID</label>
+                                <label className="field-label">
+                                    <FiSearch style={{ display: 'inline', marginRight: '4px' }} />
+                                    Search by PSID / Name / Phone
+                                </label>
                                 <Input
-                                    placeholder="Masukkan PSID..."
-                                    value={searchPsid}
-                                    onChange={(e) => setSearchPsid(e.target.value)}
+                                    placeholder="Masukkan PSID, nama, atau nomor telepon..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     size="lg"
-                                    disabled={isNewMode}
+                                    disabled={isNewMode || isSearching}
                                 />
                             </Box>
                         </div>
@@ -536,9 +614,11 @@ function ProspektifFormPage() {
                             onClick={handleSearch}
                             size="lg"
                             isDisabled={isNewMode}
+                            isLoading={isSearching}
                             bg="blue.500"
                             _hover={{ bg: 'blue.600' }}
                             color="white"
+                            leftIcon={<FiSearch />}
                         >
                             Cari
                         </Button>
@@ -554,6 +634,51 @@ function ProspektifFormPage() {
                             Form Baru
                         </Button>
                     </div>
+
+                    {/* Search Results Table */}
+                    {showSearchResults && searchResults.length > 0 && (
+                        <div className="search-results-section" style={{ marginTop: '20px', marginBottom: '20px' }}>
+                            <h3 className="section-title">
+                                Hasil Pencarian ({searchResults.length} data ditemukan)
+                            </h3>
+                            <Box overflowX="auto" bg={colorMode === 'dark' ? 'gray.800' : 'white'} borderRadius="8px" border="1px solid" borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.200'}>
+                                <Table variant="simple" size="sm">
+                                    <Thead>
+                                        <Tr>
+                                            <Th>PSID</Th>
+                                            <Th>Nama Lengkap</Th>
+                                            <Th>Program</Th>
+                                            <Th>No HP Siswa</Th>
+                                            <Th>No HP Ortu</Th>
+                                            <Th>Aksi</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {searchResults.map((result) => (
+                                            <Tr key={result.psid} _hover={{ bg: colorMode === 'dark' ? 'gray.700' : 'gray.50' }}>
+                                                <Td fontWeight="bold">
+                                                    <Badge colorScheme="blue">{result.psid}</Badge>
+                                                </Td>
+                                                <Td>{result.full_name || '-'}</Td>
+                                                <Td>{result.program || '-'}</Td>
+                                                <Td>{result.phone_number || '-'}</Td>
+                                                <Td>{result.parent_phone || '-'}</Td>
+                                                <Td>
+                                                    <Button
+                                                        size="sm"
+                                                        colorScheme="blue"
+                                                        onClick={() => handleSelectResult(result.psid)}
+                                                    >
+                                                        Pilih
+                                                    </Button>
+                                                </Td>
+                                            </Tr>
+                                        ))}
+                                    </Tbody>
+                                </Table>
+                            </Box>
+                        </div>
+                    )}
 
                     {(currentPsid || isNewMode) && (
                         <>
@@ -686,9 +811,9 @@ function ProspektifFormPage() {
                         </>
                     )}
 
-                    {!currentPsid && !isNewMode && (
+                    {!currentPsid && !isNewMode && !showSearchResults && (
                         <div className="empty-state">
-                            Silakan cari data dengan PSID atau buat form baru
+                            Silakan cari data dengan PSID, nama, nomor telepon, atau buat form baru
                         </div>
                     )}
                 </div>

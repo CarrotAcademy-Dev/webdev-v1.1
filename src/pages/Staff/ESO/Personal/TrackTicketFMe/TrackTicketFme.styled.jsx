@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const StyledTrackTicketFme = styled.div`
     padding: 2rem 0;
-
+    
     .page-header {
         margin-bottom: 2rem;
     }
@@ -18,7 +18,7 @@ export const StyledTrackTicketFme = styled.div`
     }
 
     .table-section {
-        background: var(--chakra-colors-light-bg-secondary);
+        background: var(--chakra-colors-light-bg-sechondary);
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
