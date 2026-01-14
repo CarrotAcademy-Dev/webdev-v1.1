@@ -811,7 +811,7 @@ export const getTicketExternal = async () => {
     }
 };
 
-export const postTicketExternal = async ({ rowData }) => {
+export const postTicketExternal = async ({ rowData, result }) => {
     // Ambil codeName dari user yang login
     const userData = auth.getUser();
     const pic = userData?.codeName || userData?.name || 'Unknown';
@@ -820,6 +820,7 @@ export const postTicketExternal = async ({ rowData }) => {
         action: 'done-ticketexternal',
         id_ticket: rowData.idTicket,
         pic: pic,
+        result: result || ''
     });
 
     try {
@@ -2233,6 +2234,41 @@ export async function submitProfilSiswa(data) {
 }
 
 // ==================== PROSPEKTIF FORM FUNCTIONS ====================
+
+export const searchProspektif = async (keyword) => {
+    try {
+        // Validasi minimal 3 karakter
+        if (!keyword || keyword.trim().length < 3) {
+            throw new Error('Keyword pencarian minimal 3 karakter');
+        }
+
+        const response = await apiClient.get(ENDPOINT.csoPersonal, {
+            params: { 
+                action: 'search',
+                q: keyword.trim()
+            }
+        });
+
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return {
+                total: result.total_found || result.result.length,
+                data: result.result
+            };
+        } else if (result.status === 'not_found') {
+            return {
+                total: 0,
+                data: []
+            };
+        } else {
+            throw new Error(result.message || 'Failed to search prospektif data');
+        }
+    } catch (error) {
+        console.error("Error searching prospektif data:", error);
+        throw error;
+    }
+};
 
 export const getDataProspektif = async (psid) => {
     try {
