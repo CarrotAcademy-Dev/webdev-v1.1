@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, Flex, Text, Grid, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement, useColorModeValue, useColorMode, Badge, Skeleton } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getTicketExternal, postTicketExternal } from '@/features/cso/csoApiService';
@@ -48,12 +48,11 @@ function TicketExternalPage() {
     const { data: ticketData, isLoading, isError, error } = useQuery({
         queryKey: ['ticketExternal'],
         queryFn: getTicketExternal,
-        staleTime: 5 * 60 * 1000,
-        placeholderData: { dataOpen: [], dataClose: [] }
+        staleTime: 5 * 60 * 1000
     });
 
-    // Only show loading on initial load, not on background refetch
-    const showLoading = isLoading && !ticketData;
+    // Show loading only during initial fetch
+    const showLoading = isLoading;
 
     // Helper untuk sorting
     const sortData = (data, sortConfig) => {
@@ -219,9 +218,9 @@ function TicketExternalPage() {
     );
 
     // Reset to page 1 when filters change
-    if (currentPage !== 1 && (debouncedSearch || selectedYear !== 'all' || activeTab)) {
+    useEffect(() => {
         setCurrentPage(1);
-    }
+    }, [debouncedSearch, selectedYear, activeTab]);
 
     const handleSort = (key) => {
         setSortConfig(prev => ({
@@ -359,8 +358,11 @@ function TicketExternalPage() {
                                         Deadline {getSortIcon('tanggal')}
                                     </Flex>
                                 </th>
+                                <th>From</th>
+                                <th>Responsible</th>
+                                <th>Consulted</th>
+                                <th>Informed</th>
                                 <th>No HP</th>
-                                <th>Media</th>
                                 <th>Detail</th>
                                 {activeTab === 'open' && <th>Action</th>}
                                 {activeTab === 'close' && <th>Hasil</th>}
@@ -376,15 +378,18 @@ function TicketExternalPage() {
                                         <td><Skeleton height="16px" width="80px" /></td>
                                         <td><Skeleton height="16px" /></td>
                                         <td><Skeleton height="16px" width="100px" /></td>
-                                        <td><Skeleton height="16px" width="100px" /></td>
                                         <td><Skeleton height="16px" width="80px" /></td>
+                                        <td><Skeleton height="16px" width="100px" /></td>
+                                        <td><Skeleton height="16px" width="100px" /></td>
+                                        <td><Skeleton height="16px" width="100px" /></td>
+                                        <td><Skeleton height="16px" width="100px" /></td>
                                         <td><Skeleton height="16px" /></td>
                                         <td><Skeleton height="16px" width="80px" /></td>
                                     </tr>
                                 ))
                             ) : paginatedTickets.length === 0 ? (
                                 <tr>
-                                    <td colSpan={activeTab === 'open' ? 9 : 9} style={{ textAlign: 'center', padding: '40px' }}>
+                                    <td colSpan={activeTab === 'open' ? 12 : 12} style={{ textAlign: 'center', padding: '40px' }}>
                                         <FiAlertCircle size="40px" style={{ margin: '0 auto 10px' }} />
                                         <Text>Tidak ada data ticket</Text>
                                     </td>
@@ -404,8 +409,11 @@ function TicketExternalPage() {
                                             </td>
                                             <td>{ticket.subKategori || '-'}</td>
                                             <td>{ticket.tanggal || '-'}</td>
+                                            <td>{ticket.from || '-'}</td>
+                                            <td>{ticket.responsible || '-'}</td>
+                                            <td>{ticket.consulted || '-'}</td>
+                                            <td>{ticket.informed || '-'}</td>
                                             <td>{ticket.nomor_hp || '-'}</td>
-                                            <td>{ticket.media || '-'}</td>
                                             <td style={{ maxWidth: '200px' }}>
                                                 {ticket.detail ? (
                                                     <Text noOfLines={2} title={ticket.detail}>
