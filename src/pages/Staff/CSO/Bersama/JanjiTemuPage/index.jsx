@@ -2,7 +2,7 @@ import ContainerCarrot from "@/components/Container";
 import InfoCard from "@/components/InfoCard";
 import { LuTicket, LuTicketCheck} from "react-icons/lu";
 import SistemTabs from "@/components/SistemTabs";
-import { Checkbox, useToast, useColorMode, useColorModeValue } from "@chakra-ui/react";
+import { Checkbox, useToast, useColorModeValue } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { getJanjiTemu, postJanjiTemu } from "@/features/cso/csoApiService";
 import { StyledJanjiTemuPage } from "./JanjiTemu.styled";
@@ -15,7 +15,6 @@ const tabItems = [
 ];
 
 function JanjiTemuPage() {
-    const { colorMode } = useColorMode();
     const checkboxBg = useColorModeValue('white', 'gray.700');
     const checkboxBorderColor = useColorModeValue('orange.200', 'orange.400');
     const checkboxCheckedBg = useColorModeValue('#f9dbcfff', 'orange.700');
@@ -34,6 +33,8 @@ function JanjiTemuPage() {
         mutationFn: ({ rowData }) => postJanjiTemu({ rowData }),
         onMutate: async (variables) => {
             const { rowData: updatedRow } = variables;
+
+
 
             await queryClient.cancelQueries({ queryKey: ['janjiTemu'] });
             const previousData = queryClient.getQueryData(['janjiTemu']);
