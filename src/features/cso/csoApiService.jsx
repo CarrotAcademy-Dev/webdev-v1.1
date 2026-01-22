@@ -1838,7 +1838,13 @@ export async function submitDonePindahModul(id, mapStatus, doneStatus, modulBaru
         });
 
         if (response.status === 200 || response.status === 201) {
-            return { status: 'success', message: 'Berhasil update data' };
+            const result = response.data;
+            
+            if (result.status === 'failed') {
+                throw new Error(result.message || 'Failed to submit done pindah modul');
+            }
+            
+            return { status: 'success', message: result.message || 'Berhasil update data' };
         }
 
         const result = response.data;
