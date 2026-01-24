@@ -261,33 +261,6 @@ function DashboardDailyPage() {
     const handleChecklist = async (target, sid, mapStatus, doneStatus) => {
         const itemKey = `${target}-${sid}`;
         
-        // Validasi: done harus map dulu (except birthday, last-day, sertifikat)
-        // Untuk naik level & pindah modul, cek module type dulu
-        if (target.includes('done') && !['done-birthday', 'done-last-day'].includes(target) && !target.startsWith('done-sertifikat-')) {
-            // Check if module needs map
-            let needsMap = true;
-            
-            if (target === 'done-naik-level') {
-                const item = tableData.naikLevel?.find(item => item.id === sid);
-                needsMap = ['foundation', 'drawing'].includes(item?.modul?.toLowerCase());
-            } else if (target === 'done-pindah-modul') {
-                const item = tableData.pindahModul?.find(item => item.id === sid);
-                needsMap = ['foundation', 'drawing'].includes(item?.modulBaru?.toLowerCase());
-            }
-            
-            // Only show warning if module needs map but map not checked
-            if (needsMap && mapStatus !== 'true') {
-                toast({
-                    title: "Peringatan",
-                    description: "Harap centang 'Map' terlebih dahulu",
-                    status: "warning",
-                    duration: 3000,
-                    isClosable: true,
-                });
-                return;
-            }
-        }
-        
         // Skip jika sudah checked
         if (doneStatus === 'true' && target.includes('done')) {
             return;
@@ -547,7 +520,7 @@ function DashboardDailyPage() {
                 <Checkbox
                     colorScheme="green"
                     isChecked={item.isDoneChecked}
-                    isDisabled={item.isDoneChecked || !item.isMapChecked}
+                    isDisabled={item.isDoneChecked}
                     onChange={() => handleChecklist(item.targetType, item.id, item.statusMap, item.statusDone)}
                     sx={{
                         '.chakra-checkbox__control': {
@@ -595,7 +568,7 @@ function DashboardDailyPage() {
                 <Checkbox
                     colorScheme="green"
                     isChecked={item.isDoneChecked}
-                    isDisabled={item.isDoneChecked || !item.isMapChecked}
+                    isDisabled={item.isDoneChecked}
                     onChange={() => handleChecklist(item.targetType, item.id, item.statusMap, item.statusDone)}
                     sx={{
                         '.chakra-checkbox__control': {
@@ -702,26 +675,22 @@ function DashboardDailyPage() {
         {
             key: 'done',
             label: 'Done?',
-            render: (item) => {
-                const needsMap = ['foundation', 'drawing'].includes(item.modul?.toLowerCase());
-                const isDisabled = needsMap ? (item.isDoneChecked || !item.isMapChecked) : item.isDoneChecked;
-                return (
-                    <Checkbox
-                        colorScheme="green"
-                        isChecked={item.isDoneChecked}
-                        isDisabled={isDisabled}
-                        onChange={() => handleChecklist(item.targetType, item.id, item.statusMap, item.statusDone)}
-                        sx={{
-                            '.chakra-checkbox__control': {
-                                '&[data-checked]': {
-                                    bg: '#48BB78',
-                                    borderColor: '#48BB78',
-                                }
+            render: (item) => (
+                <Checkbox
+                    colorScheme="green"
+                    isChecked={item.isDoneChecked}
+                    isDisabled={item.isDoneChecked}
+                    onChange={() => handleChecklist(item.targetType, item.id, item.statusMap, item.statusDone)}
+                    sx={{
+                        '.chakra-checkbox__control': {
+                            '&[data-checked]': {
+                                bg: '#48BB78',
+                                borderColor: '#48BB78',
                             }
-                        }}
-                    />
-                );
-            }
+                        }
+                    }}
+                />
+            )
         }
     ];
 
@@ -759,26 +728,22 @@ function DashboardDailyPage() {
         {
             key: 'done',
             label: 'Done?',
-            render: (item) => {
-                const needsMap = ['foundation', 'drawing'].includes(item.modulBaru?.toLowerCase());
-                const isDisabled = needsMap ? (item.isDoneChecked || !item.isMapChecked) : item.isDoneChecked;
-                return (
-                    <Checkbox
-                        colorScheme="green"
-                        isChecked={item.isDoneChecked}
-                        isDisabled={isDisabled}
-                        onChange={() => handleChecklist(item.targetType, item.id, item.statusMap, item.statusDone)}
-                        sx={{
-                            '.chakra-checkbox__control': {
-                                '&[data-checked]': {
-                                    bg: '#48BB78',
-                                    borderColor: '#48BB78',
-                                }
+            render: (item) => (
+                <Checkbox
+                    colorScheme="green"
+                    isChecked={item.isDoneChecked}
+                    isDisabled={item.isDoneChecked}
+                    onChange={() => handleChecklist(item.targetType, item.id, item.statusMap, item.statusDone)}
+                    sx={{
+                        '.chakra-checkbox__control': {
+                            '&[data-checked]': {
+                                bg: '#48BB78',
+                                borderColor: '#48BB78',
                             }
-                        }}
-                    />
-                );
-            }
+                        }
+                    }}
+                />
+            )
         }
     ];
 
