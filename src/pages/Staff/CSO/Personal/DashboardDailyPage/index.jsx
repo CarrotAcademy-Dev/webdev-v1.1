@@ -381,7 +381,7 @@ function DashboardDailyPage() {
         };
 
         const transformLastDay = (dataArray) => {
-            if (!dataArray || dataArray.length === 0) return [];
+            if (!dataArray || !Array.isArray(dataArray) || dataArray.length === 0) return [];
             return dataArray.map((item, index) => {
                 const doneItemKey = `done-last-day-${item.fullconcat}`;
                 const isDoneChecked = checkedItems[doneItemKey];
@@ -447,7 +447,13 @@ function DashboardDailyPage() {
 
         const transformSertifikat = (dataObject, tahun) => {
             if (!dataObject || !Array.isArray(dataObject)) return [];
-            return dataObject.map((item, index) => {
+            // Filter only Ready status and tanggal_kelas not empty
+            const readyData = dataObject.filter(item => 
+                item.status_sertifikat === 'Ready' && 
+                item.tanggal_kelas && 
+                item.tanggal_kelas.trim() !== ''
+            );
+            return readyData.map((item, index) => {
                 const doneItemKey = `done-sertifikat-${tahun}-${item.id}`;
                 const isDoneChecked = checkedItems[doneItemKey];
                 return {
@@ -914,7 +920,7 @@ function DashboardDailyPage() {
             {/* Tabs Section */}
             <div className="main-content-section">
                 <ContainerCarrot>
-                    <SistemTabs 
+                    <SistemTabs
                         tabItems={tabItems}
                         tableData={tableData}
                         headerItems={headerItemsSiswaBaru}
