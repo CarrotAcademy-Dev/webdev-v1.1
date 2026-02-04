@@ -4,30 +4,35 @@ import {
   MenuList,
   MenuItem,
   IconButton,
-  useDisclosure,
   Text,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { memo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { memo, useState, useEffect } from "react";
 import { prefetchRoute } from "@/utils/prefetch";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
 function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const [subMenuCategory, setSubMenuCategory] = useState(null);
+  const navigate = useNavigate();
+
+  // Reset submenu when menu closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSubMenuCategory(null);
+    }
+  }, [isOpen]);
 
   const handleLogoutClick = (onClickFn) => {
-    onClose();
+    setIsOpen(false);
     setSubMenuCategory(null);
     if (onMenuItemClick) onMenuItemClick();
-    
-    setTimeout(() => {
-      onClickFn();
-    }, 0);
+    onClickFn();
   };
 
   const handleCategoryClick = (category) => {
     setSubMenuCategory(category);
+    // Jangan close menu, biarkan tetap terbuka untuk pilih submenu
   };
 
   const handleBackClick = () => {
@@ -35,20 +40,33 @@ function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
   };
 
   const handleMenuClose = () => {
-    onClose();
+    setIsOpen(false);
     setSubMenuCategory(null);
   };
 
-  const handleLinkClick = () => {
-    // Close menu when link is clicked
+  const handleLinkClick = (path) => {
+    // Close menu first
+    setSubMenuCategory(null);
+    setIsOpen(false);
+    
+    // Small delay to ensure menu closes before navigation
     setTimeout(() => {
-      handleMenuClose();
       if (onMenuItemClick) onMenuItemClick();
-    }, 100);
+      navigate(path);
+    }, 50);
   };
 
   return (
-    <Menu isOpen={isOpen} onOpen={onOpen} onClose={handleMenuClose} closeOnSelect={false} closeOnBlur={true}>
+    <Menu 
+      isOpen={isOpen} 
+      onOpen={() => setIsOpen(true)} 
+      onClose={handleMenuClose}
+      closeOnSelect={false}
+      closeOnBlur={true}
+      placement="bottom-start"
+      strategy="fixed"
+      gutter={8}
+    >
       <MenuButton
         as={IconButton}
         aria-label="Options"
@@ -85,9 +103,7 @@ function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
                 <MenuItem
                   key={index}
                   icon={item.icon}
-                  as={Link}
-                  to={item.path}
-                  onClick={handleLinkClick}
+                  onClick={() => handleLinkClick(item.path)}
                   onMouseEnter={() => prefetchRoute(item.path)}
                 >
                   {item.label}
@@ -117,9 +133,7 @@ function NavbarMenu({ icon, menuList = [], isActive, onMenuItemClick }) {
                   <MenuItem
                     key={index}
                     icon={item.icon}
-                    as={Link}
-                    to={item.path}
-                    onClick={handleLinkClick}
+                    onClick={() => handleLinkClick(item.path)}
                     onMouseEnter={() => prefetchRoute(item.path)}
                   >
                     {item.label}

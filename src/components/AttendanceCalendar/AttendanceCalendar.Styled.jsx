@@ -58,11 +58,11 @@ const StyledCalendarWrapper = styled.div`
         font-weight: 400;
     }
     .react-calendar__tile.attended {
-        background-color: #FEECE5;
+        background-color: #feece5b1;
         color: #1A202C;
     }
     .react-calendar__tile.attended {
-        background-color: #FEECE5;
+        background-color: #feece5b1;
         color: #1A202C;
         border-radius: 0;
     }

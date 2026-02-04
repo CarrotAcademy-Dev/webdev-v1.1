@@ -254,3 +254,118 @@ export const createTicketingInternal = async (ticketData) => {
         throw error;
     }
 };
+
+/**
+ * Get List Siswa Full-Time (Dashboard FD)
+ * Mengambil daftar nama siswa FD untuk dropdown
+ * @returns {Promise<string[]>} Promise with array of student names
+ */
+export const getListSiswaFD = async () => {
+    const params = new URLSearchParams({
+        action: 'get-list-siswa-fd'
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data siswa FD');
+        }
+    } catch (error) {
+        console.error("Error fetching siswa FD list:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Dashboard Full-Time Detail (Nilai & Presensi)
+ * Mengambil detail dashboard siswa FD berdasarkan nama
+ * @param {string} namaSiswa - Nama siswa yang dipilih
+ * @returns {Promise} Promise with dashboard data
+ */
+export const getDataDashboardFD = async (namaSiswa) => {
+    if (!namaSiswa) {
+        throw new Error('Nama siswa wajib diisi');
+    }
+
+    const params = new URLSearchParams({
+        action: 'get-data-siswa-fd',
+        nama_siswa: namaSiswa
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Data tidak ditemukan');
+        }
+    } catch (error) {
+        console.error("Error fetching dashboard FD data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Dashboard Ticketing Mentor
+ * Mengambil data dashboard ticketing mentor per tahun
+ * @param {string} tahun - Tahun yang dipilih (required)
+ * @returns {Promise} Promise with dashboard ticketing data
+ */
+export const getDashboardTicketingMentor = async (tahun) => {
+    if (!tahun) {
+        throw new Error('Tahun wajib diisi');
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('action', 'dashboard-ticketing-mentor');
+    formData.append('tahun', tahun);
+
+    try {
+        const response = await apiClient.post(ENDPOINT.esoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data dashboard ticketing mentor');
+        }
+    } catch (error) {
+        console.error("Error fetching dashboard ticketing mentor:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Full-Time Course Student Identity
+ * Mengambil data identitas siswa FD (dokumen-dokumen)
+ * @returns {Promise} Promise with array of student identity data
+ */
+export const getFDIdentity = async () => {
+    const params = new URLSearchParams({
+        action: 'get-fd-identity'
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data identitas siswa FD');
+        }
+    } catch (error) {
+        console.error("Error fetching FD identity data:", error);
+        throw error;
+    }
+};

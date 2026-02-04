@@ -77,7 +77,7 @@ function Navbar() {
         mainIcon: <FiUser />,
         items: [
           { label: "Profile", path: "/profile" },
-          { label: "Payment", path: "/payment" },
+          { label: "Payment", path: "/payslip" },
           { label: "Settings", path: "/settings" },
         ],
       },
@@ -150,6 +150,9 @@ function Navbar() {
           {
             category: "Personal",
             items: [
+              { label: "Dashboard Full-Time", path: "/eso/dashboard-fulltime" },
+              { label: "Dashboard Ticketing Mentor", path: "/eso/dashboard-ticketing-mentor" },
+              { label: "FD Identity", path: "/eso/fd-identity" },
               { label: "Create Ticketing Internal", path: "/eso/create-ticketing-internal" },
               { label: "Track Ticket From Me", path: "/eso/track-ticket-fme" },
               { label: "Ticketing Internal", path: "/eso/ticketing-internal" },

@@ -143,6 +143,17 @@ function ProspektifFormPage() {
             return;
         }
 
+        // Jika sedang edit, confirm dulu
+        if (isEditMode && Object.keys(editedData).length > 0) {
+            const confirmSearch = window.confirm(
+                'Anda sedang mengedit data. Perubahan yang belum disimpan akan hilang. Lanjutkan?'
+            );
+            if (!confirmSearch) return;
+        }
+
+        // Clear URL params untuk avoid stuck state
+        navigate('/my-tasks/prospektif-form', { replace: true });
+
         // Check if query looks like PSID (starts with PS-)
         // If yes, langsung load by PSID (existing behavior)
         if (query.toUpperCase().startsWith('PS-')) {
@@ -223,9 +234,23 @@ function ProspektifFormPage() {
     };
 
     const handleNewForm = () => {
+        // Jika sedang edit data selected, confirm dulu
+        if (isEditMode && !isNewMode && Object.keys(editedData).length > 0) {
+            const confirmSwitch = window.confirm(
+                'Anda sedang mengedit data. Perubahan yang belum disimpan akan hilang. Lanjutkan?'
+            );
+            if (!confirmSwitch) return;
+        }
+
+        // Clear URL params untuk avoid stuck state
+        navigate('/my-tasks/prospektif-form', { replace: true });
+        
         setIsNewMode(true);
         setIsEditMode(true);
         setCurrentPsid('');
+        setSearchQuery(''); // Clear search query
+        setShowSearchResults(false); // Hide search results
+        setSearchResults([]); // Clear search results array
         setEditedData({
             full_name: '',
             phone_number: '',
@@ -266,6 +291,19 @@ function ProspektifFormPage() {
             cancel_check: '',
             prefilled_link_form: ''
         });
+    };
+
+    const handleCancelEdit = () => {
+        // Clear URL params
+        navigate('/my-tasks/prospektif-form', { replace: true });
+        
+        setIsNewMode(false);
+        setIsEditMode(false);
+        setCurrentPsid('');
+        setSearchQuery('');
+        setShowSearchResults(false);
+        setSearchResults([]);
+        setEditedData({});
     };
 
     // Helper function untuk convert ISO date ke YYYY-MM-DD format
@@ -605,7 +643,7 @@ function ProspektifFormPage() {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     size="lg"
-                                    disabled={isNewMode || isSearching}
+                                    disabled={isSearching}
                                 />
                             </Box>
                         </div>
@@ -613,7 +651,7 @@ function ProspektifFormPage() {
                             colorScheme="blue"
                             onClick={handleSearch}
                             size="lg"
-                            isDisabled={isNewMode}
+                            isDisabled={isSearching}
                             isLoading={isSearching}
                             bg="blue.500"
                             _hover={{ bg: 'blue.600' }}
@@ -623,15 +661,14 @@ function ProspektifFormPage() {
                             Cari
                         </Button>
                         <Button
-                            colorScheme="green"
-                            onClick={handleNewForm}
+                            colorScheme={isNewMode ? "red" : "green"}
+                            onClick={isNewMode ? handleCancelEdit : handleNewForm}
                             size="lg"
-                            isDisabled={isNewMode}
-                            bg="green.500"
-                            _hover={{ bg: 'green.600' }}
+                            bg={isNewMode ? "red.500" : "green.500"}
+                            _hover={{ bg: isNewMode ? "red.600" : "green.600" }}
                             color="white"
                         >
-                            Form Baru
+                            {isNewMode ? 'Batal' : 'Form Baru'}
                         </Button>
                     </div>
 
