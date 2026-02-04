@@ -44,7 +44,11 @@ const TrackTicketFmePageEso = lazy(() => import('./pages/Staff/ESO/Personal/Trac
 const TicketingInternalPageEso = lazy(() => import('./pages/Staff/ESO/Personal/TicketingInternalPage'));
 const CreateTicketingInternalPageEso = lazy(() => import('./pages/Staff/ESO/Personal/CreateTicketingInternalPage'));
 const CariDataStudentReportPage = lazy(() => import('./pages/Staff/ESO/Personal/CariDataStudentReportPage'));
+const DashboardFDPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardFDPage'));
+const DashboardTicketingMentorPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardTicketingMentorPage'));
+const FDIdentityPage = lazy(() => import('./pages/Staff/ESO/Personal/FDIdentityPage'));
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
+const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
 function App() {
@@ -86,6 +90,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <AttendancePage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/payslip" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <PayslipPage />
               </Layout>
             </ProtectedRoute>
           } 
@@ -324,8 +338,27 @@ function App() {
               <CariDataStudentReportPage />
             </Layout>
           </ProtectedRoute>
+        } />        <Route path='/eso/dashboard-fulltime' element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <DashboardFDPage />
+            </Layout>
+          </ProtectedRoute>
         } />
-        
+        <Route path='/eso/dashboard-ticketing-mentor' element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <DashboardTicketingMentorPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path='/eso/fd-identity' element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <FDIdentityPage />
+            </Layout>
+          </ProtectedRoute>
+        } />        
         <Route path="/admin/register-user" element={
           <ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
             <Layout>
