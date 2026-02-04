@@ -76,13 +76,11 @@ function CreateTicketingInternalPage() {
     return (
         <ContainerCarrot>
             <StyledCreateTicketingInternal data-theme={colorMode}>
-                <Box className="hero-section">
-                    <Flex justify="space-between" align="center" mb={6}>
-                        <Text fontSize="2xl" fontWeight="bold">
-                            Create Ticketing Internal
-                        </Text>
-                    </Flex>
-                </Box>
+                <Flex justify="space-between" align="center" mb={6}>
+                    <Text fontSize="2xl" fontWeight="bold">
+                        Create Ticketing Internal
+                    </Text>
+                </Flex>
 
                 <Box className="main-content-section">
                     <form onSubmit={handleSubmit}>
