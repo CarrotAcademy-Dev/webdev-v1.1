@@ -7,6 +7,7 @@ import { FiChevronLeft, FiChevronRight, FiSearch, FiChevronUp, FiChevronDown } f
 import Pagination from '@/components/Pagination';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { IoLogoYahoo } from 'react-icons/io5';
 
 function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
     const borderColor = useColorModeValue('gray.200', 'gray.600');
@@ -156,6 +157,68 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
             >
                 <Table variant="simple">
                     <Thead bg={theadBg}>
+                        {/* Section Headers Row */}
+                        {headerItems.some(h => h.section !== undefined) && (
+                            <Tr>
+                                {(() => {
+                                    const sections = [];
+                                    let currentSection = null;
+                                    let colspan = 0;
+                                    
+                                    headerItems.forEach((header, index) => {
+                                        // Check if this header has section property (including null)
+                                        const hasSection = 'section' in header;
+                                        
+                                        if (hasSection) {
+                                            // Push accumulated columns before starting new section
+                                            if (colspan > 0) {
+                                                sections.push({ 
+                                                    name: currentSection ? currentSection.name : '', 
+                                                    color: currentSection ? currentSection.color : '', 
+                                                    colspan 
+                                                });
+                                            }
+                                            // Start new section (can be null for empty section)
+                                            currentSection = header.section ? { name: header.section, color: header.sectionColor } : null;
+                                            colspan = 1;
+                                        } else {
+                                            // Column without section property - continues current section
+                                            colspan++;
+                                        }
+                                        
+                                        // At the end, push remaining section
+                                        if (index === headerItems.length - 1 && colspan > 0) {
+                                            sections.push({ 
+                                                name: currentSection ? currentSection.name : '', 
+                                                color: currentSection ? currentSection.color : '', 
+                                                colspan 
+                                            });
+                                        }
+                                    });
+                                    
+                                    return sections.map((section, idx) => (
+                                        <Th 
+                                            key={idx} 
+                                            colSpan={section.colspan}
+                                            textAlign="center"
+                                            fontSize="md"
+                                            fontWeight="bold"
+                                            color={section.color ? `${section.color}.600` : 'transparent'}
+                                            borderRight={idx < sections.length - 1 ? '3px solid' : 'none'}
+                                            borderRightColor={idx < sections.length - 1 ? 'gray.400' : 'transparent'}
+                                            bg={section.color ? `${section.color}.100` : 'transparent'}
+                                            _dark={{
+                                                color: section.color ? `${section.color}.300` : 'transparent',
+                                                bg: section.color ? `${section.color}.900` : 'transparent',
+                                            }}
+                                        >
+                                            {section.name}
+                                        </Th>
+                                    ));
+                                })()}
+                            </Tr>
+                        )}
+                        {/* Column Headers Row */}
                         <Tr>
                             {headerItems.map((headerName) => (
                                 <Th 
@@ -165,6 +228,8 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                                     userSelect="none"
                                     _hover={{ bg: theadHoverBg }}
                                     position="relative"
+                                    borderLeft={headerName.section ? '3px solid' : 'none'}
+                                    borderLeftColor={headerName.section ? 'gray.400' : 'transparent'}
                                 >
                                     <Flex alignItems="center" gap={1}>
                                         {headerName.label}
@@ -200,7 +265,11 @@ function DataTableComponent( {tableData, headerItems, onAction, isLoading} ) {
                             currentItems.map((item, rowIndex) => (
                             <Tr key={item.idTicket || item.id || item.nis || item.nomor_hp || rowIndex}>
                                 {headerItems.map(headerName => (
-                                    <Td key={`${item.idTicket || item.id || item.nis || item.nomor_hp || rowIndex}-${headerName.key}`} >
+                                    <Td 
+                                        key={`${item.idTicket || item.id || item.nis || item.nomor_hp || rowIndex}-${headerName.key}`}
+                                        borderLeft={headerName.section ? '3px solid' : 'none'}
+                                        borderLeftColor={headerName.section ? 'gray.400' : 'transparent'}
+                                    >
                                         {headerName.render ? (
                                             headerName.render(item, rowIndex)
                                         ): (

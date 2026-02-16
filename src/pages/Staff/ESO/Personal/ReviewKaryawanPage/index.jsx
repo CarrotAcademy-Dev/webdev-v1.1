@@ -18,13 +18,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
     getReviewKaryawan,
     submitReviewKaryawan
-} from "@/features/cso/csoApiService";
+} from "@/features/eso/esoApiService";
 import { StyledReviewKaryawan } from "./ReviewKaryawan.styled";
 import { useState, useMemo, useContext } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import { AuthContext } from "@/context/AuthContext";
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
 
 // Dummy data karyawan - nanti bisa diganti dengan API
 const KARYAWAN_LIST = [
@@ -34,14 +32,13 @@ const KARYAWAN_LIST = [
 ];
 
 function ReviewKaryawanPage() {
-    const { user } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
     const toast = useToast();
     const queryClient = useQueryClient();
     const { colorMode } = useColorMode();
 
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
-    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
 
     const [selectedKaryawan, setSelectedKaryawan] = useState('');
     const [karyawanData, setKaryawanData] = useState(null);
@@ -155,7 +152,7 @@ function ReviewKaryawanPage() {
 
         // Submit
         submitMutation.mutate({
-            reviewer: user?.name || 'Unknown',
+            reviewer: currentUser?.name || 'Unknown',
             nama_karyawan: karyawanData.nama,
             id_karyawan: karyawanData.id,
             jabatan: karyawanData.jabatan,
@@ -171,7 +168,7 @@ function ReviewKaryawanPage() {
         
         // Filter hanya review yang dibuat oleh user saat ini
         const currentUserReviews = reviewHistory.result.filter(
-            item => item.reviewer === user?.name
+            item => item.reviewer === currentUser?.name
         );
         
         return currentUserReviews.map((item, index) => ({
@@ -192,7 +189,7 @@ function ReviewKaryawanPage() {
             kinerja_umum: item.kinerja_umum,
             komentar: item.komentar || '-'
         }));
-    }, [reviewHistory, user]);
+    }, [reviewHistory, currentUser]);
 
     const headerHistory = [
         { key: 'no', label: 'No' },

@@ -153,6 +153,7 @@ function Navbar() {
               { label: "Dashboard Full-Time", path: "/eso/dashboard-fulltime" },
               { label: "Dashboard Ticketing Mentor", path: "/eso/dashboard-ticketing-mentor" },
               { label: "FD Identity", path: "/eso/fd-identity" },
+              { label: "Review Karyawan", path: "/eso/review-karyawan" },
               { label: "Create Ticketing Internal", path: "/eso/create-ticketing-internal" },
               { label: "Track Ticket From Me", path: "/eso/track-ticket-fme" },
               { label: "Ticketing Internal", path: "/eso/ticketing-internal" },
