@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Box, Flex, Text, Grid, IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, Button, Textarea, useDisclosure, useToast, Select, Input, InputGroup, InputLeftElement, useColorModeValue, useColorMode, Badge, Skeleton } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTicketExternal, postTicketExternal } from '@/features/cso/csoApiService';
+import { getTicketExternal, postTicketExternal, updateDeadlineTicketExternal } from '@/features/cso/csoApiService';
 import useDebounce from '@/hooks/useDebounce';
 import { StyledTicketExternal } from './TicketExternal.styled';
 import ContainerCarrot from '@/components/Container';
 import InfoCard from '@/components/InfoCard';
 import { FiCheckCircle, FiClock, FiAlertCircle, FiTag, FiChevronLeft, FiChevronRight, FiChevronUp, FiChevronDown, FiSearch } from 'react-icons/fi';
-import { LuTicket, LuTicketCheck } from 'react-icons/lu';
+import { LuTicket, LuTicketCheck, LuPencil, LuSave, LuX } from 'react-icons/lu';
 import Pagination from '@/components/Pagination';
 
 function TicketExternalPage() {
@@ -43,6 +43,10 @@ function TicketExternalPage() {
 
     // Tab state (Open/Close)
     const [activeTab, setActiveTab] = useState('open');
+
+    // State for editing deadline
+    const [editingRows, setEditingRows] = useState({});
+    const [editedData, setEditedData] = useState({});
 
     // Fetch tickets
     const { data: ticketData, isLoading, isError, error } = useQuery({
@@ -142,6 +146,82 @@ function TicketExternalPage() {
             queryClient.invalidateQueries({ queryKey: ['ticketExternal'] });
         }
     });
+
+    // Mutation for updating deadline
+    const { mutate: updateDeadline, isPending: isUpdatingDeadline } = useMutation({
+        mutationFn: updateDeadlineTicketExternal,
+        onSuccess: () => {
+            toast({
+                title: 'Deadline berhasil diupdate!',
+                status: 'success',
+                duration: 2000,
+                isClosable: true
+            });
+            queryClient.invalidateQueries({ queryKey: ['ticketExternal'] });
+        },
+        onError: (error) => {
+            toast({
+                title: 'Update Deadline Failed',
+                description: error.message || 'Gagal update deadline',
+                status: 'error',
+                duration: 5000,
+                isClosable: true
+            });
+        }
+    });
+
+    // Handler functions for editing deadline
+    const handleStartEdit = (ticket) => {
+        setEditingRows(prev => ({ ...prev, [ticket.idTicket]: true }));
+        setEditedData(prev => ({ 
+            ...prev, 
+            [ticket.idTicket]: { 
+                ...ticket,
+                tanggal: ticket.tanggal || ''
+            } 
+        }));
+    };
+
+    const handleCancelEdit = (ticketId) => {
+        setEditingRows(prev => {
+            const newState = { ...prev };
+            delete newState[ticketId];
+            return newState;
+        });
+        setEditedData(prev => {
+            const newState = { ...prev };
+            delete newState[ticketId];
+            return newState;
+        });
+    };
+
+    const handleSaveEdit = (ticketId) => {
+        const dataToSave = editedData[ticketId];
+        if (dataToSave && dataToSave.tanggal) {
+            updateDeadline({
+                id_ticket: ticketId,
+                deadline: dataToSave.tanggal
+            });
+            handleCancelEdit(ticketId);
+        } else {
+            toast({
+                title: 'Deadline tidak boleh kosong',
+                status: 'warning',
+                duration: 3000,
+                isClosable: true
+            });
+        }
+    };
+
+    const handleFieldChange = (value, ticketId, field) => {
+        setEditedData(prev => ({
+            ...prev,
+            [ticketId]: {
+                ...prev[ticketId],
+                [field]: value
+            }
+        }));
+    };
 
     const handleOpenModal = (ticket) => {
         setSelectedTicket(ticket);
@@ -408,7 +488,53 @@ function TicketExternalPage() {
                                                 <Badge colorScheme="purple">{ticket.kategori || '-'}</Badge>
                                             </td>
                                             <td>{ticket.subKategori || '-'}</td>
-                                            <td>{ticket.tanggal || '-'}</td>
+                                            <td>
+                                                {activeTab === 'open' ? (
+                                                    editingRows[ticket.idTicket] ? (
+                                                        <Flex gap={2} align="center">
+                                                            <Input
+                                                                type="date"
+                                                                value={editedData[ticket.idTicket]?.tanggal || ''}
+                                                                onChange={(e) => handleFieldChange(e.target.value, ticket.idTicket, 'tanggal')}
+                                                                size="sm"
+                                                                width="150px"
+                                                            />
+                                                            <IconButton
+                                                                icon={<LuSave />}
+                                                                size="sm"
+                                                                colorScheme="green"
+                                                                onClick={() => handleSaveEdit(ticket.idTicket)}
+                                                                isLoading={isUpdatingDeadline}
+                                                                aria-label="Save"
+                                                                title="Save"
+                                                            />
+                                                            <IconButton
+                                                                icon={<LuX />}
+                                                                size="sm"
+                                                                colorScheme="red"
+                                                                onClick={() => handleCancelEdit(ticket.idTicket)}
+                                                                aria-label="Cancel"
+                                                                title="Cancel"
+                                                            />
+                                                        </Flex>
+                                                    ) : (
+                                                        <Flex gap={2} align="center">
+                                                            <Text>{ticket.tanggal || '-'}</Text>
+                                                            <IconButton
+                                                                icon={<LuPencil />}
+                                                                size="sm"
+                                                                colorScheme="blue"
+                                                                onClick={() => handleStartEdit(ticket)}
+                                                                aria-label="Edit Deadline"
+                                                                title="Edit Deadline"
+                                                                variant="ghost"
+                                                            />
+                                                        </Flex>
+                                                    )
+                                                ) : (
+                                                    ticket.tanggal || '-'
+                                                )}
+                                            </td>
                                             <td>{ticket.from || '-'}</td>
                                             <td>{ticket.responsible || '-'}</td>
                                             <td>{ticket.consulted || '-'}</td>

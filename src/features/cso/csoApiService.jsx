@@ -851,6 +851,28 @@ export const postTicketExternal = async ({ rowData, result }) => {
     }
 };
 
+export const updateDeadlineTicketExternal = async ({ id_ticket, deadline }) => {
+    const params = new URLSearchParams({
+        action: 'update-deadline-ticketexternal',
+        id_ticket: id_ticket,
+        deadline: deadline || ''
+    });
+
+    try {
+        const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to update deadline');
+        }
+    } catch (error) {
+        logError(error, 'updateDeadlineTicketExternal');
+        throw error;
+    }
+};
+
 export const getPendaftaranLanjutan = async () => {
     try {
         const response = await apiClient.get(ENDPOINT.csoBersama, {
