@@ -316,12 +316,18 @@ export const getDaftarOffboarding = async () => {
                 done_reminderWhatsapp: item.reminder_whatsapp,
                 done_sertifSudahDikirim: item.sertifikat_dikirim,
                 done_progressReportSudahDikirim: item.progress_report_dikirim,
-                // Check if all tasks are done
-                done: item.last_day === true && 
-                      item.schedule_dirapihkan === true && 
-                      item.reminder_whatsapp === true && 
-                      item.sertifikat_dikirim === true && 
-                      item.progress_report_dikirim === true
+                // Finance fields (from backend)
+                done_ubahTagihan: item.finance_ubah_tagihan,
+                done_memberiTagihanBelumLunas: item.finance_tagihan_belum_lunas,
+                done_lunas: item.finance_lunas,
+                // ESO fields (from backend)
+                done_prosesSertifikat: item.eso_proses_sertifikat,
+                done_prosesMonthlyReport: item.eso_monthly_report,
+                done_prosesGdriveDropbox: item.eso_gdrive_dropbox,
+                done_hapusBirthdayReminder: item.eso_birthday_reminder,
+                done_uninviteLinkKelas: item.eso_uninvite_link,
+                // All done status - from backend, NOT calculated in frontend
+                done: item.done || false
             }));
 
             // Sort by timestamp (newest first)
@@ -348,7 +354,8 @@ export const postOffboardingData = async (rowData) => {
         schedule_dirapihkan: rowData.done_scheduleSudahDirapihkan || false,
         reminder_whatsapp: rowData.done_reminderWhatsapp || false,
         sertifikat_dikirim: rowData.done_sertifSudahDikirim || false,
-        progress_report: rowData.done_progressReportSudahDikirim || false
+        progress_report: rowData.done_progressReportSudahDikirim || false,
+        done: rowData.done || false
     });
     
     try {
@@ -840,6 +847,28 @@ export const postTicketExternal = async ({ rowData, result }) => {
         }
     } catch (error) {
         logError(error, 'postTicketExternal');
+        throw error;
+    }
+};
+
+export const updateDeadlineTicketExternal = async ({ id_ticket, deadline }) => {
+    const params = new URLSearchParams({
+        action: 'update-deadline-ticketexternal',
+        id_ticket: id_ticket,
+        deadline: deadline || ''
+    });
+
+    try {
+        const response = await apiClient.post(`${ENDPOINT.csoBersama}?${params.toString()}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to update deadline');
+        }
+    } catch (error) {
+        logError(error, 'updateDeadlineTicketExternal');
         throw error;
     }
 };

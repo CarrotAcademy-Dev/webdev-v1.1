@@ -4,12 +4,12 @@ import { getDaftarOffboarding, postOffboardingData } from "@/features/cso/csoApi
 import SistemTabs from "@/components/SistemTabs";
 import StyledDaftarOffboardingPage from "./DaftarOffboarding.styled";
 import { BiTask, BiTaskX } from "react-icons/bi";
-import { Checkbox, Input, useToast, Button, Flex, IconButton } from "@chakra-ui/react";
+import { Checkbox, Input, useToast, Button, Flex, IconButton, useColorModeValue } from "@chakra-ui/react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useState } from 'react';
-import { LuPencil, LuSave, LuX } from 'react-icons/lu';
+import { LuPencil, LuSave, LuX, LuEye, LuEyeOff } from 'react-icons/lu';
 
 const tabItems = [
     { key: 'notDone', label: 'Not Done' },
@@ -65,9 +65,16 @@ function DaftarOffboardingPage() {
     const queryClient = useQueryClient();       
     const toast = useToast();
 
+    // Color mode values for input fields
+    const inputEditBg = useColorModeValue('yellow.50', 'gray.700');
+    const inputTextColor = useColorModeValue('gray.800', 'white');
+
     // State for tracking which rows are being edited
     const [editingRows, setEditingRows] = useState({});
     const [editedData, setEditedData] = useState({});
+    
+    // State for showing/hiding Finance & ESO columns
+    const [showFinanceEsoColumns, setShowFinanceEsoColumns] = useState(false);
 
     const { data: rawData = [], isLoading, isError, error } = useQuery({
         queryKey: ['offboarding'],
@@ -179,6 +186,8 @@ function DaftarOffboardingPage() {
         { 
             key: 'program',
             label: 'Program',
+            section: 'CSO',
+            sectionColor: 'blue',
             render: (item) => {
                 const isEditing = editingRows[item.id_ticket];
                 const currentData = editedData[item.id_ticket] || item;
@@ -189,7 +198,8 @@ function DaftarOffboardingPage() {
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'program')}
                         width="10rem"
                         isDisabled={!isEditing}
-                        bg={isEditing ? 'yellow.50' : 'transparent'}
+                        bg={isEditing ? inputEditBg : 'transparent'}
+                        color={inputTextColor}
                     />
                 );
             }
@@ -207,7 +217,8 @@ function DaftarOffboardingPage() {
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'modul')}
                         width="10rem"
                         isDisabled={!isEditing}
-                        bg={isEditing ? 'yellow.50' : 'transparent'}
+                        bg={isEditing ? inputEditBg : 'transparent'}
+                        color={inputTextColor}
                     />
                 );
             }
@@ -225,7 +236,8 @@ function DaftarOffboardingPage() {
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'level')}
                         width="10rem"
                         isDisabled={!isEditing}
-                        bg={isEditing ? 'yellow.50' : 'transparent'}
+                        bg={isEditing ? inputEditBg : 'transparent'}
+                        color={inputTextColor}
                     />
                 );
             }
@@ -250,7 +262,8 @@ function DaftarOffboardingPage() {
                         value={displayValue}
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'tanggalMulaiCuti')}
                         width="10rem"
-                        bg="yellow.50"
+                        bg={inputEditBg}
+                        color={inputTextColor}
                     />
                 ) : (
                     <span>{displayValue}</span>
@@ -275,7 +288,8 @@ function DaftarOffboardingPage() {
                         value={displayValue}
                         onChange={(e) => handleFieldChange(e.target.value, item.id_ticket, 'tanggalAkhirCuti')}
                         width="10rem"
-                        bg="yellow.50"
+                        bg={inputEditBg}
+                        color={inputTextColor}
                     />
                 ) : (
                     <span>{displayValue}</span>
@@ -367,7 +381,155 @@ function DaftarOffboardingPage() {
                 );
             }
         },
-        { key: 'done', label: 'ALL DONE?'}
+        // Finance columns (conditionally shown)
+        ...(showFinanceEsoColumns ? [
+            { 
+                key: 'done_ubahTagihan',
+                label: 'Sudah Ubah Tagihan?',
+                section: 'FINANCE',
+                sectionColor: 'green',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_ubahTagihan}
+                            colorScheme="green"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+            { 
+                key: 'done_memberiTagihanBelumLunas',
+                label: 'Sudah Memberi Tagihan Belum Lunas?',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_memberiTagihanBelumLunas}
+                            colorScheme="green"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+            { 
+                key: 'done_lunas',
+                label: 'Sudah Lunas?',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_lunas}
+                            colorScheme="green"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+        ] : []),
+        // ESO columns (conditionally shown)
+        ...(showFinanceEsoColumns ? [
+            { 
+                key: 'done_prosesSertifikat',
+                label: 'Sudah Proses Sertifikat?',
+                section: 'ESO',
+                sectionColor: 'purple',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_prosesSertifikat}
+                            colorScheme="purple"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+            { 
+                key: 'done_prosesMonthlyReport',
+                label: 'Sudah Proses Monthly Report?',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_prosesMonthlyReport}
+                            colorScheme="purple"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+            { 
+                key: 'done_prosesGdriveDropbox',
+                label: 'Sudah Proses Gdrive & Dropbox?',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_prosesGdriveDropbox}
+                            colorScheme="purple"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+            { 
+                key: 'done_hapusBirthdayReminder',
+                label: 'Sudah Hapus Birthday Reminder?',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_hapusBirthdayReminder}
+                            colorScheme="purple"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+            { 
+                key: 'done_uninviteLinkKelas',
+                label: 'Sudah Uninvite Link Kelas?',
+                render: (item) => {
+                    const currentData = editedData[item.id_ticket] || item;
+                    
+                    return (
+                        <Checkbox 
+                            isChecked={currentData.done_uninviteLinkKelas}
+                            colorScheme="purple"
+                            isDisabled={true}
+                        />
+                    );
+                }
+            },
+        ] : []),
+        // ALL DONE checkbox
+        { 
+            key: 'done',
+            label: 'ALL DONE?',
+            section: null, // Explicitly mark as separate section
+            render: (item) => {
+                const isEditing = editingRows[item.id_ticket];
+                const currentData = editedData[item.id_ticket] || item;
+                
+                return (
+                    <Checkbox 
+                        isChecked={currentData.done}
+                        onChange={() => handleFieldChange(!currentData.done, item.id_ticket, 'done')}
+                        colorScheme="orange"
+                        isDisabled={!isEditing}
+                    />
+                );
+            }
+        }
     ];
 
     // Start editing a row
@@ -451,6 +613,16 @@ function DaftarOffboardingPage() {
             </ContainerCarrot>
             <ContainerCarrot>
                 <div className="main-content-section">
+                    <Flex justify="flex-end" mb={4}>
+                        <Button 
+                            leftIcon={showFinanceEsoColumns ? <LuEyeOff /> : <LuEye />}
+                            onClick={() => setShowFinanceEsoColumns(!showFinanceEsoColumns)}
+                            colorScheme={showFinanceEsoColumns ? "red" : "blue"}
+                            size="sm"
+                        >
+                            {showFinanceEsoColumns ? 'Hide' : 'Show'} Finance & ESO Columns
+                        </Button>
+                    </Flex>
                     <SistemTabs 
                         tabItems={tabItems}
                         tableData={offboardingData} 

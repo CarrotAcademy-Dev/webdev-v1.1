@@ -47,6 +47,7 @@ const CariDataStudentReportPage = lazy(() => import('./pages/Staff/ESO/Personal/
 const DashboardFDPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardFDPage'));
 const DashboardTicketingMentorPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardTicketingMentorPage'));
 const FDIdentityPage = lazy(() => import('./pages/Staff/ESO/Personal/FDIdentityPage'));
+const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/ReviewKaryawanPage'));
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
@@ -358,7 +359,14 @@ function App() {
               <FDIdentityPage />
             </Layout>
           </ProtectedRoute>
-        } />        
+        } />
+        <Route path='/eso/review-karyawan' element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <ReviewKaryawanPageEso />
+            </Layout>
+          </ProtectedRoute>
+        } />
         <Route path="/admin/register-user" element={
           <ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
             <Layout>

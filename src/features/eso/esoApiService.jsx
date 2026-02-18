@@ -369,3 +369,89 @@ export const getFDIdentity = async () => {
         throw error;
     }
 };
+
+/**
+ * Get Review Karyawan History (ESO Personal)
+ * Mengambil riwayat review karyawan berdasarkan nama
+ * @param {string} namaFilter - Nama karyawan yang akan dicari
+ * @returns {Promise} Promise with review history data
+ */
+export const getReviewKaryawan = async (namaFilter) => {
+    if (!namaFilter) {
+        throw new Error('Nama karyawan tidak boleh kosong');
+    }
+
+    const params = new URLSearchParams({
+        action: 'get-review-karyawan',
+        nama_filter: namaFilter
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoPersonal}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data review karyawan');
+        }
+    } catch (error) {
+        console.error("Error fetching review karyawan:", error);
+        throw error;
+    }
+};
+
+/**
+ * Submit Review Karyawan (ESO Personal)
+ * Mengirim penilaian karyawan baru
+ * @param {Object} reviewData - Data review karyawan
+ * @param {string} reviewData.reviewer - Nama reviewer
+ * @param {string} reviewData.nama_karyawan - Nama karyawan yang dinilai
+ * @param {string} reviewData.id_karyawan - ID karyawan
+ * @param {string} reviewData.jabatan - Jabatan karyawan
+ * @param {string} reviewData.tingkat_pekerjaan - Tingkat pekerjaan
+ * @param {string} reviewData.status - Status karyawan
+ * @param {string} reviewData.disiplin - Nilai disiplin (1-5)
+ * @param {string} reviewData.komunikasi - Nilai komunikasi (1-5)
+ * @param {string} reviewData.kerja_sama_tim - Nilai kerja sama tim (1-5)
+ * @param {string} reviewData.tanggung_jawab - Nilai tanggung jawab (1-5)
+ * @param {string} reviewData.inisiatif - Nilai inisiatif (1-5)
+ * @param {string} reviewData.kinerja_umum - Nilai kinerja umum (1-5)
+ * @param {string} reviewData.review - Komentar/masukan (optional)
+ * @returns {Promise} Promise with success message
+ */
+export const submitReviewKaryawan = async (reviewData) => {
+    const formData = new URLSearchParams();
+    formData.append('action', 'submit-review-karyawan');
+    formData.append('reviewer', reviewData.reviewer || '');
+    formData.append('nama_karyawan', reviewData.nama_karyawan || '');
+    formData.append('id_karyawan', reviewData.id_karyawan || '');
+    formData.append('jabatan', reviewData.jabatan || '');
+    formData.append('tingkat_pekerjaan', reviewData.tingkat_pekerjaan || '');
+    formData.append('status', reviewData.status || '');
+    formData.append('disiplin', reviewData.disiplin || '');
+    formData.append('komunikasi', reviewData.komunikasi || '');
+    formData.append('kerja_sama_tim', reviewData.kerja_sama_tim || '');
+    formData.append('tanggung_jawab', reviewData.tanggung_jawab || '');
+    formData.append('inisiatif', reviewData.inisiatif || '');
+    formData.append('kinerja_umum', reviewData.kinerja_umum || '');
+    formData.append('review', reviewData.review || '');
+
+    try {
+        const response = await apiClient.post(ENDPOINT.esoPersonal, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal submit review karyawan');
+        }
+    } catch (error) {
+        console.error("Error submitting review karyawan:", error);
+        throw error;
+    }
+};
