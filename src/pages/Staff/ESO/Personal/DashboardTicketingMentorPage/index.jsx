@@ -177,35 +177,35 @@ function DashboardTicketingMentorPage() {
 
                     {/* Table Artist Journal */}
                     <Box overflowX="auto">
-                  <Box as="table" width="100%" borderWidth="1px" borderColor={borderColor} borderRadius="md">
-                    <Box as="thead" bg={tableHeaderBg}>
-                      <Box as="tr">
-                        <Box as="th" p={3} textAlign="left" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
-                          Bulan
+                      <Box as="table" width="100%" borderWidth="1px" borderColor={borderColor} borderRadius="md">
+                        <Box as="thead" bg={tableHeaderBg}>
+                          <Box as="tr">
+                            <Box as="th" p={3} textAlign="left" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
+                              Bulan
+                            </Box>
+                            {mentorColumns.map(mentor => (
+                              <Box key={mentor} as="th" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
+                                {mentor}
+                              </Box>
+                            ))}
+                          </Box>
                         </Box>
-                        {mentorColumns.map(mentor => (
-                          <Box key={mentor} as="th" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
-                            {mentor}
-                          </Box>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box as="tbody">
-                      {tableData['Artist Journal']?.map((row, idx) => (
-                        <Box key={idx} as="tr" _hover={{ bg: tableRowHoverBg }}>
-                          <Box as="td" p={3} borderBottomWidth="1px" borderColor={borderColor}>
-                            {row.month}
-                          </Box>
-                          {mentorColumns.map(mentor => (
-                            <Box key={mentor} as="td" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor}>
-                              {row[mentor]}
+                        <Box as="tbody">
+                          {tableData['Artist Journal']?.map((row, idx) => (
+                            <Box key={idx} as="tr" _hover={{ bg: tableRowHoverBg }}>
+                              <Box as="td" p={3} borderBottomWidth="1px" borderColor={borderColor}>
+                                {row.month}
+                              </Box>
+                              {mentorColumns.map(mentor => (
+                                <Box key={mentor} as="td" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor}>
+                                  {row[mentor]}
+                                </Box>
+                              ))}
                             </Box>
                           ))}
                         </Box>
-                      ))}
+                      </Box>
                     </Box>
-                  </Box>
-                </Box>
                   </>
                 ) : (
                   <Text>Tidak ada data untuk ditampilkan</Text>
@@ -230,35 +230,35 @@ function DashboardTicketingMentorPage() {
 
                     {/* Table Siswa tidak Proaktif */}
                     <Box overflowX="auto">
-                  <Box as="table" width="100%" borderWidth="1px" borderColor={borderColor} borderRadius="md">
-                    <Box as="thead" bg={tableHeaderBg}>
-                      <Box as="tr">
-                        <Box as="th" p={3} textAlign="left" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
-                          Bulan
+                      <Box as="table" width="100%" borderWidth="1px" borderColor={borderColor} borderRadius="md">
+                        <Box as="thead" bg={tableHeaderBg}>
+                          <Box as="tr">
+                            <Box as="th" p={3} textAlign="left" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
+                              Bulan
+                            </Box>
+                            {mentorColumns.map(mentor => (
+                              <Box key={mentor} as="th" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
+                                {mentor}
+                              </Box>
+                            ))}
+                          </Box>
                         </Box>
-                        {mentorColumns.map(mentor => (
-                          <Box key={mentor} as="th" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor} fontWeight="bold" color={tableHeaderColor}>
-                            {mentor}
-                          </Box>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box as="tbody">
-                      {tableData['Siswa tidak Proaktif']?.map((row, idx) => (
-                        <Box key={idx} as="tr" _hover={{ bg: tableRowHoverBg }}>
-                          <Box as="td" p={3} borderBottomWidth="1px" borderColor={borderColor}>
-                            {row.month}
-                          </Box>
-                          {mentorColumns.map(mentor => (
-                            <Box key={mentor} as="td" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor}>
-                              {row[mentor]}
+                        <Box as="tbody">
+                          {tableData['Siswa tidak Proaktif']?.map((row, idx) => (
+                            <Box key={idx} as="tr" _hover={{ bg: tableRowHoverBg }}>
+                              <Box as="td" p={3} borderBottomWidth="1px" borderColor={borderColor}>
+                                {row.month}
+                              </Box>
+                              {mentorColumns.map(mentor => (
+                                <Box key={mentor} as="td" p={3} textAlign="center" borderBottomWidth="1px" borderColor={borderColor}>
+                                  {row[mentor]}
+                                </Box>
+                              ))}
                             </Box>
                           ))}
                         </Box>
-                      ))}
+                      </Box>
                     </Box>
-                  </Box>
-                </Box>
                   </>
                 ) : (
                   <Text>Tidak ada data untuk ditampilkan</Text>
