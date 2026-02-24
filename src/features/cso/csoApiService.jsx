@@ -264,8 +264,8 @@ export const getDailyStoryData = async () => {
 
 export const markStoryAsDone = async (date) => {
     // Ambil codeName dari user yang login
-        const userData = auth.getUser();
-        const pic = userData?.codeName || 'Unknown';
+    const userData = auth.getUser();
+    const pic = userData?.codeName || 'Unknown';
 
     const params = new URLSearchParams();
     params.append('action', 'done-story');
@@ -342,6 +342,10 @@ export const getDaftarOffboarding = async () => {
 };
 
 export const postOffboardingData = async (rowData) => {
+    // Ambil codeName dari user yang login
+    const userData = auth.getUser();
+    const pic = userData?.codeName || 'Unknown';
+
     const params = new URLSearchParams({
         action: 'ceklis-daftar-offboarding',
         id_ticket: rowData.id_ticket || rowData.id,
@@ -355,7 +359,8 @@ export const postOffboardingData = async (rowData) => {
         reminder_whatsapp: rowData.done_reminderWhatsapp || false,
         sertifikat_dikirim: rowData.done_sertifSudahDikirim || false,
         progress_report: rowData.done_progressReportSudahDikirim || false,
-        done: rowData.done || false
+        done: rowData.done || false,
+        pic: pic
     });
     
     try {
