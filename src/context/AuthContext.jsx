@@ -66,22 +66,32 @@ export function AuthProvider({ children }) {
     }, [currentUser, checkTokenExpiry]);
 
     const login = async (email, password) => {
-        const apiUrl = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.auth}`;
+        const apiUrl = API_CONFIG.endpoints.auth;
         
-        const response = await fetch(`${apiUrl}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
-            method: 'GET',
-            redirect: 'follow'
+        // V2.0: Use POST with URLSearchParams (avoid preflight OPTIONS)
+        const params = new URLSearchParams();
+        params.append('action', 'login');
+        params.append('email', email);
+        params.append('password', password);
+        params.append('device', navigator.userAgent || 'Unknown Device');
+        
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: params
         });
         const textResponse = await response.text();
         const result = JSON.parse(textResponse);
         
-        if (result.message.includes('berhasil')) {
-            setCurrentUser(result);
+        // V2.0: Check status instead of message
+        if (result.status === 'success') {
+            // V2.0: Profile data now nested in result.profile
+            setCurrentUser(result.profile);
             console.log('[Auth] Setting user with 540 min expiry (9 hours)');
-            storageAuth.setUser(result); // Uses default 540 minutes
-            return result;
+            storageAuth.setUser(result.profile); // Uses default 540 minutes
+            return result.profile;
         } else {
-            throw new Error(result.message || 'Login failed');
+            // V2.0: More specific error messages (Email tidak terdaftar / Password salah)
+            throw new Error(result.message || 'Login gagal');
         }
     };
 

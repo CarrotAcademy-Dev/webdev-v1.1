@@ -15,20 +15,21 @@ const AUTH_ENDPOINT = API_CONFIG.endpoints.auth;
 /**
  * Register new user account
  * Only accessible by admin/super_admin
+ * V2.0: Use POST with URLSearchParams body (avoid preflight OPTIONS)
  */
 export const registerUser = async (userData) => {
-    const params = new URLSearchParams({
-        action: 'register',
-        nama: userData.nama || '',
-        email: userData.email || '',
-        password: userData.password || '',
-        jabatan: userData.jabatan || '',
-        role: userData.role || '',
-        aktif: userData.aktif || 'ya'
-    });
+    const params = new URLSearchParams();
+    params.append('action', 'register');
+    params.append('nama', userData.nama || '');
+    params.append('email', userData.email || '');
+    params.append('password', userData.password || '');
+    params.append('jabatan', userData.jabatan || '');
+    params.append('role', userData.role || '');
+    params.append('aktif', userData.aktif || 'ya');
 
     try {
-        const response = await authClient.post(`${AUTH_ENDPOINT}?${params.toString()}`);
+        // V2.0: POST body (not query params)
+        const response = await authClient.post(AUTH_ENDPOINT, params);
         const result = response.data;
 
         if (result.status === 'success') {
