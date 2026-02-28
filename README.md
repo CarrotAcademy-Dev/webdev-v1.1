@@ -139,14 +139,24 @@ Seiring aplikasi membesar, *state* di sisi UI (*client state*) juga akan makin k
 
 ### Tahap 3: Otentikasi Profesional
 
-* **Status**: Sebagian Selesai - Token expiry & session management sudah diimplementasikan (lihat `TOKEN_EXPIRY_GUIDE.md`)
+* **Status**: ✅ Selesai - Full authentication system sudah diimplementasikan
 * **Yang Sudah Ada**:
-    * Auto-logout saat token expired (8 jam)
-    * Session monitoring dengan warning notification
-    * Real-time session timer di Navbar
-    * Manual session extension capability
-* **Rencana Lanjutan**: Mengganti sistem login berbasis API custom dengan layanan otentikasi profesional seperti Firebase Authentication, Auth0, atau implementasi JWT (JSON Web Token) di *backend* baru kita.
-* **Keuntungan**: Keamanan yang jauh lebih terjamin, fitur social login (Google, Facebook), password reset, dll.
+    * ✅ Auth API V2.0 dengan POST method (Feb 2026)
+    * ✅ Auto-logout saat token expired (9 jam)
+    * ✅ Session tracking dengan productive/idle time (Feb 2026)
+    * ✅ Session monitoring dengan warning notification
+    * ✅ Real-time session timer di Navbar
+    * ✅ Manual session extension capability
+    * ✅ Forgot password flow dengan email (Feb 2026)
+    * ✅ Update password dengan password strength indicator (Feb 2026)
+    * ✅ Auto-logout setelah password change (Feb 2026)
+    * ✅ Orphaned session detection & recovery (Feb 2026)
+* **Rencana Lanjutan**: 
+    * Two-Factor Authentication (2FA) dengan email OTP
+    * Social login (Google OAuth)
+    * Biometric authentication untuk mobile
+    * Password expiry reminder (90 hari)
+* **Keuntungan**: Security layer lengkap dengan productivity monitoring dan self-service password management
 
 ## 6. Security & Access Control
 
@@ -160,17 +170,34 @@ Project ini sudah dilengkapi dengan sistem keamanan multi-layer:
 * Dokumentasi lengkap: `RBAC_GUIDE.md`
 
 ### Token Expiry & Session Management
-* **Auto-logout**: Token expired otomatis logout setelah 8 jam
+* **Auto-logout**: Token expired otomatis logout setelah 9 jam (540 menit)
 * **Warning System**: Toast notification 15 menit sebelum expired
 * **Session Extension**: User bisa perpanjang sesi manual
 * **Real-time Badge**: Timer di Navbar dengan color coding
 * Dokumentasi lengkap: `TOKEN_EXPIRY_GUIDE.md`
+
+### Productivity Tracking (NEW - Feb 2026)
+* **Session Monitoring**: Real-time productive vs idle time tracking
+* **Grace Period**: 30 menit tolerance untuk multitasking
+* **Session Recovery**: Auto-restore session setelah browser refresh
+* **Orphaned Detection**: Cleanup session yang tidak selesai dengan benar
+* **Backend Integration**: Productive/idle duration otomatis terkirim saat logout
+* **Format**: HH:mm:ss untuk analytics dashboard
+
+### Password Management (NEW - Feb 2026)
+* **Forgot Password**: Reset password via email dengan temporary password
+* **Update Password**: Self-service password change dengan validasi
+* **Password Strength**: Real-time indicator dengan 5 requirements
+* **Auto-logout**: Force re-login setelah password berhasil diubah
+* **Validation**: Client-side dan server-side validation
+* **Requirements**: 8-20 karakter, uppercase, lowercase, number, symbol
 
 ### Storage Security
 * **Prefix isolation**: `carrot_academy_` prefix untuk semua keys
 * **Expiry check**: Otomatis hapus expired data
 * **Safe wrappers**: Error handling untuk semua localStorage operations
 * **No sensitive data**: Password tidak pernah disimpan di client
+* **Session persistence**: Encrypted session data dengan localStorage
 
 **Catatan Penting**: Client-side security adalah UX layer. Backend validation tetap WAJIB untuk security sesungguhnya.
 
@@ -220,8 +247,62 @@ Project ini memiliki dokumentasi lengkap yang terstruktur. Untuk memahami projec
 
 **Tips**: Gunakan [FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md) sebagai navigation guide untuk menjelajahi dokumentasi berdasarkan kebutuhan spesifik Anda.
 
+## 8. Recent Updates & Features (February 2026)
+
+### Authentication System V2.0
+* **Auth API Migration**: Migrasi dari GET ke POST method untuk security
+* **Device Tracking**: Track device yang digunakan untuk login
+* **Nested Profile**: Response structure dengan nested `result.profile`
+
+### Session Tracking & Productivity Monitoring
+* **Real-time Tracking**: Monitor waktu produktif vs idle staff
+* **Grace Period**: 30 menit tolerance untuk multitasking (blur window)
+* **Session States**: Productive → Grace (30 min) → Idle
+* **Window Events**: Focus/blur/visibility change tracking
+* **Persistence**: Auto-save setiap 10 detik ke localStorage
+* **Recovery**: Restore session setelah browser crash/refresh
+* **Orphaned Detection**: Cleanup session yang tidak selesai (9 jam threshold)
+* **Backend Logging**: Productive/idle duration otomatis ke database saat logout
+
+### Password Management System
+* **Forgot Password**: Self-service password reset via email
+* **Update Password**: Protected route untuk change password
+* **Password Strength Indicator**: Visual feedback dengan 5 requirements
+  - 8-20 characters
+  - Minimum 1 lowercase
+  - Minimum 1 uppercase
+  - Minimum 1 number
+  - Minimum 1 special character
+* **Validation**: Client-side dan server-side validation
+* **Security**: Auto-logout setelah password berhasil diubah
+
+### Settings Page
+* **Profile Management**: 
+  - Avatar display dengan initial nama
+  - Edit nama lengkap (editable)
+  - Email, Role, Jabatan (read-only dengan badges)
+  - Form validation dan state management
+* **Security Section**:
+  - Quick access ke Update Password page
+  - Login history viewer (tanggal, waktu, device, status)
+  - Ready untuk backend integration
+* **Display Preferences**:
+  - Theme toggle (Light/Dark mode)
+  - Integrated dengan Chakra UI useColorMode
+  - Smooth transitions
+* **UI/UX**: Responsive design, gradient themes, hover effects
+
+### Bug Fixes & Improvements
+* Fixed stale closure di session persistence (useRef pattern)
+* Fixed session tidak restore setelah refresh
+* Fixed false orphan detection untuk active sessions
+* Fixed orphan threshold alignment (9 jam sesuai token expiry)
+* Fixed extended session false-positive logout
+* Enhanced error handling dengan detailed logging
+* Updated CSS variables untuk dark/light mode support
+
 ---
 
 Dokumentasi ini adalah dokumen hidup. Selalu perbarui seiring dengan perkembangan project.
 
-Last update: 8 January 2026
+Last update: 28 February 2026
