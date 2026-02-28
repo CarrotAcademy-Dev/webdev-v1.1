@@ -8,6 +8,8 @@ import { ACCESS_GROUPS } from './utils/constants/accessControl';
 
 // Lazy load pages for better performance
 const Login = lazy(() => import('./components/Login'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword'));
+const UpdatePasswordPage = lazy(() => import('./pages/UpdatePassword'));
 const OverviewPage = lazy(() => import('./pages/Staff/OverviewPage'));
 const KpiDetailsPage = lazy(() => import('./pages/Staff/KpiDetailsPage'));
 const AttendancePage = lazy(() => import('./pages/Staff/AttendancePage'));
@@ -65,6 +67,16 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route 
+            path="/update-password" 
+            element={
+              <ProtectedRoute>
+                <UpdatePasswordPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/home" 
           element={

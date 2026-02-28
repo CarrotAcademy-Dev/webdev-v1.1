@@ -58,3 +58,70 @@ export const validatePassword = (password) => {
 export const getPasswordValidationMessage = () => {
     return 'Password harus 8-20 karakter, mengandung huruf besar, kecil, angka, dan simbol.';
 };
+
+/**
+ * Update user password (self-service)
+ * User can change their own password
+ * V2.0: Use POST with URLSearchParams body
+ */
+export const updatePassword = async (email, oldPassword, newPassword) => {
+    const params = new URLSearchParams();
+    params.append('action', 'update-password');
+    params.append('email', email || '');
+    params.append('old_password', oldPassword || '');
+    params.append('new_password', newPassword || '');
+
+    console.log('[Update Password] Sending request with:', {
+        action: 'update-password',
+        email,
+        oldPasswordLength: oldPassword?.length || 0,
+        newPasswordLength: newPassword?.length || 0
+    });
+
+    try {
+        const response = await authClient.post(AUTH_ENDPOINT, params);
+        const result = response.data;
+
+        console.log('[Update Password] Backend response:', result);
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            // Return backend error message directly
+            throw new Error(result.message || 'Failed to update password');
+        }
+    } catch (error) {
+        console.error("[Update Password] Error:", error);
+        // If error has response data, use that message
+        if (error.response?.data?.message) {
+            throw new Error(error.response.data.message);
+        }
+        // Otherwise throw the original error
+        throw error.message ? new Error(error.message) : error;
+    }
+};
+
+/**
+ * Request password reset
+ * Backend will generate temporary password and send via email
+ * V2.0: Use POST with URLSearchParams body
+ */
+export const forgotPassword = async (email) => {
+    const params = new URLSearchParams();
+    params.append('action', 'forgot-password');
+    params.append('email', email);
+
+    try {
+        const response = await authClient.post(AUTH_ENDPOINT, params);
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Failed to process forgot password request');
+        }
+    } catch (error) {
+        console.error("Error processing forgot password:", error);
+        throw error;
+    }
+};
