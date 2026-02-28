@@ -31,6 +31,10 @@ body {
   --bg-secondary: #2D3748;
   --bg-tertiary: #374151;
   --border-color: #4A5568;
+  --card-bg: #2D3748;
+  --input-bg: #374151;
+  --disabled-bg: #1A202C;
+  --hover-bg: #4A5568;
 }
 
 [data-theme='light'] {
@@ -41,6 +45,10 @@ body {
   --bg-secondary: #FFFFFF;
   --bg-tertiary: #F7FAFC;
   --border-color: #E2E8F0;
+  --card-bg: #FFFFFF;
+  --input-bg: #F7FAFC;
+  --disabled-bg: #EDF2F7;
+  --hover-bg: #F7FAFC;
 }
 
 /* Default heading colors for styled components */

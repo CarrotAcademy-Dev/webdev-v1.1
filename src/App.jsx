@@ -52,6 +52,7 @@ const FDIdentityPage = lazy(() => import('./pages/Staff/ESO/Personal/FDIdentityP
 const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/ReviewKaryawanPage'));
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
 function App() {
@@ -74,6 +75,16 @@ function App() {
             element={
               <ProtectedRoute>
                 <UpdatePasswordPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <SettingsPage />
+                </Layout>
               </ProtectedRoute>
             } 
           />
