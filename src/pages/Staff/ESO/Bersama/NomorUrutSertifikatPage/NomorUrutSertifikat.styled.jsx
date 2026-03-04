@@ -73,8 +73,8 @@ const StyledNomorUrutSertifikat = styled.div`
             border-collapse: collapse;
 
             thead {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
+                background-color: ${props => props['data-theme'] === 'dark' ? '#3e4a5e' : '#fcf7ecff'};
+                color: ${props => props['data-theme'] === 'dark' ? '#E5E7EB' : '#3b3b43ff'};
 
                 tr {
                     th {
@@ -83,6 +83,11 @@ const StyledNomorUrutSertifikat = styled.div`
                         font-weight: 600;
                         font-size: 0.9rem;
                         white-space: nowrap;
+                        border-bottom: 2px solid ${props => props['data-theme'] === 'dark' ? '#374151' : '#e5e7eb'};
+
+                        &:hover {
+                            background-color: ${props => props['data-theme'] === 'dark' ? '#313c4b' : '#f5efdcff'};
+                        }
 
                         &.center {
                             text-align: center;

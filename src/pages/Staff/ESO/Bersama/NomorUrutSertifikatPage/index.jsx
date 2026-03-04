@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useToast, Input, Spinner } from '@chakra-ui/react';
+import { useToast, useColorMode, Input, InputGroup, InputLeftElement, Spinner } from '@chakra-ui/react';
 import { FiPlus, FiX, FiInbox, FiSearch } from 'react-icons/fi';
 import ContainerCarrot from '@/components/Container';
 import StyledNomorUrutSertifikat from './NomorUrutSertifikat.styled';
@@ -11,11 +11,11 @@ import 'react-loading-skeleton/dist/skeleton.css';
 const ITEMS_PER_PAGE = 10;
 const CURRENT_YEAR = new Date().getFullYear();
 const MONTHS = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-const MODULS = ['Reuni', 'Desain Grafis', 'Videografi', 'Fotografi', 'Videografi & Fotografi', 'Desain Grafis & Fotografi', 'Desain Grafis & Videografi', 'Desain Grafis & Videografi & Fotografi'];
 
 function NomorUrutSertifikatPage() {
     const queryClient = useQueryClient();
     const toast = useToast();
+    const { colorMode } = useColorMode();
     
     // State management
     const [searchQuery, setSearchQuery] = useState('');
@@ -96,7 +96,7 @@ function NomorUrutSertifikatPage() {
         const errors = {};
         if (!formData.nomor_urut.trim()) errors.nomor_urut = 'Nomor urut harus diisi';
         if (!formData.nama.trim()) errors.nama = 'Nama harus diisi';
-        if (!formData.modul.trim()) errors.modul = 'Modul harus dipilih';
+        if (!formData.modul.trim()) errors.modul = 'Modul harus diisi';
         if (!formData.angkatan.trim()) errors.angkatan = 'Angkatan harus diisi';
         if (!formData.bulan_lulus.trim()) errors.bulan_lulus = 'Bulan lulus harus dipilih';
         if (!formData.tahun_lulus.trim()) errors.tahun_lulus = 'Tahun lulus harus diisi';
@@ -181,7 +181,7 @@ function NomorUrutSertifikatPage() {
 
     return (
         <ContainerCarrot>
-            <StyledNomorUrutSertifikat>
+            <StyledNomorUrutSertifikat data-theme={colorMode}>
                 {/* Header */}
                 <div className="hero-section">
                     <h1 className="page-title">Nomor Urut Sertifikat Full-Time</h1>
@@ -190,13 +190,16 @@ function NomorUrutSertifikatPage() {
                 {/* Controls */}
                 <div className="controls-section">
                     <div className="search-box">
-                        <Input
-                            placeholder="Cari berdasarkan nama, nomor urut, modul..."
-                            value={searchQuery}
-                            onChange={handleSearch}
-                            size="lg"
-                            leftIcon={<FiSearch />}
-                        />
+                        <InputGroup size="lg">
+                            <InputLeftElement pointerEvents="none">
+                                <FiSearch color="gray.400" />
+                            </InputLeftElement>
+                            <Input
+                                placeholder="Cari berdasarkan nama, nomor urut, modul..."
+                                value={searchQuery}
+                                onChange={handleSearch}
+                            />
+                        </InputGroup>
                     </div>
                     <button className="add-button" onClick={handleOpenModal}>
                         <FiPlus />
@@ -349,16 +352,13 @@ function NomorUrutSertifikatPage() {
                                     <label>
                                         Modul<span className="required">*</span>
                                     </label>
-                                    <select
+                                    <input
+                                        type="text"
                                         name="modul"
                                         value={formData.modul}
                                         onChange={handleInputChange}
-                                    >
-                                        <option value="">-- Pilih Modul --</option>
-                                        {MODULS.map(modul => (
-                                            <option key={modul} value={modul}>{modul}</option>
-                                        ))}
-                                    </select>
+                                        placeholder="Contoh: Desain Grafis & Videografi"
+                                    />
                                     {formErrors.modul && (
                                         <div className="error-message">{formErrors.modul}</div>
                                     )}
