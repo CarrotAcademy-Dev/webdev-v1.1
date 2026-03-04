@@ -53,6 +53,7 @@ const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/Revi
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
 function App() {
@@ -84,6 +85,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <SettingsPage />
+                </Layout>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProfilePage />
                 </Layout>
               </ProtectedRoute>
             } 
