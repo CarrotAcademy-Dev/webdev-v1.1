@@ -50,6 +50,9 @@ const DashboardFDPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardF
 const DashboardTicketingMentorPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardTicketingMentorPage'));
 const FDIdentityPage = lazy(() => import('./pages/Staff/ESO/Personal/FDIdentityPage'));
 const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/ReviewKaryawanPage'));
+// ESO Bersama
+const NomorUrutSertifikatPage = lazy(() => import('./pages/Staff/ESO/Bersama/NomorUrutSertifikatPage'));
+// Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
@@ -343,6 +346,16 @@ function App() {
         } />
         
         {/* ESO Routes */}
+        {/* ESO Bersama */}
+        <Route path="/eso/nomor-urut-sertifikat" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <NomorUrutSertifikatPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        
+        {/* ESO Personal */}
         <Route path="eso/track-ticket-fme" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>

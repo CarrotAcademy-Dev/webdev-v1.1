@@ -144,7 +144,7 @@ function Navbar() {
           {
             category: "Bersama",
             items: [
-              // ESO Bersama pages will be added here
+              { label: "Nomor Urut Sertifikat", path: "/eso/nomor-urut-sertifikat" },
             ]
           },
           {

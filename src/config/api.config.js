@@ -4,6 +4,7 @@ export const API_CONFIG = {
     endpoints: {
         csoBersama: import.meta.env.VITE_API_CSO_BERSAMA_ENDPOINT,
         csoPersonal: import.meta.env.VITE_API_CSO_PERSONAL_ENDPOINT,
+        esoBersama: import.meta.env.VITE_API_ESO_BERSAMA_ENDPOINT,
         esoPersonal: import.meta.env.VITE_API_ESO_PERSONAL_ENDPOINT,
         auth: import.meta.env.VITE_API_AUTH_ENDPOINT,
     },

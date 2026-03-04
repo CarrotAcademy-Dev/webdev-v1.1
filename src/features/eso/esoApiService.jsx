@@ -16,7 +16,8 @@ const apiClient = axios.create({
 });
 
 const ENDPOINT = {
-    esoPersonal: API_CONFIG.endpoints.esoPersonal
+    esoPersonal: API_CONFIG.endpoints.esoPersonal,
+    esoBersama: API_CONFIG.endpoints.esoBersama
 };
 
 /**
@@ -452,6 +453,72 @@ export const submitReviewKaryawan = async (reviewData) => {
         }
     } catch (error) {
         console.error("Error submitting review karyawan:", error);
+        throw error;
+    }
+};
+
+// ==================== ESO BERSAMA API ====================
+
+/**
+ * Get Nomor Urut Sertifikat Full-Time data
+ * @returns {Promise} Promise with array of certificate serial numbers
+ */
+export const getNomorUrutSertifikat = async () => {
+    const params = new URLSearchParams({
+        action: 'get-nomor-urut-fd'
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data nomor urut sertifikat');
+        }
+    } catch (error) {
+        console.error("Error fetching nomor urut sertifikat:", error);
+        throw error;
+    }
+};
+
+/**
+ * Add new Nomor Urut Sertifikat Full-Time
+ * @param {Object} data - Certificate data
+ * @param {string} data.nomor_urut - Serial number
+ * @param {string} data.nama - Student name
+ * @param {string} data.modul - Module name
+ * @param {string} data.angkatan - Batch/class
+ * @param {string} data.bulan_lulus - Graduation month
+ * @param {string} data.tahun_lulus - Graduation year
+ * @returns {Promise} Promise with success message
+ */
+export const addNomorUrutSertifikat = async (data) => {
+    const formData = new URLSearchParams();
+    formData.append('action', 'add-nomor-urut-fd');
+    formData.append('nomor_urut', data.nomor_urut);
+    formData.append('nama', data.nama);
+    formData.append('modul', data.modul);
+    formData.append('angkatan', data.angkatan);
+    formData.append('bulan_lulus', data.bulan_lulus);
+    formData.append('tahun_lulus', data.tahun_lulus);
+
+    try {
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal menambahkan data nomor urut sertifikat');
+        }
+    } catch (error) {
+        console.error("Error adding nomor urut sertifikat:", error);
         throw error;
     }
 };
