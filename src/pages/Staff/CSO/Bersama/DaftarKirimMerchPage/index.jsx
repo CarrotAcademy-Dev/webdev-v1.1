@@ -10,8 +10,8 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const tabItems = [
-    {key: 'belumDikirim', label: 'Belum Dikirim'},
-    {key: 'sudahDikirim', label: 'Sudah Dikirim'}
+    {key: 'belumDikirim', label: 'Not Done'},
+    {key: 'sudahDikirim', label: 'Done'}
 ];
 
 function DaftarKirimMerchPage() {
