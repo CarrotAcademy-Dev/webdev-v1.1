@@ -77,7 +77,7 @@ function Navbar() {
         mainIcon: <FiUser />,
         items: [
           { label: "Profile", path: "/profile" },
-          { label: "Payment", path: "/payslip" },
+          { label: "Payslip", path: "/payslip" },
           { label: "Settings", path: "/settings" },
         ],
       },
@@ -95,7 +95,7 @@ function Navbar() {
         mainIcon: <PiSuitcaseBold />,
         items: [
           {
-            category: "Bersama",
+            category: "Bersama", 
             items: [
               { label: "Statistik Prospektif", path: "/my-tasks/statistik-prospektif" },
               { label: "Rekap Jadwal Mentor", path: "/my-tasks/rekap-jadwal-mentor" },
@@ -142,9 +142,11 @@ function Navbar() {
         mainIcon: <PiSuitcaseBold />,
         items: [
           {
-            category: "Bersama",
+            category: "Bersama", 
             items: [
               { label: "Nomor Urut Sertifikat", path: "/eso/nomor-urut-sertifikat" },
+              { label: "Pendaftaran Lanjutan", path: "/eso/pendaftaran-lanjutan" },
+              { label: "Kelengkapan Data", path: "/eso/kelengkapan-data" },
             ]
           },
           {

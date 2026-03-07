@@ -42,7 +42,7 @@ function AttendancePage() {
     useEffect(() => {
         const fetchHolidays = async () => {
             try {
-                const response = await fetch('https://api-harilibur.vercel.app/api');
+                const response = await fetch('https://api-harilibur.netlify.app/api');
                 const data = await response.json();
                 const filteredData = data.filter(item => item.is_national_holiday);
                 setHolidays(filteredData);
