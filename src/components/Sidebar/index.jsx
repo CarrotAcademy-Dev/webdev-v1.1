@@ -117,7 +117,11 @@ function Sidebar({ userRole }) {
         categories: [
           {
             name: 'Bersama',
-            items: []
+            items: [
+              { label: "Nomor Urut Sertifikat", path: "/eso/nomor-urut-sertifikat" },
+              { label: "Pendaftaran Lanjutan", path: "/eso/pendaftaran-lanjutan" },
+              { label: "Kelengkapan Data", path: "/eso/kelengkapan-data" },
+            ]
           },
           {
             name: 'Personal',

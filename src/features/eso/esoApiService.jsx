@@ -522,3 +522,96 @@ export const addNomorUrutSertifikat = async (data) => {
         throw error;
     }
 };
+
+/**
+ * Get Pendaftaran Lanjutan (ESO Bersama)
+ * Mengambil data pendaftaran lanjutan siswa dengan prefilled form link
+ * @returns {Promise<Array>} Promise with array of student registration data
+ */
+export const getPendaftaranLanjutan = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-pendaftaran-lanjutan'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data pendaftaran lanjutan');
+        }
+    } catch (error) {
+        console.error("Error fetching pendaftaran lanjutan:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Kelengkapan Data (ESO Bersama)
+ * Mengambil data kelengkapan siswa termasuk links dan predrawing status
+ * @returns {Promise<Array>} Promise with array of student data completion
+ */
+export const getKelengkapanData = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-kelengkapan-data'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data kelengkapan');
+        }
+    } catch (error) {
+        console.error("Error fetching kelengkapan data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update Kelengkapan Data (ESO Bersama)
+ * Update data kelengkapan siswa
+ * @param {Object} data - Data kelengkapan to update
+ * @returns {Promise<Object>} Promise with update result
+ */
+export const updateKelengkapanData = async (data) => {
+    try {
+        const params = new URLSearchParams({
+            action: 'update-kelengkapan-data',
+            nis: data.nis,
+            nama: data.nama,
+            program: data.program,
+            status: data.status,
+            link_dropbox: data.link_dropbox || '',
+            link_gdrive_studio: data.link_gdrive_studio || '',
+            link_gdrive_portfolio: data.link_gdrive_portfolio || '',
+            artist_journal: data.artist_journal || '',
+            invite_gchat: data.invite_gchat || '',
+            add_birthday: data.add_birthday || '',
+            link_foto: data.link_foto || '',
+            link_predrawing: data.link_predrawing || '',
+            predrawing_satu: data.predrawing_satu || '',
+            predrawing_dua: data.predrawing_dua || '',
+            predrawing_tiga: data.predrawing_tiga || '',
+            predrawing_empat: data.predrawing_empat || '',
+            predrawing_lima: data.predrawing_lima || '',
+        });
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, params);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data kelengkapan');
+        }
+    } catch (error) {
+        console.error("Error updating kelengkapan data:", error);
+        throw error;
+    }
+};

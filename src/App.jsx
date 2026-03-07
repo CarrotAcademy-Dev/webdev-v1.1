@@ -52,6 +52,8 @@ const FDIdentityPage = lazy(() => import('./pages/Staff/ESO/Personal/FDIdentityP
 const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/ReviewKaryawanPage'));
 // ESO Bersama
 const NomorUrutSertifikatPage = lazy(() => import('./pages/Staff/ESO/Bersama/NomorUrutSertifikatPage'));
+const PendaftaranLanjutanPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/PendaftaranLanjutanPage'));
+const KelengkapanDataPage = lazy(() => import('./pages/Staff/ESO/Bersama/KelengkapanDataPage'));
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -344,7 +346,7 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
-        
+
         {/* ESO Routes */}
         {/* ESO Bersama */}
         <Route path="/eso/nomor-urut-sertifikat" element={
@@ -354,9 +356,23 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
+        <Route path="/eso/pendaftaran-lanjutan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <PendaftaranLanjutanPageEso />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/kelengkapan-data" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <KelengkapanDataPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
         
         {/* ESO Personal */}
-        <Route path="eso/track-ticket-fme" element={
+        <Route path="/eso/track-ticket-fme" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <TrackTicketFmePageEso />
@@ -364,7 +380,7 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="eso/ticketing-internal" element={
+        <Route path="/eso/ticketing-internal" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <TicketingInternalPageEso />
@@ -372,7 +388,7 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="eso/create-ticketing-internal" element={
+        <Route path="/eso/create-ticketing-internal" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <CreateTicketingInternalPageEso />
@@ -380,13 +396,15 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="eso/cari-data-student-report" element={
+        <Route path="/eso/cari-data-student-report" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <CariDataStudentReportPage />
             </Layout>
           </ProtectedRoute>
-        } />        <Route path='/eso/dashboard-fulltime' element={
+        } />
+        
+        <Route path='/eso/dashboard-fulltime' element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <DashboardFDPage />
