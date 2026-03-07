@@ -615,3 +615,68 @@ export const updateKelengkapanData = async (data) => {
         throw error;
     }
 };
+
+/**
+ * Get Artwork of The Month Data (ESO Bersama)
+ * Mengambil data artwork of the month dengan validasi dan tanggal progress
+ * @returns {Promise<Array>} Promise with array of AOTM data
+ */
+export const getDataAotm = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-data-aotm'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data AOTM');
+        }
+    } catch (error) {
+        console.error("Error fetching AOTM data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update Artwork of The Month Data (ESO Bersama)
+ * Update data artwork of the month
+ * @param {Object} data - Data AOTM to update
+ * @returns {Promise<Object>} Promise with update result
+ */
+export const updateDataAotm = async (data) => {
+    try {
+        const params = new URLSearchParams({
+            action: 'update-data-aotm',
+            nomor: data.nomor,
+            nama: data.nama,
+            modul: data.modul,
+            level: data.level,
+            deskripsi: data.deskripsi || '',
+            artwork_validation: data.artwork_validation || '',
+            foto_validation: data.foto_validation || '',
+            predrawing_validation: data.predrawing_validation || '',
+            tanggal_edit: data.tanggal_edit || '',
+            tanggal_print: data.tanggal_print || '',
+            tanggal_tempel: data.tanggal_tempel || '',
+            link_dropbox: data.link_dropbox || '',
+            notes: data.notes || '',
+            link_design: data.link_design || '',
+        });
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, params);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data AOTM');
+        }
+    } catch (error) {
+        console.error("Error updating AOTM data:", error);
+        throw error;
+    }
+};

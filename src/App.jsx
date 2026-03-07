@@ -54,6 +54,7 @@ const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/Revi
 const NomorUrutSertifikatPage = lazy(() => import('./pages/Staff/ESO/Bersama/NomorUrutSertifikatPage'));
 const PendaftaranLanjutanPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/PendaftaranLanjutanPage'));
 const KelengkapanDataPage = lazy(() => import('./pages/Staff/ESO/Bersama/KelengkapanDataPage'));
+const ArtworkOfTheMonthPage = lazy(() => import('./pages/Staff/ESO/Bersama/ArtworkOfTheMonthPage'));
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -367,6 +368,13 @@ function App() {
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <KelengkapanDataPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/artwork-of-the-month" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <ArtworkOfTheMonthPage />
             </Layout>
           </ProtectedRoute>
         } />
