@@ -55,6 +55,7 @@ const NomorUrutSertifikatPage = lazy(() => import('./pages/Staff/ESO/Bersama/Nom
 const PendaftaranLanjutanPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/PendaftaranLanjutanPage'));
 const KelengkapanDataPage = lazy(() => import('./pages/Staff/ESO/Bersama/KelengkapanDataPage'));
 const ArtworkOfTheMonthPage = lazy(() => import('./pages/Staff/ESO/Bersama/ArtworkOfTheMonthPage'));
+const StudentReportPage = lazy(() => import('./pages/Staff/ESO/Bersama/StudentReportPage'));
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -375,6 +376,13 @@ function App() {
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <ArtworkOfTheMonthPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/student-report" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <StudentReportPage />
             </Layout>
           </ProtectedRoute>
         } />
