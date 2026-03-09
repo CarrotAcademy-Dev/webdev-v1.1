@@ -8,6 +8,8 @@ import { ACCESS_GROUPS } from './utils/constants/accessControl';
 
 // Lazy load pages for better performance
 const Login = lazy(() => import('./components/Login'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword'));
+const UpdatePasswordPage = lazy(() => import('./pages/UpdatePassword'));
 const OverviewPage = lazy(() => import('./pages/Staff/OverviewPage'));
 const KpiDetailsPage = lazy(() => import('./pages/Staff/KpiDetailsPage'));
 const AttendancePage = lazy(() => import('./pages/Staff/AttendancePage'));
@@ -48,8 +50,16 @@ const DashboardFDPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardF
 const DashboardTicketingMentorPage = lazy(() => import('./pages/Staff/ESO/Personal/DashboardTicketingMentorPage'));
 const FDIdentityPage = lazy(() => import('./pages/Staff/ESO/Personal/FDIdentityPage'));
 const ReviewKaryawanPageEso = lazy(() => import('./pages/Staff/ESO/Personal/ReviewKaryawanPage'));
+// ESO Bersama
+const NomorUrutSertifikatPage = lazy(() => import('./pages/Staff/ESO/Bersama/NomorUrutSertifikatPage'));
+const PendaftaranLanjutanPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/PendaftaranLanjutanPage'));
+const KelengkapanDataPage = lazy(() => import('./pages/Staff/ESO/Bersama/KelengkapanDataPage'));
+const ArtworkOfTheMonthPage = lazy(() => import('./pages/Staff/ESO/Bersama/ArtworkOfTheMonthPage'));
+// Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
 
 function App() {
@@ -65,6 +75,36 @@ function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route 
+            path="/update-password" 
+            element={
+              <ProtectedRoute>
+                <UpdatePasswordPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <SettingsPage />
+                </Layout>
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProfilePage />
+                </Layout>
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/home" 
           element={
@@ -307,9 +347,40 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
-        
+
         {/* ESO Routes */}
-        <Route path="eso/track-ticket-fme" element={
+        {/* ESO Bersama */}
+        <Route path="/eso/nomor-urut-sertifikat" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <NomorUrutSertifikatPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/pendaftaran-lanjutan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <PendaftaranLanjutanPageEso />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/kelengkapan-data" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <KelengkapanDataPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/artwork-of-the-month" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <ArtworkOfTheMonthPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        
+        {/* ESO Personal */}
+        <Route path="/eso/track-ticket-fme" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <TrackTicketFmePageEso />
@@ -317,7 +388,7 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="eso/ticketing-internal" element={
+        <Route path="/eso/ticketing-internal" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <TicketingInternalPageEso />
@@ -325,7 +396,7 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="eso/create-ticketing-internal" element={
+        <Route path="/eso/create-ticketing-internal" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <CreateTicketingInternalPageEso />
@@ -333,13 +404,15 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="eso/cari-data-student-report" element={
+        <Route path="/eso/cari-data-student-report" element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <CariDataStudentReportPage />
             </Layout>
           </ProtectedRoute>
-        } />        <Route path='/eso/dashboard-fulltime' element={
+        } />
+        
+        <Route path='/eso/dashboard-fulltime' element={
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <DashboardFDPage />

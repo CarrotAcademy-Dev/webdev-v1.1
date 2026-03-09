@@ -138,7 +138,7 @@ function DashboardTicketingMentorPage() {
     <Container>
       {/* Header with Year Filter */}
       <Flex justify="space-between" align="center" mb={6}>
-        <Heading size="lg">Dashboard Ticketing Mentor {selectedYear}</Heading>
+        <Heading size="lg">Dashboard Ticketing Mentor{selectedYear}</Heading>
         <Flex align="center" gap={2}>
           <FiCalendar size={20} color={labelColor} />
           <Select
@@ -170,7 +170,7 @@ function DashboardTicketingMentorPage() {
                     <Box height="400px" mb={6}>
                       <StatisticsBarChart
                         data={chartData['Artist Journal']}
-                        title="Artist Journal"
+                        title="Artist Journal" 
                         categories={chartData['Artist Journal'].mentors}
                       />
                     </Box>

@@ -16,7 +16,8 @@ const apiClient = axios.create({
 });
 
 const ENDPOINT = {
-    esoPersonal: API_CONFIG.endpoints.esoPersonal
+    esoPersonal: API_CONFIG.endpoints.esoPersonal,
+    esoBersama: API_CONFIG.endpoints.esoBersama
 };
 
 /**
@@ -452,6 +453,230 @@ export const submitReviewKaryawan = async (reviewData) => {
         }
     } catch (error) {
         console.error("Error submitting review karyawan:", error);
+        throw error;
+    }
+};
+
+// ==================== ESO BERSAMA API ====================
+
+/**
+ * Get Nomor Urut Sertifikat Full-Time data
+ * @returns {Promise} Promise with array of certificate serial numbers
+ */
+export const getNomorUrutSertifikat = async () => {
+    const params = new URLSearchParams({
+        action: 'get-nomor-urut-fd'
+    });
+
+    try {
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params.toString()}`);
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result || [];
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data nomor urut sertifikat');
+        }
+    } catch (error) {
+        console.error("Error fetching nomor urut sertifikat:", error);
+        throw error;
+    }
+};
+
+/**
+ * Add new Nomor Urut Sertifikat Full-Time
+ * @param {Object} data - Certificate data
+ * @param {string} data.nomor_urut - Serial number
+ * @param {string} data.nama - Student name
+ * @param {string} data.modul - Module name
+ * @param {string} data.angkatan - Batch/class
+ * @param {string} data.bulan_lulus - Graduation month
+ * @param {string} data.tahun_lulus - Graduation year
+ * @returns {Promise} Promise with success message
+ */
+export const addNomorUrutSertifikat = async (data) => {
+    const formData = new URLSearchParams();
+    formData.append('action', 'add-nomor-urut-fd');
+    formData.append('nomor_urut', data.nomor_urut);
+    formData.append('nama', data.nama);
+    formData.append('modul', data.modul);
+    formData.append('angkatan', data.angkatan);
+    formData.append('bulan_lulus', data.bulan_lulus);
+    formData.append('tahun_lulus', data.tahun_lulus);
+
+    try {
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal menambahkan data nomor urut sertifikat');
+        }
+    } catch (error) {
+        console.error("Error adding nomor urut sertifikat:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Pendaftaran Lanjutan (ESO Bersama)
+ * Mengambil data pendaftaran lanjutan siswa dengan prefilled form link
+ * @returns {Promise<Array>} Promise with array of student registration data
+ */
+export const getPendaftaranLanjutan = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-pendaftaran-lanjutan'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data pendaftaran lanjutan');
+        }
+    } catch (error) {
+        console.error("Error fetching pendaftaran lanjutan:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Kelengkapan Data (ESO Bersama)
+ * Mengambil data kelengkapan siswa termasuk links dan predrawing status
+ * @returns {Promise<Array>} Promise with array of student data completion
+ */
+export const getKelengkapanData = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-kelengkapan-data'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data kelengkapan');
+        }
+    } catch (error) {
+        console.error("Error fetching kelengkapan data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update Kelengkapan Data (ESO Bersama)
+ * Update data kelengkapan siswa
+ * @param {Object} data - Data kelengkapan to update
+ * @returns {Promise<Object>} Promise with update result
+ */
+export const updateKelengkapanData = async (data) => {
+    try {
+        const params = new URLSearchParams({
+            action: 'update-kelengkapan-data',
+            nis: data.nis,
+            nama: data.nama,
+            program: data.program,
+            status: data.status,
+            link_dropbox: data.link_dropbox || '',
+            link_gdrive_studio: data.link_gdrive_studio || '',
+            link_gdrive_portfolio: data.link_gdrive_portfolio || '',
+            artist_journal: data.artist_journal || '',
+            invite_gchat: data.invite_gchat || '',
+            add_birthday: data.add_birthday || '',
+            link_foto: data.link_foto || '',
+            link_predrawing: data.link_predrawing || '',
+            predrawing_satu: data.predrawing_satu || '',
+            predrawing_dua: data.predrawing_dua || '',
+            predrawing_tiga: data.predrawing_tiga || '',
+            predrawing_empat: data.predrawing_empat || '',
+            predrawing_lima: data.predrawing_lima || '',
+        });
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, params);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data kelengkapan');
+        }
+    } catch (error) {
+        console.error("Error updating kelengkapan data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Artwork of The Month Data (ESO Bersama)
+ * Mengambil data artwork of the month dengan validasi dan tanggal progress
+ * @returns {Promise<Array>} Promise with array of AOTM data
+ */
+export const getDataAotm = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-data-aotm'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data AOTM');
+        }
+    } catch (error) {
+        console.error("Error fetching AOTM data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update Artwork of The Month Data (ESO Bersama)
+ * Update data artwork of the month
+ * @param {Object} data - Data AOTM to update
+ * @returns {Promise<Object>} Promise with update result
+ */
+export const updateDataAotm = async (data) => {
+    try {
+        const params = new URLSearchParams({
+            action: 'update-data-aotm',
+            nomor: data.nomor,
+            nama: data.nama,
+            modul: data.modul,
+            level: data.level,
+            deskripsi: data.deskripsi || '',
+            artwork_validation: data.artwork_validation || '',
+            foto_validation: data.foto_validation || '',
+            predrawing_validation: data.predrawing_validation || '',
+            tanggal_edit: data.tanggal_edit || '',
+            tanggal_print: data.tanggal_print || '',
+            tanggal_tempel: data.tanggal_tempel || '',
+            link_dropbox: data.link_dropbox || '',
+            notes: data.notes || '',
+            link_design: data.link_design || '',
+        });
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, params);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data AOTM');
+        }
+    } catch (error) {
+        console.error("Error updating AOTM data:", error);
         throw error;
     }
 };
