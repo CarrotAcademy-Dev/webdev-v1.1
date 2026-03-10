@@ -122,6 +122,7 @@ function Sidebar({ userRole }) {
               { label: "Pendaftaran Lanjutan", path: "/eso/pendaftaran-lanjutan" },
               { label: "Kelengkapan Data", path: "/eso/kelengkapan-data" },
               { label: "Artwork of The Month", path: "/eso/artwork-of-the-month" },
+              { label: "Student Report", path: "/eso/student-report" },
             ]
           },
           {

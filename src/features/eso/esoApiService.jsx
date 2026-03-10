@@ -680,3 +680,28 @@ export const updateDataAotm = async (data) => {
         throw error;
     }
 };
+
+/**
+ * Get Student Report Data (ESO Bersama)
+ * Mengambil data laporan siswa dengan 25 fields
+ * @returns {Promise<Array>} Promise with array of student report data
+ */
+export const getStudentReport = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-student-report'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Student Report');
+        }
+    } catch (error) {
+        console.error("Error fetching Student Report data:", error);
+        throw error;
+    }
+};
