@@ -705,3 +705,70 @@ export const getStudentReport = async () => {
         throw error;
     }
 };
+
+/**
+ * Get Progress Report Monthly Data (ESO Bersama)
+ * Mengambil data progress report bulanan dengan 13 fields
+ * @returns {Promise<Array>} Promise with array of progress report monthly data
+ */
+export const getProgressReportMonthly = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-progress-report-monthly'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Progress Report Monthly');
+        }
+    } catch (error) {
+        console.error("Error fetching Progress Report Monthly data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update Progress Report Monthly Data (ESO Bersama)
+ * Update data progress report bulanan
+ * @param {Object} data - Data yang akan diupdate
+ * @returns {Promise<Object>} Promise with update result
+ */
+export const updateProgressReportMonthly = async (data) => {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'update-progress-report-monthly');
+        formData.append('id', data.id || '');
+        formData.append('nama_siswa', data.nama_siswa || '');
+        formData.append('program', data.program || '');
+        formData.append('modul', data.modul || '');
+        formData.append('bulan_aktif', data.bulan_aktif || '');
+        formData.append('email', data.email || '');
+        formData.append('last_update', data.last_update || '');
+        formData.append('notes', data.notes || '');
+        formData.append('last_day_class', data.last_day_class || '');
+        formData.append('check', data.check || '');
+        formData.append('link_progress_report', data.link_progress_report || '');
+        formData.append('ready_kirim', data.ready_kirim || '');
+        formData.append('tanggal_kirim', data.tanggal_kirim || '');
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data Progress Report Monthly');
+        }
+    } catch (error) {
+        console.error("Error updating Progress Report Monthly data:", error);
+        throw error;
+    }
+};

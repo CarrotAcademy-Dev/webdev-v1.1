@@ -123,6 +123,7 @@ function Sidebar({ userRole }) {
               { label: "Kelengkapan Data", path: "/eso/kelengkapan-data" },
               { label: "Artwork of The Month", path: "/eso/artwork-of-the-month" },
               { label: "Student Report", path: "/eso/student-report" },
+              { label: "Progress Report Monthly", path: "/eso/progress-report-monthly" },
             ]
           },
           {
