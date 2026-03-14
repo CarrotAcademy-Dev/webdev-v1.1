@@ -57,6 +57,8 @@ const KelengkapanDataPage = lazy(() => import('./pages/Staff/ESO/Bersama/Kelengk
 const ArtworkOfTheMonthPage = lazy(() => import('./pages/Staff/ESO/Bersama/ArtworkOfTheMonthPage'));
 const StudentReportPage = lazy(() => import('./pages/Staff/ESO/Bersama/StudentReportPage'));
 const ProgressReportMonthlyPage = lazy(() => import('./pages/Staff/ESO/Bersama/ProgressReportMonthlyPage'));
+const CariNamaMonthlyPage = lazy(() => import('./pages/Staff/ESO/Bersama/CariNamaMonthlyPage'));
+const DaftarOffboardingPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/DaftarOffboardingPage'));
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -391,6 +393,20 @@ function App() {
           <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
             <Layout>
               <ProgressReportMonthlyPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/cari-nama-monthly" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <CariNamaMonthlyPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/eso/daftar-offboarding" element={
+          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+            <Layout>
+              <DaftarOffboardingPageEso />
             </Layout>
           </ProtectedRoute>
         } />

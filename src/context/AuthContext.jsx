@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
         idleSeconds: 0,
         currentState: 'productive', // 'productive' | 'grace' | 'idle'
         graceStartTime: null,
-        lastFocusTime: null
+        lastActiveTimestamp: null // Track when productive state started
     });
     
     // Ref to hold latest sessionData for persistence (avoid closure stale data)
@@ -100,7 +100,7 @@ export function AuthProvider({ children }) {
                             idleSeconds: session.idleSeconds,
                             currentState: 'productive', // Start as productive after refresh
                             graceStartTime: null,
-                            lastFocusTime: new Date()
+                            lastActiveTimestamp: Date.now()
                         });
                     }
                 } catch (error) {
@@ -211,9 +211,11 @@ export function AuthProvider({ children }) {
         const handleFocus = () => {
             console.log('[Session] Window focused - calculating time away');
             setSessionData(prev => {
+                const now = Date.now();
+                
                 // If there was a grace period, calculate how long user was away
                 if (prev.graceStartTime) {
-                    const awayDuration = Date.now() - prev.graceStartTime.getTime();
+                    const awayDuration = now - prev.graceStartTime.getTime();
                     const awaySeconds = Math.floor(awayDuration / 1000);
                     
                     // If away < 30 minutes, add to productive
@@ -224,7 +226,7 @@ export function AuthProvider({ children }) {
                             productiveSeconds: prev.productiveSeconds + awaySeconds,
                             currentState: 'productive',
                             graceStartTime: null,
-                            lastFocusTime: new Date()
+                            lastActiveTimestamp: now
                         };
                     } else {
                         // If away >= 30 minutes, add 30 min to productive, rest to idle
@@ -237,44 +239,76 @@ export function AuthProvider({ children }) {
                             idleSeconds: prev.idleSeconds + idleSeconds,
                             currentState: 'productive',
                             graceStartTime: null,
-                            lastFocusTime: new Date()
+                            lastActiveTimestamp: now
                         };
                     }
                 }
                 
-                // No grace period active, just switch to productive
+                // No grace period active, just switch to productive and start tracking
                 return {
                     ...prev,
                     currentState: 'productive',
                     graceStartTime: null,
-                    lastFocusTime: new Date()
+                    lastActiveTimestamp: now
                 };
             });
         };
         
         const handleBlur = () => {
-            console.log('[Session] Window blurred - starting GRACE PERIOD (30 min)');
-            setSessionData(prev => ({
-                ...prev,
-                currentState: 'grace',
-                graceStartTime: new Date()
-            }));
+            console.log('[Session] Window blurred - calculating productive time and starting GRACE PERIOD');
+            setSessionData(prev => {
+                const now = Date.now();
+                let newProductiveSeconds = prev.productiveSeconds;
+                
+                // Calculate productive time from last active timestamp to now
+                if (prev.lastActiveTimestamp && prev.currentState === 'productive') {
+                    const productiveDuration = now - prev.lastActiveTimestamp;
+                    const productiveAddSeconds = Math.floor(productiveDuration / 1000);
+                    newProductiveSeconds += productiveAddSeconds;
+                    console.log(`[Session] Adding ${productiveAddSeconds}s productive time before blur`);
+                }
+                
+                return {
+                    ...prev,
+                    productiveSeconds: newProductiveSeconds,
+                    currentState: 'grace',
+                    graceStartTime: new Date(),
+                    lastActiveTimestamp: null
+                };
+            });
         };
         
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                console.log('[Session] Tab hidden - starting GRACE PERIOD');
-                setSessionData(prev => ({
-                    ...prev,
-                    currentState: 'grace',
-                    graceStartTime: prev.graceStartTime || new Date()
-                }));
+                console.log('[Session] Tab hidden - calculating productive time and starting GRACE PERIOD');
+                setSessionData(prev => {
+                    const now = Date.now();
+                    let newProductiveSeconds = prev.productiveSeconds;
+                    
+                    // Calculate productive time from last active timestamp to now
+                    if (prev.lastActiveTimestamp && prev.currentState === 'productive') {
+                        const productiveDuration = now - prev.lastActiveTimestamp;
+                        const productiveAddSeconds = Math.floor(productiveDuration / 1000);
+                        newProductiveSeconds += productiveAddSeconds;
+                        console.log(`[Session] Adding ${productiveAddSeconds}s productive time before hidden`);
+                    }
+                    
+                    return {
+                        ...prev,
+                        productiveSeconds: newProductiveSeconds,
+                        currentState: 'grace',
+                        graceStartTime: prev.graceStartTime || new Date(),
+                        lastActiveTimestamp: null
+                    };
+                });
             } else {
                 console.log('[Session] Tab visible - calculating time away');
                 setSessionData(prev => {
+                    const now = Date.now();
+                    
                     // If there was a grace period, calculate how long user was away
                     if (prev.graceStartTime) {
-                        const awayDuration = Date.now() - prev.graceStartTime.getTime();
+                        const awayDuration = now - prev.graceStartTime.getTime();
                         const awaySeconds = Math.floor(awayDuration / 1000);
                         
                         // If away < 30 minutes, add to productive
@@ -285,7 +319,7 @@ export function AuthProvider({ children }) {
                                 productiveSeconds: prev.productiveSeconds + awaySeconds,
                                 currentState: 'productive',
                                 graceStartTime: null,
-                                lastFocusTime: new Date()
+                                lastActiveTimestamp: now
                             };
                         } else {
                             // If away >= 30 minutes, add 30 min to productive, rest to idle
@@ -298,17 +332,17 @@ export function AuthProvider({ children }) {
                                 idleSeconds: prev.idleSeconds + idleSeconds,
                                 currentState: 'productive',
                                 graceStartTime: null,
-                                lastFocusTime: new Date()
+                                lastActiveTimestamp: now
                             };
                         }
                     }
                     
-                    // No grace period active, just switch to productive
+                    // No grace period active, just switch to productive and start tracking
                     return {
                         ...prev,
                         currentState: 'productive',
                         graceStartTime: null,
-                        lastFocusTime: new Date()
+                        lastActiveTimestamp: now
                     };
                 });
             }
@@ -325,33 +359,16 @@ export function AuthProvider({ children }) {
         };
     }, [currentUser]);
     
-    // Session timer: increment productive/idle seconds ONLY when tab is active
+    // Display update timer: update UI every second for live display
+    // Note: Actual time calculation is timestamp-based, this just triggers UI updates
     useEffect(() => {
-        if (!currentUser) return; // Only track when user is logged in
+        if (!currentUser) return;
         
         const interval = setInterval(() => {
-            setSessionData(prev => {
-                // Only increment when actively productive (tab is focused)
-                // Grace period time will be calculated when tab becomes visible again
-                if (prev.currentState === 'productive') {
-                    return {
-                        ...prev,
-                        productiveSeconds: prev.productiveSeconds + 1
-                    };
-                }
-                
-                // Increment idle only if truly idle (grace period exceeded)
-                if (prev.currentState === 'idle') {
-                    return {
-                        ...prev,
-                        idleSeconds: prev.idleSeconds + 1
-                    };
-                }
-                
-                // Don't increment during grace - will be calculated on return
-                return prev;
-            });
-        }, 1000); // Tick every second
+            // Force component re-render to update displayed time
+            // The actual calculation happens in handleBlur/handleFocus
+            setSessionData(prev => ({ ...prev }));
+        }, 1000);
         
         return () => clearInterval(interval);
     }, [currentUser]);
@@ -432,7 +449,7 @@ export function AuthProvider({ children }) {
                 idleSeconds: 0,
                 currentState: 'productive', // Start as productive (user just logged in)
                 graceStartTime: null,
-                lastFocusTime: now
+                lastActiveTimestamp: now.getTime() // Start tracking productive time
             });
             console.log('[Session] Session tracking initialized');
             
@@ -449,8 +466,18 @@ export function AuthProvider({ children }) {
         // Use ref to get real-time sessionData (avoid stale closure)
         const current = sessionDataRef.current;
         
+        // Calculate final productive time if currently active
+        let finalProductiveSeconds = current.productiveSeconds;
+        if (current.lastActiveTimestamp && current.currentState === 'productive') {
+            const now = Date.now();
+            const productiveDuration = now - current.lastActiveTimestamp;
+            const productiveAddSeconds = Math.floor(productiveDuration / 1000);
+            finalProductiveSeconds += productiveAddSeconds;
+            console.log(`[Session] Adding final ${productiveAddSeconds}s productive time before logout`);
+        }
+        
         // Calculate final durations
-        const productiveDuration = formatDuration(current.productiveSeconds);
+        const productiveDuration = formatDuration(finalProductiveSeconds);
         const idleDuration = formatDuration(current.idleSeconds);
         
         console.log('[Session] Logout - Productive:', productiveDuration, 'Idle:', idleDuration);
@@ -483,7 +510,7 @@ export function AuthProvider({ children }) {
             idleSeconds: 0,
             currentState: 'productive',
             graceStartTime: null,
-            lastFocusTime: null
+            lastActiveTimestamp: null
         });
         storageAuth.logout();
     };

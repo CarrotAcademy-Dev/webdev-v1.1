@@ -120,7 +120,7 @@ const ProgressReportMonthlyPage = () => {
     }, [filteredData, sortConfig]);
 
     // Pagination - 20 items per page
-    const { currentItems, currentPage, totalPages, handlePageChange, setCurrentPage } =
+    const { currentItems, currentPage, totalPages, goToPage, startIndex, endIndex, totalItems, setCurrentPage } =
         usePagination(sortedData, 20);
 
     // Sort handler
@@ -452,7 +452,10 @@ const ProgressReportMonthlyPage = () => {
                                     <Pagination
                                         currentPage={currentPage}
                                         totalPages={totalPages}
-                                        onPageChange={handlePageChange}
+                                        onPageChange={goToPage}
+                                        startIndex={startIndex}
+                                        endIndex={endIndex}
+                                        totalItems={totalItems}
                                     />
                                 </Flex>
                             )}

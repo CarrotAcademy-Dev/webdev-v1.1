@@ -772,3 +772,84 @@ export const updateProgressReportMonthly = async (data) => {
         throw error;
     }
 };
+
+/**
+ * Get Cari Nama Monthly Data (ESO Bersama)
+ * Mengambil data cari nama monthly dengan 4 fields
+ * @returns {Promise<Array>} Promise with array of cari nama monthly data
+ */
+export const getCariNamaMonthly = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'cari-nama-monthly'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Cari Nama Monthly');
+        }
+    } catch (error) {
+        console.error("Error fetching Cari Nama Monthly data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Daftar Offboarding Data (ESO Bersama)
+ * @returns {Promise<Array>} Array of offboarding records
+ */
+export const getDataDaftarOffboarding = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'data-daftar-offboarding'
+        });
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Daftar Offboarding');
+        }
+    } catch (error) {
+        console.error("Error fetching Daftar Offboarding data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update (ceklis) Daftar Offboarding Data (ESO Bersama)
+ * @param {Object} data - Data to update
+ * @returns {Promise<Object>} Update result
+ */
+export const ceklisDaftarOffboarding = async (data) => {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'ceklis-daftar-offboarding');
+        formData.append('id_ticket', data.id_ticket || '');
+        formData.append('program', data.program || '');
+        formData.append('modul', data.modul || '');
+        formData.append('level', data.level || '');
+        formData.append('sudah_proses_sertifikat', data.sudah_proses_sertifikat ? 'TRUE' : 'FALSE');
+        formData.append('sudah_proses_monthly_report', data.sudah_proses_monthly_report ? 'TRUE' : 'FALSE');
+        formData.append('sudah_proses_gdrive_dropbox', data.sudah_proses_gdrive_dropbox ? 'TRUE' : 'FALSE');
+        formData.append('sudah_proses_birthday_reminder', data.sudah_proses_birthday_reminder ? 'TRUE' : 'FALSE');
+        formData.append('sudah_uninvite_link', data.sudah_uninvite_link ? 'TRUE' : 'FALSE');
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data Daftar Offboarding');
+        }
+    } catch (error) {
+        console.error("Error updating Daftar Offboarding data:", error);
+        throw error;
+    }
+};
