@@ -126,6 +126,7 @@ function Sidebar({ userRole }) {
               { label: "Progress Report Monthly", path: "/eso/progress-report-monthly" },
               { label: "Cari Nama Monthly", path: "/eso/cari-nama-monthly" },
               { label: "Daftar Offboarding", path: "/eso/daftar-offboarding" },
+              { label: "Ticketing External", path: "/eso/ticket-external" },
             ]
           },
           {

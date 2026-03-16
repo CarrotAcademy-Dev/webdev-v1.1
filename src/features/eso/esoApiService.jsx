@@ -853,3 +853,91 @@ export const ceklisDaftarOffboarding = async (data) => {
         throw error;
     }
 };
+
+/**
+ * Get Ticket External Data (ESO Bersama)
+ * @returns {Promise<{dataOpen: Array, dataClose: Array}>}
+ */
+export const getDataTicketExternalEso = async () => {
+    const parseTimestamp = (timestamp) => {
+        if (!timestamp) return new Date(0);
+
+        const parsedDate = new Date(timestamp);
+        if (!Number.isNaN(parsedDate.getTime())) {
+            return parsedDate;
+        }
+
+        const [datePart, timePart] = String(timestamp).split(' ');
+        const [day, month, year] = (datePart || '').split('/');
+        if (day && month && year) {
+            return new Date(`${year}-${month}-${day}${timePart ? ` ${timePart}` : ''}`);
+        }
+
+        return new Date(0);
+    };
+
+    const sortByNewestTimestamp = (a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp);
+
+    try {
+        const params = new URLSearchParams({
+            action: 'data-ticket-external'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params.toString()}`);
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return {
+                dataOpen: (result.dataOpen || []).sort(sortByNewestTimestamp),
+                dataClose: (result.dataClose || []).sort(sortByNewestTimestamp)
+            };
+        }
+
+        throw new Error(result.message || 'Gagal mengambil data Ticketing External');
+    } catch (error) {
+        console.error("Error fetching Ticketing External data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Mark Ticket External as Done (ESO Bersama)
+ * @param {Object} data
+ * @param {string} data.id_ticket
+ * @param {string} data.result
+ * @returns {Promise<Object>} Update result
+ */
+export const doneTicketExternalEso = async (data) => {
+    const userData = auth.getUser();
+    const pic = userData?.codeName || userData?.name || '';
+
+    if (!data?.id_ticket || String(data.id_ticket).trim() === '') {
+        throw new Error('ID Ticket tidak boleh kosong');
+    }
+
+    if (!pic) {
+        throw new Error('PIC user tidak ditemukan. Silakan login ulang.');
+    }
+
+    try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'done-ticketexternal');
+        formData.append('id_ticket', data.id_ticket);
+        formData.append('pic', pic);
+        formData.append('result', data.result || '');
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        }
+
+        throw new Error(result.message || 'Gagal update data Ticketing External');
+    } catch (error) {
+        console.error("Error updating Ticketing External data:", error);
+        throw error;
+    }
+};
