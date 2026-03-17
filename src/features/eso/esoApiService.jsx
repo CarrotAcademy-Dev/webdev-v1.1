@@ -705,3 +705,239 @@ export const getStudentReport = async () => {
         throw error;
     }
 };
+
+/**
+ * Get Progress Report Monthly Data (ESO Bersama)
+ * Mengambil data progress report bulanan dengan 13 fields
+ * @returns {Promise<Array>} Promise with array of progress report monthly data
+ */
+export const getProgressReportMonthly = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'get-progress-report-monthly'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Progress Report Monthly');
+        }
+    } catch (error) {
+        console.error("Error fetching Progress Report Monthly data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update Progress Report Monthly Data (ESO Bersama)
+ * Update data progress report bulanan
+ * @param {Object} data - Data yang akan diupdate
+ * @returns {Promise<Object>} Promise with update result
+ */
+export const updateProgressReportMonthly = async (data) => {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'update-progress-report-monthly');
+        formData.append('id', data.id || '');
+        formData.append('nama_siswa', data.nama_siswa || '');
+        formData.append('program', data.program || '');
+        formData.append('modul', data.modul || '');
+        formData.append('bulan_aktif', data.bulan_aktif || '');
+        formData.append('email', data.email || '');
+        formData.append('last_update', data.last_update || '');
+        formData.append('notes', data.notes || '');
+        formData.append('last_day_class', data.last_day_class || '');
+        formData.append('check', data.check || '');
+        formData.append('link_progress_report', data.link_progress_report || '');
+        formData.append('ready_kirim', data.ready_kirim || '');
+        formData.append('tanggal_kirim', data.tanggal_kirim || '');
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data Progress Report Monthly');
+        }
+    } catch (error) {
+        console.error("Error updating Progress Report Monthly data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Cari Nama Monthly Data (ESO Bersama)
+ * Mengambil data cari nama monthly dengan 4 fields
+ * @returns {Promise<Array>} Promise with array of cari nama monthly data
+ */
+export const getCariNamaMonthly = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'cari-nama-monthly'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Cari Nama Monthly');
+        }
+    } catch (error) {
+        console.error("Error fetching Cari Nama Monthly data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Daftar Offboarding Data (ESO Bersama)
+ * @returns {Promise<Array>} Array of offboarding records
+ */
+export const getDataDaftarOffboarding = async () => {
+    try {
+        const params = new URLSearchParams({
+            action: 'data-daftar-offboarding'
+        });
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params}`);
+        const result = response.data;
+        if (result.status === 'success') {
+            return result.result;
+        } else {
+            throw new Error(result.message || 'Gagal mengambil data Daftar Offboarding');
+        }
+    } catch (error) {
+        console.error("Error fetching Daftar Offboarding data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Update (ceklis) Daftar Offboarding Data (ESO Bersama)
+ * @param {Object} data - Data to update
+ * @returns {Promise<Object>} Update result
+ */
+export const ceklisDaftarOffboarding = async (data) => {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'ceklis-daftar-offboarding');
+        formData.append('id_ticket', data.id_ticket || '');
+        formData.append('program', data.program || '');
+        formData.append('modul', data.modul || '');
+        formData.append('level', data.level || '');
+        formData.append('sudah_proses_sertifikat', data.sudah_proses_sertifikat ? 'TRUE' : 'FALSE');
+        formData.append('sudah_proses_monthly_report', data.sudah_proses_monthly_report ? 'TRUE' : 'FALSE');
+        formData.append('sudah_proses_gdrive_dropbox', data.sudah_proses_gdrive_dropbox ? 'TRUE' : 'FALSE');
+        formData.append('sudah_proses_birthday_reminder', data.sudah_proses_birthday_reminder ? 'TRUE' : 'FALSE');
+        formData.append('sudah_uninvite_link', data.sudah_uninvite_link ? 'TRUE' : 'FALSE');
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        } else {
+            throw new Error(result.message || 'Gagal update data Daftar Offboarding');
+        }
+    } catch (error) {
+        console.error("Error updating Daftar Offboarding data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Get Ticket External Data (ESO Bersama)
+ * @returns {Promise<{dataOpen: Array, dataClose: Array}>}
+ */
+export const getDataTicketExternalEso = async () => {
+    const parseTimestamp = (timestamp) => {
+        if (!timestamp) return new Date(0);
+
+        const parsedDate = new Date(timestamp);
+        if (!Number.isNaN(parsedDate.getTime())) {
+            return parsedDate;
+        }
+
+        const [datePart, timePart] = String(timestamp).split(' ');
+        const [day, month, year] = (datePart || '').split('/');
+        if (day && month && year) {
+            return new Date(`${year}-${month}-${day}${timePart ? ` ${timePart}` : ''}`);
+        }
+
+        return new Date(0);
+    };
+
+    const sortByNewestTimestamp = (a, b) => parseTimestamp(b.timestamp) - parseTimestamp(a.timestamp);
+
+    try {
+        const params = new URLSearchParams({
+            action: 'data-ticket-external'
+        });
+
+        const response = await apiClient.get(`${ENDPOINT.esoBersama}?${params.toString()}`);
+        const result = response.data;
+
+        if (result.status === 'success') {
+            return {
+                dataOpen: (result.dataOpen || []).sort(sortByNewestTimestamp),
+                dataClose: (result.dataClose || []).sort(sortByNewestTimestamp)
+            };
+        }
+
+        throw new Error(result.message || 'Gagal mengambil data Ticketing External');
+    } catch (error) {
+        console.error("Error fetching Ticketing External data:", error);
+        throw error;
+    }
+};
+
+/**
+ * Mark Ticket External as Done (ESO Bersama)
+ * @param {Object} data
+ * @param {string} data.id_ticket
+ * @param {string} data.result
+ * @returns {Promise<Object>} Update result
+ */
+export const doneTicketExternalEso = async (data) => {
+    const userData = auth.getUser();
+    const pic = userData?.codeName || userData?.name || '';
+
+    if (!data?.id_ticket || String(data.id_ticket).trim() === '') {
+        throw new Error('ID Ticket tidak boleh kosong');
+    }
+
+    if (!pic) {
+        throw new Error('PIC user tidak ditemukan. Silakan login ulang.');
+    }
+
+    try {
+        const formData = new URLSearchParams();
+        formData.append('action', 'done-ticketexternal');
+        formData.append('id_ticket', data.id_ticket);
+        formData.append('pic', pic);
+        formData.append('result', data.result || '');
+
+        const response = await apiClient.post(ENDPOINT.esoBersama, formData, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+
+        const result = response.data;
+        if (result.status === 'success') {
+            return result;
+        }
+
+        throw new Error(result.message || 'Gagal update data Ticketing External');
+    } catch (error) {
+        console.error("Error updating Ticketing External data:", error);
+        throw error;
+    }
+};
