@@ -106,7 +106,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailySiswaBaru']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailySiswaBaru'] });
         },
         onError: (error) => {
             toast({
@@ -129,7 +129,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailyRetention']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailyRetention'] });
         },
         onError: (error) => {
             toast({
@@ -152,7 +152,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailyBirthday']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailyBirthday'] });
         },
         onError: (error) => {
             toast({
@@ -175,7 +175,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailySertifikat']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailySertifikat'] });
         },
         onError: (error) => {
             toast({
@@ -198,7 +198,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailyLastDay']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailyLastDay'] });
         },
         onError: (error) => {
             toast({
@@ -221,7 +221,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailyNaikLevel']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailyNaikLevel'] });
         },
         onError: (error) => {
             toast({
@@ -244,7 +244,7 @@ function DashboardDailyPage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['dashboardDailyPindahModul']);
+            queryClient.invalidateQueries({ queryKey: ['dashboardDailyPindahModul'] });
         },
         onError: (error) => {
             toast({

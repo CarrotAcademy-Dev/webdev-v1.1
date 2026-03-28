@@ -203,11 +203,7 @@ function PendaftaranLanjutanPage() {
             currentItems,
             currentPage,
             totalPages,
-            nextPage,
-            prevPage,
             goToPage,
-            hasNextPage,
-            hasPrevPage,
         } = usePagination(sortedData, 10);
 
         return (

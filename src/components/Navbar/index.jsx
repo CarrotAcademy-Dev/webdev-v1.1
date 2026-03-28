@@ -201,8 +201,8 @@ function Navbar() {
           {currentUser && (
             <div className="navbar__session">
               <Tooltip 
-                content={`Sesi akan berakhir dalam ${formatSessionTime(sessionTime)}`}
-                positioning={{ placement: 'bottom' }}
+                label={`Sesi akan berakhir dalam ${formatSessionTime(sessionTime)}`}
+                placement='bottom'
               >
                 <Badge 
                   colorScheme={getSessionColor(sessionTime)}

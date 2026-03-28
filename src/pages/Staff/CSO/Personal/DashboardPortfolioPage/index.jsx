@@ -17,7 +17,6 @@ import 'react-loading-skeleton/dist/skeleton.css';
 function DashboardPortfolioPage() {
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
-    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
     
     const [searchName, setSearchName] = useState('');
     const toast = useToast();

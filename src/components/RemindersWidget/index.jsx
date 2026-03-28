@@ -65,7 +65,7 @@ function RemindersWidget() {
     const openWhatsApp = (phone, name = '') => {
         const number = formatWhatsAppNumber(phone);
         const message = encodeURIComponent(`Halo ${name}, `);
-        window.open(`https://wa.me/${number}?text=${message}`, '_blank');
+        window.open(`https://wa.me/${number}?text=${message}`, '_blank', 'noopener,noreferrer');
     };
 
     // Helper function to get today's date in format for API

@@ -138,7 +138,7 @@ function PayslipPage() {
   // Handle download
   const handleDownload = (pdfUrl) => {
     // Backend akan provide direct download link
-    window.open(pdfUrl, '_blank');
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (

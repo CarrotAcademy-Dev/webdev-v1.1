@@ -78,7 +78,7 @@ function DashboardProspektifPage() {
             });
             refetch();
             // Invalidate prospektifData query agar form juga terupdate
-            queryClient.invalidateQueries(['prospektifData']);
+            queryClient.invalidateQueries({ queryKey: ['prospektifData'] });
         },
         onError: (error) => {
             toast({

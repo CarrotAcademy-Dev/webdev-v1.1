@@ -338,14 +338,14 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
-        <Route path="my-tasks/fd-student-identity" element={
+        <Route path="/my-tasks/fd-student-identity" element={
           <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <FdStudentIdentityPage />
             </Layout>
           </ProtectedRoute>
         } />
-        <Route path="my-tasks/track-ticket-fme" element={
+        <Route path="/my-tasks/track-ticket-fme" element={
           <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
             <Layout>
               <TrackTicketFmePage />
