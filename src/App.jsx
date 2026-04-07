@@ -4,6 +4,7 @@ import { useColorMode } from '@chakra-ui/react';
 import Layout from './Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loading from './components/Loading';
+import ErrorBoundary from './components/ErrorBoundary';
 import { ACCESS_GROUPS } from './utils/constants/accessControl';
 
 // Lazy load pages for better performance
@@ -60,6 +61,10 @@ const ProgressReportMonthlyPage = lazy(() => import('./pages/Staff/ESO/Bersama/P
 const CariNamaMonthlyPage = lazy(() => import('./pages/Staff/ESO/Bersama/CariNamaMonthlyPage'));
 const DaftarOffboardingPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/DaftarOffboardingPage'));
 const TicketExternalPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/TicketExternalPage'));
+// Finance
+const ApprovalPendaftaranPage = lazy(() => import('./pages/Staff/Finance/Bersama/ApprovalPendaftaranPage'));
+const DaftarHargaPage = lazy(() => import('./pages/Staff/Finance/Bersama/DaftarHargaPage'));
+const DataBKMPage = lazy(() => import('./pages/Staff/Finance/Bersama/DataBKMPage'));
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -76,9 +81,10 @@ function App() {
   }
   
   return (
-    <div data-theme={colorMode}>
-      <Suspense fallback={<Loading />}>
-        <Routes>
+    <ErrorBoundary>
+      <div data-theme={colorMode}>
+        <Suspense fallback={<Loading />}>
+          <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -480,6 +486,33 @@ function App() {
             </Layout>
           </ProtectedRoute>
         } />
+
+        {/* Finance Routes */}
+        <Route path="/finance/approval-pendaftaran" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <ApprovalPendaftaranPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/daftar-harga" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <DaftarHargaPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/data-bkm" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <DataBKMPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        {/* Admin Routes */}
         <Route path="/admin/register-user" element={
           <ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
             <Layout>
@@ -492,6 +525,7 @@ function App() {
       </Routes>
     </Suspense>
     </div>
+    </ErrorBoundary>
   );
 }
 

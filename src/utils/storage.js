@@ -4,6 +4,14 @@
  * Safe wrapper untuk localStorage dengan error handling dan expiry
  */
 
+const isDebugLoggingEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEBUG_MODE === 'true';
+const debugLog = (...args) => {
+    if (isDebugLoggingEnabled) console.log(...args);
+};
+const debugError = (...args) => {
+    if (isDebugLoggingEnabled) console.error(...args);
+};
+
 const STORAGE_PREFIX = 'carrot_academy_';
 
 // Migration: Fix old sessions yang tidak punya expiry (unlimited)
@@ -12,11 +20,11 @@ const STORAGE_PREFIX = 'carrot_academy_';
     try {
         const userKey = STORAGE_PREFIX + 'user';
         const item = localStorage.getItem(userKey);
-        console.log('[Storage Migration] Checking for old session...', item ? 'Found' : 'Not found');
+        debugLog('[Storage Migration] Checking for old session...', item ? 'Found' : 'Not found');
         
         if (item) {
             const data = JSON.parse(item);
-            console.log('[Storage Migration] Session data:', {
+            debugLog('[Storage Migration] Session data:', {
                 hasExpiry: !!data.expiry,
                 expiry: data.expiry,
                 expiryInHours: data.expiry ? ((data.expiry - Date.now()) / (60 * 60 * 1000)).toFixed(2) : 'N/A'
@@ -24,15 +32,15 @@ const STORAGE_PREFIX = 'carrot_academy_';
             
             // Jika session tidak punya expiry atau expiry di masa depan terlalu jauh (> 10 jam)
             if (!data.expiry || (data.expiry - Date.now() > 10 * 60 * 60 * 1000)) {
-                console.log('[Storage Migration] Clearing old unlimited session...');
+                debugLog('[Storage Migration] Clearing old unlimited session...');
                 localStorage.removeItem(userKey);
                 localStorage.removeItem(STORAGE_PREFIX + 'auth_token');
             } else {
-                console.log('[Storage Migration] Session is valid, keeping it.');
+                debugLog('[Storage Migration] Session is valid, keeping it.');
             }
         }
     } catch (error) {
-        console.error('[Storage Migration] Error during session migration:', error);
+        debugError('[Storage Migration] Error during session migration:', error);
     }
 })();
 
@@ -51,7 +59,7 @@ export const setItem = (key, value, expiryInMinutes = null) => {
         localStorage.setItem(prefixedKey, JSON.stringify(data));
         return true;
     } catch (error) {
-        console.error('Error setting localStorage:', error);
+        debugError('Error setting localStorage:', error);
         return false;
     }
 };
@@ -76,7 +84,7 @@ export const getItem = (key, defaultValue = null) => {
         
         return data.value;
     } catch (error) {
-        console.error('Error getting localStorage:', error);
+        debugError('Error getting localStorage:', error);
         return defaultValue;
     }
 };
@@ -90,7 +98,7 @@ export const removeItem = (key) => {
         localStorage.removeItem(prefixedKey);
         return true;
     } catch (error) {
-        console.error('Error removing localStorage:', error);
+        debugError('Error removing localStorage:', error);
         return false;
     }
 };
@@ -108,7 +116,7 @@ export const clearAll = () => {
         });
         return true;
     } catch (error) {
-        console.error('Error clearing localStorage:', error);
+        debugError('Error clearing localStorage:', error);
         return false;
     }
 };

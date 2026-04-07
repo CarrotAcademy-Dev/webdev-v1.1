@@ -22,10 +22,14 @@ function Navbar() {
     const isCSO = currentUser?.jabatan === JABATAN.CSO;
     // Check if user is ESO
     const isESO = currentUser?.jabatan === JABATAN.ESO;
+    // Check if user is Finance
+    const isFinance = currentUser?.jabatan === JABATAN.FINANCE;
     // Show CSO menu if user is CSO or Admin
     const showCSOMenu = isCSO || isAdmin;
     // Show ESO menu if user is ESO or Admin
     const showESOMenu = isESO || isAdmin;
+    // Show Finance menu if user is Finance or Admin
+    const showFinanceMenu = isFinance || isAdmin;
     
     // Update session time every minute
     useEffect(() => {
@@ -172,9 +176,37 @@ function Navbar() {
       });
     }
 
+    // Add Finance menu only for Finance jabatan or Admin
+    if (showFinanceMenu) {
+      const insertPosition = (showCSOMenu ? 1 : 0) + (showESOMenu ? 1 : 0) + 1;
+      baseMenu.splice(insertPosition, 0, {
+        mainIcon: <FiBriefcase />,
+        items: [
+          {
+            category: "Bersama", 
+            items: [
+              { label: "Approval Pendaftaran", path: "/finance/approval-pendaftaran" },
+              { label: "Daftar Harga", path: "/finance/daftar-harga" },
+              { label: "Daftar Diskon", path: "/finance/daftar-diskon" },
+              { label: "Bukti Pembayaran", path: "/finance/bukti-pembayaran" },
+              { label: "Pendaftaran Fulltime", path: "/finance/pendaftaran-fulltime" },
+              { label: "Daftar Offboarding", path: "/finance/daftar-offboarding" },
+              { label: "Data BKM", path: "/finance/data-bkm" },
+            ]
+          },
+          {
+            category: "Personal",
+            items: [
+              { label: "Tagihan Siswa", path: "/finance/tagihan-siswa" },
+            ]
+          }
+        ],
+      });
+    }
+
     // Add Admin menu only for admin/super_admin
     if (isAdmin) {
-      baseMenu.splice((showCSOMenu ? 1 : 0) + (showESOMenu ? 1 : 0) + 1, 0, {
+      baseMenu.splice((showCSOMenu ? 1 : 0) + (showESOMenu ? 1 : 0) + (showFinanceMenu ? 1 : 0) + 1, 0, {
         mainIcon: <FiShield />,
         items: [
           {
@@ -188,7 +220,7 @@ function Navbar() {
     }
 
     return baseMenu;
-  }, [logout, isAdmin, showCSOMenu, showESOMenu]);
+  }, [logout, isAdmin, showCSOMenu, showESOMenu, showFinanceMenu]);
 
     return (
       <StyledNavbar>

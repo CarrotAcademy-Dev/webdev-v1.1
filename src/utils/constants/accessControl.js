@@ -50,5 +50,11 @@ export const ACCESS_GROUPS = {
         allowedJabatan: [JABATAN.ESO],
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
         requireAny: true
+    },
+    // Admin can also access Finance pages
+    FINANCE_OR_ADMIN: {
+        allowedJabatan: [JABATAN.FINANCE],
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        requireAny: true
     }
 };

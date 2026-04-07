@@ -34,6 +34,7 @@ function Sidebar({ userRole }) {
     const path = location.pathname;
     if (path.startsWith('/my-tasks')) return 'cso';
     if (path.startsWith('/eso')) return 'eso';
+    if (path.startsWith('/finance')) return 'finance';
     if (path.startsWith('/admin')) return 'admin';
     if (path.startsWith('/profile') || path.startsWith('/payslip') || path.startsWith('/settings')) return 'profile';
     if (path === '/home' || path.startsWith('/attendance') || path.startsWith('/leave-request') || path.startsWith('/home/kpi')) return 'home';
@@ -144,6 +145,32 @@ function Sidebar({ userRole }) {
           }
         ]
       };
+
+    // Add Finance menu
+    menus.finance = {
+      title: 'Finance',
+      icon: <FiCreditCard />,
+      categories: [
+        {
+          name: 'Bersama',
+          items: [
+            { label: "Approval Pendaftaran", path: "/finance/approval-pendaftaran" },
+            { label: "Daftar Harga", path: "/finance/daftar-harga" },
+            { label: "Daftar Diskon", path: "/finance/daftar-diskon" },
+            { label: "Bukti Pembayaran", path: "/finance/bukti-pembayaran" },
+            { label: "Pendaftaran Fulltime", path: "/finance/pendaftaran-fulltime" },
+            { label: "Daftar Offboarding", path: "/finance/daftar-offboarding" },
+            { label: "Data BKM", path: "/finance/data-bkm" },
+          ]
+        },
+        {
+          name: 'Personal',
+          items: [
+            { label: "Tagihan Siswa", path: "/finance/tagihan-siswa" },
+          ]
+        }
+      ]
+    };
 
     // Add Admin menu - only for admin users
     if (isAdmin) {
