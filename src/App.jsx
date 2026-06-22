@@ -65,6 +65,38 @@ const TicketExternalPageEso = lazy(() => import('./pages/Staff/ESO/Bersama/Ticke
 const ApprovalPendaftaranPage = lazy(() => import('./pages/Staff/Finance/Bersama/ApprovalPendaftaranPage'));
 const DaftarHargaPage = lazy(() => import('./pages/Staff/Finance/Bersama/DaftarHargaPage'));
 const DataBKMPage = lazy(() => import('./pages/Staff/Finance/Bersama/DataBKMPage'));
+const BuktiPembayaranPage = lazy(() => import('./pages/Staff/Finance/Bersama/BuktiPembayaranPage'));
+const TagihanPage = lazy(() => import('./pages/Staff/Finance/Bersama/TagihanPage'));
+const DaftarOffboardingFinancePage = lazy(() => import('./pages/Staff/Finance/Bersama/DaftarOffboardingPage'));
+const PendaftaranFulltimeCoursePage = lazy(() => import('./pages/Staff/Finance/Bersama/PendaftaranFulltimeCoursePage'));
+const DaftarKirimMerchFinancePage = lazy(() => import('./pages/Staff/Finance/Bersama/DaftarKirimMerchFinancePage'));
+const TicketExternalFinancePage = lazy(() => import('./pages/Staff/Finance/Bersama/TicketExternalFinancePage'));
+const DaftarHargaPersonalPage = lazy(() => import('./pages/Staff/Finance/Personal/DaftarHargaPage'));
+const TicketingInternalFinancePage = lazy(() => import('./pages/Staff/Finance/Personal/TicketingInternalPage'));
+const TrackTicketFromMePage = lazy(() => import('./pages/Staff/Finance/Personal/TrackTicketFromMePaage'));
+const ReviewKaryawanFinPage = lazy(() => import('./pages/Staff/Finance/Personal/ReviewKaryawanPage'));
+const StatistikTagihanPage = lazy(() => import('./pages/Staff/Finance/Personal/StatistikTagihanPage'));
+const DashboardPendapatanPage = lazy(() => import('./pages/Staff/Finance/Personal/DashboardPendapatanPage'));
+const ProfileSiswaPage = lazy(() => import('./pages/Staff/Finance/Personal/ProfileSiswaPage'));
+// HR Recruitment
+const DashboardReportPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/DashboardReport'));
+const JamKerjaPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/JamKerja'));
+const TugasInterviewPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/TugasInterview'));
+const HasilResponseTestKandidatPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/HasilResponseKandidat'));
+const ApplicantDataPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/ApplicantData'));
+const HumanResourceRequestsPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/HumanResourceRequests'));
+const PenilaianKandidatPage = lazy(() => import('./pages/Staff/HRGA/HRRecruitmen/PenilaianKandidat'));
+// HRGA Asset
+const AssetDataPage = lazy(() => import('./pages/Staff/HRGA/Asset/AssetPage'));
+const DashboardAssetPage = lazy(() => import('./pages/Staff/HRGA/Asset/DashboardAssetPage'));
+const DailyAssetPage = lazy(() => import('./pages/Staff/HRGA/Asset/DailyAssetPage'));
+const PenyusutanPage = lazy(() => import('./pages/Staff/HRGA/Asset/PenyusutanPage'));
+const ServicesPage = lazy(() => import('./pages/Staff/HRGA/Asset/ServicesPage'));
+const MaintenancePage = lazy(() => import('./pages/Staff/HRGA/Asset/MaintenancePage'));
+const PeminjamanBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/PeminjamanBarang'));
+const DetailBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/DetailBarangPage'));
+const AssetHistoryPage = lazy(() => import('./pages/Staff/HRGA/Asset/AssetHistoryPage'));
+
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -508,6 +540,238 @@ function App() {
           <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
             <Layout>
               <DataBKMPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/bukti-pembayaran" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <BuktiPembayaranPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/tagihan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <TagihanPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/daftar-offboarding" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <DaftarOffboardingFinancePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/pendaftaran-fulltime" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <PendaftaranFulltimeCoursePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/ticket-external" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <TicketExternalFinancePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/track-ticket-from-me" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <TrackTicketFromMePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/daftar-kirim-merch" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <DaftarKirimMerchFinancePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/ticketing-internal" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <TicketingInternalFinancePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/daftar-harga-personal" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <DaftarHargaPersonalPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/review-karyawan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <ReviewKaryawanFinPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/statistik-tagihan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <StatistikTagihanPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/dashboard-pendapatan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <DashboardPendapatanPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finance/profile-siswa" element={
+          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+              <ProfileSiswaPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/dashboard-report" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <DashboardReportPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/jam-kerja" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <JamKerjaPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/tugas-interview" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <TugasInterviewPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/hasil-response-test-kandidat" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <HasilResponseTestKandidatPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/applicant-data" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <ApplicantDataPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/human-resource-requests" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <HumanResourceRequestsPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/penilaian-kandidat" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <PenilaianKandidatPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/asset-data" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <AssetDataPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/dashboard-asset" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <DashboardAssetPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/daily-asset" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <DailyAssetPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/penyusutan" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <PenyusutanPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/services" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <ServicesPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/maintenance" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <MaintenancePage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/peminjaman-barang" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <PeminjamanBarangPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/detail-barang" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <DetailBarangPage />
+            </Layout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/hrga/asset-history" element={
+          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+              <AssetHistoryPage />
             </Layout>
           </ProtectedRoute>
         } />

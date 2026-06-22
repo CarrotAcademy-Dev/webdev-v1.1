@@ -1,7 +1,5 @@
 # Carrot Academy - Internal Dashboard CSO
 
-![Showcase](https://storage.googleapis.com/gemini-prod/images/5e5db08b-7d0c-48f4-aa90-0721284e2572)
-
 Ini merupakan dokumentasi resmi untuk project Internal Carrot Academy. Dokumen ini bertujuan sebagai panduan instalasi, pemahaman arsitektur, dan rencana pengembangan di masa depan.
 
 ## 1. Tentang Proyek
@@ -139,18 +137,18 @@ Seiring aplikasi membesar, *state* di sisi UI (*client state*) juga akan makin k
 
 ### Tahap 3: Otentikasi Profesional
 
-* **Status**: ✅ Selesai - Full authentication system sudah diimplementasikan
+* **Status**: Selesai - Full authentication system sudah diimplementasikan
 * **Yang Sudah Ada**:
-    * ✅ Auth API V2.0 dengan POST method (Feb 2026)
-    * ✅ Auto-logout saat token expired (9 jam)
-    * ✅ Session tracking dengan productive/idle time (Feb 2026)
-    * ✅ Session monitoring dengan warning notification
-    * ✅ Real-time session timer di Navbar
-    * ✅ Manual session extension capability
-    * ✅ Forgot password flow dengan email (Feb 2026)
-    * ✅ Update password dengan password strength indicator (Feb 2026)
-    * ✅ Auto-logout setelah password change (Feb 2026)
-    * ✅ Orphaned session detection & recovery (Feb 2026)
+    * Auth API V2.0 dengan POST method (Feb 2026)
+    * Auto-logout saat token expired (9 jam)
+    * Session tracking dengan productive/idle time (Feb 2026)
+    * Session monitoring dengan warning notification
+    * Real-time session timer di Navbar
+    * Manual session extension capability
+    * Forgot password flow dengan email (Feb 2026)
+    * Update password dengan password strength indicator (Feb 2026)
+    * Auto-logout setelah password change (Feb 2026)
+    * Orphaned session detection & recovery (Feb 2026)
 * **Rencana Lanjutan**: 
     * Two-Factor Authentication (2FA) dengan email OTP
     * Social login (Google OAuth)
@@ -203,49 +201,94 @@ Project ini sudah dilengkapi dengan sistem keamanan multi-layer:
 
 ## 7. Dokumentasi & Learning Path
 
-Project ini memiliki dokumentasi lengkap yang terstruktur. Untuk memahami project dengan baik, ikuti urutan baca dokumentasi berikut:
+Project ini memiliki dokumentasi lengkap yang terstruktur untuk memudahkan handover dan onboarding developer baru.
 
-### Quick Start (Untuk Developer Baru)
-1. **[README.md](README.md)** (dokumen ini) - Overview project, instalasi, dan arsitektur
-2. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Cheat sheet utilities dan hooks
-3. **[IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)** - Status fitur dan utilities yang sudah dibuat
+### 🎯 START HERE - Handover Documentation
 
-### Core Documentation (Developer)
-4. **[RBAC_GUIDE.md](RBAC_GUIDE.md)** - Access control dan permission system
-5. **[TOKEN_EXPIRY_GUIDE.md](TOKEN_EXPIRY_GUIDE.md)** - Session management dan token expiry
-6. **[THEME_GUIDE.md](THEME_GUIDE.md)** - Dark/Light mode dan theming system
+**⭐ [HANDOVER_DOCUMENTATION.md](HANDOVER_DOCUMENTATION.md)** - Comprehensive handover guide dengan:
+- ✅ System Overview & Current State (fitur yang sudah selesai)
+- ✅ Credentials & Endpoint Mapping (env vars, GAS endpoints, database structure)
+- ✅ Pending Tasks & Next Steps (checklist untuk developer berikutnya)
 
-### Feature-Specific Guides
-7. **[DASHBOARD_PROSPEKTIF_GUIDE.md](DASHBOARD_PROSPEKTIF_GUIDE.md)** - Dashboard Prospektif features
-8. **[DASHBOARD_REMINDER_GUIDE.md](DASHBOARD_REMINDER_GUIDE.md)** - Dashboard Reminder & Janjian Temu
+**Mulai baca dari sini untuk quick understanding tentang project status dan apa yang perlu dikerjakan selanjutnya.**
 
-### Workflow & Process
-9. **[GIT_WORKFLOW.md](GIT_WORKFLOW.md)** - Git branching strategy dan commit conventions
-10. **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment process dan environment setup
-11. **[APP_NAVIGATION_FLOW.md](APP_NAVIGATION_FLOW.md)** - User navigation flows
+---
 
-### Planning & Stories
-12. **[USER_STORIES.md](USER_STORIES.md)** - User stories dan requirements
-13. **[USER_FLOW_GUIDE.md](USER_FLOW_GUIDE.md)** - Detailed user flow diagrams
-14. **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Known issues dan planned improvements
+### 📚 View All Documentation
 
-### Theme Migration (Historical)
-15. **[THEME_MIGRATION.md](THEME_MIGRATION.md)** - Migration dari Chakra v2 ke v3
-16. **[THEME_UPDATE_SUMMARY.md](THEME_UPDATE_SUMMARY.md)** - Summary of theme changes
+👉 **[Klik di sini untuk melihat SEMUA dokumentasi →](docs/)**
 
-### Master Documentation Index
-17. **[FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md)** - Complete documentation navigation guide
+Semua dokumentasi teknis sudah terorganisir di folder `/docs/` dengan index, tabel lengkap, dan rekomendasi reading by role.
 
-### Recommended Reading by Role
+---
 
-**Frontend Developer (New)**: 1 → 2 → 3 → 4 → 5 → 6 → 9  
-**Backend Integration**: 4 → 5 → 11 → 9  
-**UI/UX Designer**: 6 → 15 → 16 → 11  
-**QA/Testing**: 3 → 7 → 8 → 11 → 14  
-**Project Manager**: 1 → 3 → 12 → 13 → 14  
-**DevOps**: 9 → 10
+### Complete Documentation Guide
 
-**Tips**: Gunakan [FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md) sebagai navigation guide untuk menjelajahi dokumentasi berdasarkan kebutuhan spesifik Anda.
+#### Essential Reading (HARUS BACA)
+|                    Document                    |                      Purpose                | Read Time |
+|------------------------------------------------|---------------------------------------------|-----------|
+| [README.md](README.md)                         | Project overview, tech stack, arsitektur    | 15 min    |
+| [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)       | Cheat sheet untuk developer                 | 5 min     |
+| [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md)                 | Role-Based Access Control sistem            | 15 min    |
+| [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md) | Session management & auto-logout            | 10 min    |
+| [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)             | Git branching strategy & commit conventions | 10 min    |
+
+#### Technical Guides
+|                        Document                      |              Purpose             |          For         |
+|------------------------------------------------------|----------------------------------|----------------------|
+| [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) | Utilities & features status      | Developer            |
+| [docs/THEME_GUIDE.md](docs/THEME_GUIDE.md)                     | Dark/Light mode & theming system | Frontend Developer   |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)                       | Vercel deployment process        | DevOps/DevOps-minded |
+| [docs/LOGGING_GUIDE.md](docs/LOGGING_GUIDE.md)                 | Logging & debugging patterns     | Developer            |
+
+#### Feature Guides (Optional)
+|                               Document                         |             Purpose            | When Needed |
+|----------------------------------------------------------------|--------------------------------|-------------|
+| [docs/DASHBOARD_PROSPEKTIF_GUIDE.md](docs/DASHBOARD_PROSPEKTIF_GUIDE.md) | CSO Prospektif dashboard       | Working on CSO prospektif |
+| [docs/DASHBOARD_REMINDER_GUIDE.md](docs/DASHBOARD_REMINDER_GUIDE.md)     | CSO Reminder dashboard         | Working on CSO reminder |
+| [docs/APP_NAVIGATION_FLOW.md](docs/APP_NAVIGATION_FLOW.md)               | Navigation & routing structure | Understanding menu structure |
+
+#### User Documentation
+|                   Document               |              Purpose            |               For             |
+|------------------------------------------|---------------------------------|-------------------------------|
+| [docs/USER_STORIES.md](docs/USER_STORIES.md)       | User stories & workflows        | Business analyst, Stakeholder |
+| [docs/USER_FLOW_GUIDE.md](docs/USER_FLOW_GUIDE.md) | Detailed user journey flows     | QA, Product Manager           |
+| [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md)       | Known issues & planned features | Project tracking              |
+
+---
+
+### 🚀 Recommended Reading by Role
+
+**Frontend Developer (New to project)**:
+1. README.md → [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md) → [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md) → [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md) → [docs/THEME_GUIDE.md](docs/THEME_GUIDE.md) → [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)
+
+**Backend/GAS Developer**:
+1. README.md → HANDOVER_DOCUMENTATION.md (fokus ke section 2) → [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)
+
+**QA/Tester**:
+1. README.md → [docs/USER_STORIES.md](docs/USER_STORIES.md) → [docs/USER_FLOW_GUIDE.md](docs/USER_FLOW_GUIDE.md) → [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
+
+**DevOps/Deployment**:
+1. [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) → [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md) → HANDOVER_DOCUMENTATION.md (section 2 - environment vars)
+
+**Project Manager/Stakeholder**:
+1. README.md → [docs/USER_STORIES.md](docs/USER_STORIES.md) → [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md)
+
+**UI/UX Designer**:
+1. [docs/THEME_GUIDE.md](docs/THEME_GUIDE.md) → [docs/APP_NAVIGATION_FLOW.md](docs/APP_NAVIGATION_FLOW.md) → [docs/DASHBOARD_PROSPEKTIF_GUIDE.md](docs/DASHBOARD_PROSPEKTIF_GUIDE.md)
+
+---
+
+### 📋 Handover Checklist
+
+Sebelum mulai development, pastikan Anda sudah:
+- [ ] Baca README.md & [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)
+- [ ] Pahami RBAC dari [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md)
+- [ ] Pahami session management dari [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md)
+- [ ] Setup local development environment
+- [ ] Baca [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md) untuk understand branching strategy
+- [ ] Baca HANDOVER_DOCUMENTATION.md untuk know current status
+- [ ] Siap untuk start development atau maintenance
 
 ## 8. Recent Updates & Features (February 2026)
 
@@ -305,4 +348,4 @@ Project ini memiliki dokumentasi lengkap yang terstruktur. Untuk memahami projec
 
 Dokumentasi ini adalah dokumen hidup. Selalu perbarui seiring dengan perkembangan project.
 
-Last update: 28 February 2026
+Last update: 22 June 2026

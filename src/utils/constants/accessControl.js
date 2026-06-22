@@ -39,6 +39,9 @@ export const ACCESS_GROUPS = {
     FINANCE_ONLY: {
         allowedJabatan: [JABATAN.FINANCE]
     },
+    HRGA_ONLY: {
+        allowedJabatan: [JABATAN.HRGA]
+    },
     // Admin can also access CSO pages
     CSO_OR_ADMIN: {
         allowedJabatan: [JABATAN.CSO],
@@ -54,6 +57,12 @@ export const ACCESS_GROUPS = {
     // Admin can also access Finance pages
     FINANCE_OR_ADMIN: {
         allowedJabatan: [JABATAN.FINANCE],
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        requireAny: true
+    },
+    // Admin can also access HRGA pages
+    HRGA_OR_ADMIN: {
+        allowedJabatan: [JABATAN.HRGA],
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
         requireAny: true
     }

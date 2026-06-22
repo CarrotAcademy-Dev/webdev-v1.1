@@ -373,6 +373,7 @@ function DashboardDailyPage() {
                     no: index + 1,
                     nama: item.nama,
                     umur: item.umur,
+                    tanggalLahir: item.tanggal_lahir || '-',
                     tanggalKelasLahir: item.tanggal_kelas_terdekat || '-',
                     targetType: 'done-birthday',
                     isDoneChecked: isDoneChecked || false

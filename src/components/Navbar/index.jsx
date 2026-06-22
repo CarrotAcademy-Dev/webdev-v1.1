@@ -24,13 +24,17 @@ function Navbar() {
     const isESO = currentUser?.jabatan === JABATAN.ESO;
     // Check if user is Finance
     const isFinance = currentUser?.jabatan === JABATAN.FINANCE;
+    // Check if user is HRGA
+    const isHRGA = currentUser?.jabatan === JABATAN.HRGA;
     // Show CSO menu if user is CSO or Admin
     const showCSOMenu = isCSO || isAdmin;
     // Show ESO menu if user is ESO or Admin
     const showESOMenu = isESO || isAdmin;
     // Show Finance menu if user is Finance or Admin
     const showFinanceMenu = isFinance || isAdmin;
-    
+    // Show HRGA menu if user is HRGA or Admin
+    const showHRGAMenu = isHRGA || isAdmin;
+
     // Update session time every minute
     useEffect(() => {
         if (!currentUser) return;
@@ -187,17 +191,61 @@ function Navbar() {
             items: [
               { label: "Approval Pendaftaran", path: "/finance/approval-pendaftaran" },
               { label: "Daftar Harga", path: "/finance/daftar-harga" },
-              { label: "Daftar Diskon", path: "/finance/daftar-diskon" },
               { label: "Bukti Pembayaran", path: "/finance/bukti-pembayaran" },
               { label: "Pendaftaran Fulltime", path: "/finance/pendaftaran-fulltime" },
               { label: "Daftar Offboarding", path: "/finance/daftar-offboarding" },
               { label: "Data BKM", path: "/finance/data-bkm" },
+              { label: "Daftar Kirim Merch", path: "/finance/daftar-kirim-merch" },
+              { label: "Tagihan Siswa", path: "/finance/tagihan" },
+              { label: "Ticketing External", path: "/finance/ticket-external" },
             ]
           },
           {
             category: "Personal",
             items: [
-              { label: "Tagihan Siswa", path: "/finance/tagihan-siswa" },
+              { label: "Statistik Tagihan", path: "/finance/statistik-tagihan" },
+              { label: "Dashboard Pendapatan", path: "/finance/dashboard-pendapatan" },
+              { label: "Profile Siswa", path: "/finance/profile-siswa" },
+              { label: "Daftar Harga", path: "/finance/daftar-harga-personal" },
+              { label: "Track Ticket From Me", path: "/finance/track-ticket-from-me" },
+              { label: "Ticketing Internal", path: "/finance/ticketing-internal" },
+              { label: "Review Karyawan", path: "/finance/review-karyawan" },
+            ]
+          }
+        ],
+      });
+    }
+
+    // Add HRGA menu only for HRGA jabatan or Admin
+    if (showHRGAMenu) {
+      const insertPosition = (showCSOMenu ? 1 : 0) + (showESOMenu ? 1 : 0) + (showFinanceMenu ? 1 : 0) + 1;
+      baseMenu.splice(insertPosition, 0, {
+        mainIcon: <FiBriefcase />,
+        items: [
+          {
+            category: "Recruitment",
+            items: [
+              { label: "Dashboard Report", path: "/hrga/dashboard-report" },
+              { label: "Applicant Data", path: "/hrga/applicant-data" },
+              { label: "Human Resource Requests", path: "/hrga/human-resource-requests" },
+              { label: "Jam Kerja", path: "/hrga/jam-kerja" },
+              { label: "Tugas Interview", path: "/hrga/tugas-interview" },
+              { label: "Hasil Response Test Kandidat", path: "/hrga/hasil-response-test-kandidat" },
+              { label: "Penilaian Kandidat", path: "/hrga/penilaian-kandidat" },
+            ]
+          },
+          {
+            category: "Asset",
+            items: [
+              { label: "Data Asset", path: "/hrga/asset-data" },
+              { label: "Dashboard Asset", path: "/hrga/dashboard-asset" },
+              { label: "Daily Asset", path: "/hrga/daily-asset" },
+              { label: "Penyusutan Asset", path: "/hrga/penyusutan" },
+              { label: "Services", path: "/hrga/services" },
+              { label: "Maintenance", path: "/hrga/maintenance" },
+              { label: "Peminjaman Barang", path: "/hrga/peminjaman-barang" },
+              { label: "Detail Barang", path: "/hrga/detail-barang" },
+              { label: "Asset History", path: "/hrga/asset-history" },
             ]
           }
         ],
@@ -220,7 +268,7 @@ function Navbar() {
     }
 
     return baseMenu;
-  }, [logout, isAdmin, showCSOMenu, showESOMenu, showFinanceMenu]);
+  }, [logout, isAdmin, showCSOMenu, showESOMenu, showFinanceMenu, showHRGAMenu]);
 
     return (
       <StyledNavbar>

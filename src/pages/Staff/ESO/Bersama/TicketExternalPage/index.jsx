@@ -232,7 +232,7 @@ const TicketExternalPage = () => {
 
     return (
         <ContainerCarrot>
-            <TicketExternalStyled colorMode={colorMode}>
+            <TicketExternalStyled colorMode={colorMode} data-theme={colorMode}>
                 <Box className="header">
                     <h1>Ticketing External</h1>
                     <Text className="subtitle">
