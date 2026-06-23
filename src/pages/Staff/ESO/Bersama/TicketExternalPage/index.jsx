@@ -69,7 +69,7 @@ const TicketExternalPage = () => {
     const doneMutation = useMutation({
         mutationFn: doneTicketExternalEso,
         onSuccess: () => {
-            queryClient.invalidateQueries(["ticketExternalEso"]);
+            queryClient.invalidateQueries({ queryKey: ["ticketExternalEso"] });
             toaster.create({
                 title: "Ticket berhasil diselesaikan",
                 type: "success",
@@ -232,7 +232,7 @@ const TicketExternalPage = () => {
 
     return (
         <ContainerCarrot>
-            <TicketExternalStyled colorMode={colorMode}>
+            <TicketExternalStyled colorMode={colorMode} data-theme={colorMode}>
                 <Box className="header">
                     <h1>Ticketing External</h1>
                     <Text className="subtitle">
@@ -411,7 +411,7 @@ const TicketExternalPage = () => {
                                                         size="sm"
                                                         variant="ghost"
                                                         colorScheme="blue"
-                                                        onClick={() => window.open(item.lampiran, "_blank")}
+                                                        onClick={() => window.open(item.lampiran, "_blank", "noopener,noreferrer")}
                                                     >
                                                         <FiExternalLink />
                                                     </IconButton>

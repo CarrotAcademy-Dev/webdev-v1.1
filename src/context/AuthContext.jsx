@@ -4,6 +4,14 @@ import { auth as storageAuth } from '@/utils/storage';
 import { API_CONFIG } from '@/config/api.config';
 import { toaster } from '@/components/ui/toaster';
 
+const isDebugLoggingEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEBUG_MODE === 'true';
+const debugLog = (...args) => {
+    if (isDebugLoggingEnabled) console.log(...args);
+};
+const debugError = (...args) => {
+    if (isDebugLoggingEnabled) console.error(...args);
+};
+
 export const AuthContext = createContext();
 
 // Session tracking constants
@@ -90,8 +98,8 @@ export function AuthProvider({ children }) {
                     
                     // If session belongs to this user and was updated recently (< 1 hour), restore it
                     if (session.email === storedUser.email && timeSinceUpdate < 5 * 60 * 1000) {
-                        console.log('[Session] Restoring active session from localStorage');
-                        console.log('[Session] Productive:', formatDuration(session.productiveSeconds), 
+                        debugLog('[Session] Restoring active session from localStorage');
+                        debugLog('[Session] Productive:', formatDuration(session.productiveSeconds), 
                                     'Idle:', formatDuration(session.idleSeconds));
                         
                         setSessionData({
@@ -104,7 +112,7 @@ export function AuthProvider({ children }) {
                         });
                     }
                 } catch (error) {
-                    console.error('[Session] Error restoring session:', error);
+                    debugError('[Session] Error restoring session:', error);
                 }
             }
         }
@@ -142,7 +150,7 @@ export function AuthProvider({ children }) {
                     const isOrphaned = isDifferentUser || (isStaleSession && isTokenExpired);
                     
                     if (isOrphaned) {
-                        console.log('[Session Recovery] Orphaned session detected:', {
+                        debugLog('[Session Recovery] Orphaned session detected:', {
                             reason: isDifferentUser ? 'Different user' : 'Session stale + Token expired',
                             sessionEmail: session.email,
                             currentEmail: storedUser?.email,
@@ -164,9 +172,9 @@ export function AuthProvider({ children }) {
                                 method: 'POST',
                                 body: params
                             });
-                            console.log('[Session Recovery] Logout data sent successfully');
+                            debugLog('[Session Recovery] Logout data sent successfully');
                         } catch (error) {
-                            console.error('[Session Recovery] Failed to send logout data:', error);
+                            debugError('[Session Recovery] Failed to send logout data:', error);
                         }
                         
                         // Clean up orphaned session
@@ -174,7 +182,7 @@ export function AuthProvider({ children }) {
                         
                         // If this is same user's expired session, force logout
                         if (storedUser && session.email === storedUser.email && isStaleSession && isTokenExpired) {
-                            console.log('[Session Recovery] Force logout current user (token expired)');
+                            debugLog('[Session Recovery] Force logout current user (token expired)');
                             setCurrentUser(null);
                             storageAuth.logout();
                             
@@ -188,14 +196,14 @@ export function AuthProvider({ children }) {
                     } else if (storedUser && session.email === storedUser.email) {
                         // Session is stale (> 9h) but token still valid (user extended session)
                         if (isStaleSession) {
-                            console.log('[Session Recovery] Stale session but token still valid (extended), will be restored');
-                            console.log('[Session Recovery] Time since update:', (timeSinceUpdate / 1000 / 60).toFixed(2), 'minutes');
+                            debugLog('[Session Recovery] Stale session but token still valid (extended), will be restored');
+                            debugLog('[Session Recovery] Time since update:', (timeSinceUpdate / 1000 / 60).toFixed(2), 'minutes');
                         } else {
-                            console.log('[Session Recovery] Active session found (<9h), will be restored');
+                            debugLog('[Session Recovery] Active session found (<9h), will be restored');
                         }
                     }
                 } catch (error) {
-                    console.error('[Session Recovery] Error parsing orphaned session:', error);
+                    debugError('[Session Recovery] Error parsing orphaned session:', error);
                     localStorage.removeItem(ACTIVE_SESSION_KEY);
                 }
             }
@@ -209,7 +217,7 @@ export function AuthProvider({ children }) {
         if (!currentUser) return; // Only track when user is logged in
         
         const handleFocus = () => {
-            console.log('[Session] Window focused - calculating time away');
+            debugLog('[Session] Window focused - calculating time away');
             setSessionData(prev => {
                 const now = Date.now();
                 
@@ -220,7 +228,7 @@ export function AuthProvider({ children }) {
                     
                     // If away < 30 minutes, add to productive
                     if (awayDuration < GRACE_PERIOD_MS) {
-                        console.log(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding to PRODUCTIVE`);
+                        debugLog(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding to PRODUCTIVE`);
                         return {
                             ...prev,
                             productiveSeconds: prev.productiveSeconds + awaySeconds,
@@ -232,7 +240,7 @@ export function AuthProvider({ children }) {
                         // If away >= 30 minutes, add 30 min to productive, rest to idle
                         const graceSeconds = GRACE_PERIOD_MINUTES * 60;
                         const idleSeconds = awaySeconds - graceSeconds;
-                        console.log(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding ${GRACE_PERIOD_MINUTES} min to PRODUCTIVE, ${Math.floor(idleSeconds / 60)} min to IDLE`);
+                        debugLog(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding ${GRACE_PERIOD_MINUTES} min to PRODUCTIVE, ${Math.floor(idleSeconds / 60)} min to IDLE`);
                         return {
                             ...prev,
                             productiveSeconds: prev.productiveSeconds + graceSeconds,
@@ -255,7 +263,7 @@ export function AuthProvider({ children }) {
         };
         
         const handleBlur = () => {
-            console.log('[Session] Window blurred - calculating productive time and starting GRACE PERIOD');
+            debugLog('[Session] Window blurred - calculating productive time and starting GRACE PERIOD');
             setSessionData(prev => {
                 const now = Date.now();
                 let newProductiveSeconds = prev.productiveSeconds;
@@ -265,7 +273,7 @@ export function AuthProvider({ children }) {
                     const productiveDuration = now - prev.lastActiveTimestamp;
                     const productiveAddSeconds = Math.floor(productiveDuration / 1000);
                     newProductiveSeconds += productiveAddSeconds;
-                    console.log(`[Session] Adding ${productiveAddSeconds}s productive time before blur`);
+                    debugLog(`[Session] Adding ${productiveAddSeconds}s productive time before blur`);
                 }
                 
                 return {
@@ -280,7 +288,7 @@ export function AuthProvider({ children }) {
         
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                console.log('[Session] Tab hidden - calculating productive time and starting GRACE PERIOD');
+                debugLog('[Session] Tab hidden - calculating productive time and starting GRACE PERIOD');
                 setSessionData(prev => {
                     const now = Date.now();
                     let newProductiveSeconds = prev.productiveSeconds;
@@ -290,7 +298,7 @@ export function AuthProvider({ children }) {
                         const productiveDuration = now - prev.lastActiveTimestamp;
                         const productiveAddSeconds = Math.floor(productiveDuration / 1000);
                         newProductiveSeconds += productiveAddSeconds;
-                        console.log(`[Session] Adding ${productiveAddSeconds}s productive time before hidden`);
+                        debugLog(`[Session] Adding ${productiveAddSeconds}s productive time before hidden`);
                     }
                     
                     return {
@@ -302,7 +310,7 @@ export function AuthProvider({ children }) {
                     };
                 });
             } else {
-                console.log('[Session] Tab visible - calculating time away');
+                debugLog('[Session] Tab visible - calculating time away');
                 setSessionData(prev => {
                     const now = Date.now();
                     
@@ -313,7 +321,7 @@ export function AuthProvider({ children }) {
                         
                         // If away < 30 minutes, add to productive
                         if (awayDuration < GRACE_PERIOD_MS) {
-                            console.log(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding to PRODUCTIVE`);
+                            debugLog(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding to PRODUCTIVE`);
                             return {
                                 ...prev,
                                 productiveSeconds: prev.productiveSeconds + awaySeconds,
@@ -325,7 +333,7 @@ export function AuthProvider({ children }) {
                             // If away >= 30 minutes, add 30 min to productive, rest to idle
                             const graceSeconds = GRACE_PERIOD_MINUTES * 60;
                             const idleSeconds = awaySeconds - graceSeconds;
-                            console.log(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding ${GRACE_PERIOD_MINUTES} min to PRODUCTIVE, ${Math.floor(idleSeconds / 60)} min to IDLE`);
+                            debugLog(`[Session] Away for ${Math.floor(awaySeconds / 60)} min - adding ${GRACE_PERIOD_MINUTES} min to PRODUCTIVE, ${Math.floor(idleSeconds / 60)} min to IDLE`);
                             return {
                                 ...prev,
                                 productiveSeconds: prev.productiveSeconds + graceSeconds,
@@ -392,7 +400,7 @@ export function AuthProvider({ children }) {
             };
             
             localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(sessionSnapshot));
-            console.log('[Session] Persisted:', {
+            debugLog('[Session] Persisted:', {
                 productive: formatDuration(current.productiveSeconds),
                 idle: formatDuration(current.idleSeconds),
                 state: current.currentState
@@ -438,7 +446,7 @@ export function AuthProvider({ children }) {
         if (result.status === 'success') {
             // V2.0: Profile data now nested in result.profile
             setCurrentUser(result.profile);
-            console.log('[Auth] Setting user with 540 min expiry (9 hours)');
+            debugLog('[Auth] Setting user with 540 min expiry (9 hours)');
             storageAuth.setUser(result.profile); // Uses default 540 minutes
             
             // Initialize session tracking
@@ -451,7 +459,7 @@ export function AuthProvider({ children }) {
                 graceStartTime: null,
                 lastActiveTimestamp: now.getTime() // Start tracking productive time
             });
-            console.log('[Session] Session tracking initialized');
+            debugLog('[Session] Session tracking initialized');
             
             return result.profile;
         } else {
@@ -473,14 +481,14 @@ export function AuthProvider({ children }) {
             const productiveDuration = now - current.lastActiveTimestamp;
             const productiveAddSeconds = Math.floor(productiveDuration / 1000);
             finalProductiveSeconds += productiveAddSeconds;
-            console.log(`[Session] Adding final ${productiveAddSeconds}s productive time before logout`);
+            debugLog(`[Session] Adding final ${productiveAddSeconds}s productive time before logout`);
         }
         
         // Calculate final durations
         const productiveDuration = formatDuration(finalProductiveSeconds);
         const idleDuration = formatDuration(current.idleSeconds);
         
-        console.log('[Session] Logout - Productive:', productiveDuration, 'Idle:', idleDuration);
+        debugLog('[Session] Logout - Productive:', productiveDuration, 'Idle:', idleDuration);
         
         // Send session data to backend
         const params = new URLSearchParams();
@@ -495,9 +503,9 @@ export function AuthProvider({ children }) {
                 method: 'POST',
                 body: params
             });
-            console.log('[Session] Logout data sent successfully');
+            debugLog('[Session] Logout data sent successfully');
         } catch (error) {
-            console.error('[Session] Logout tracking failed:', error);
+            debugError('[Session] Logout tracking failed:', error);
             // Continue with logout even if tracking fails
         }
         

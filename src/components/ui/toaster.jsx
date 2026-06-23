@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createStandaloneToast } from '@chakra-ui/react'
 
 const { ToastContainer, toast } = createStandaloneToast({

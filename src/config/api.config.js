@@ -6,6 +6,10 @@ export const API_CONFIG = {
         csoPersonal: import.meta.env.VITE_API_CSO_PERSONAL_ENDPOINT,
         esoBersama: import.meta.env.VITE_API_ESO_BERSAMA_ENDPOINT,
         esoPersonal: import.meta.env.VITE_API_ESO_PERSONAL_ENDPOINT,
+        financeBersama: import.meta.env.VITE_API_FINANCE_BERSAMA_ENDPOINT,
+        financePersonal: import.meta.env.VITE_API_FINANCE_PERSONAL_ENDPOINT,
+        hrRecruitment: import.meta.env.VITE_HR_RECRUITMENT_ENDPOINT,
+        hrgaAsset: import.meta.env.VITE_HRGA_ASSET_ENDPOINT,
         auth: import.meta.env.VITE_API_AUTH_ENDPOINT,
     },
     timeout: 150000, // 2.5 minutes

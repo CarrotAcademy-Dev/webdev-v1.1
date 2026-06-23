@@ -66,7 +66,7 @@ const ProgressReportMonthlyPage = () => {
     const updateMutation = useMutation({
         mutationFn: updateProgressReportMonthly,
         onSuccess: () => {
-            queryClient.invalidateQueries(['progressReportMonthly']);
+            queryClient.invalidateQueries({ queryKey: ['progressReportMonthly'] });
             toaster.create({
                 title: "Berhasil update data",
                 type: "success",
@@ -423,7 +423,7 @@ const ProgressReportMonthlyPage = () => {
                                                         size="sm"
                                                         colorScheme="blue"
                                                         variant="ghost"
-                                                        onClick={() => window.open(item.link_progress_report, '_blank')}
+                                                        onClick={() => window.open(item.link_progress_report, '_blank', 'noopener,noreferrer')}
                                                     >
                                                         <FiExternalLink />
                                                     </IconButton>

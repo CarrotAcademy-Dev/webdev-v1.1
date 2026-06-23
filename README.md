@@ -1,12 +1,20 @@
-# Carrot Academy - Internal Dashboard CSO
-
-![Showcase](https://storage.googleapis.com/gemini-prod/images/5e5db08b-7d0c-48f4-aa90-0721284e2572)
+# Carrot Academy - Internal Dashboard
 
 Ini merupakan dokumentasi resmi untuk project Internal Carrot Academy. Dokumen ini bertujuan sebagai panduan instalasi, pemahaman arsitektur, dan rencana pengembangan di masa depan.
 
 ## 1. Tentang Proyek
 
-Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun menggunakan React (Vite) dan Chakra UI. Tujuannya adalah untuk menyediakan dashboard internal bagi tim Carrot Academy untuk memonitor dan mengelola berbagai data operasional, mulai dari data siswa, jadwal, hingga logistik seperti pengiriman merchandise dan lost & found.
+Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun menggunakan React (Vite) dan Chakra UI. Tujuannya adalah untuk menyediakan dashboard internal bagi tim Carrot Academy untuk memonitor dan mengelola berbagai data operasional dari **5 divisi utama**: CSO, ESO, Finance, HRGA, Admin - mulai dari data siswa, jadwal, hingga logistik seperti pengiriman merchandise, asset management, dan recruitment.
+
+**Fitur Utama**:
+- **50+ pages** untuk CSO (Customer Support Officer)
+- **15+ pages** untuk ESO (Education Support Officer)
+- **16+ pages** untuk Finance (Keuangan - NEW)
+- **16+ pages** untuk HRGA (HR & General Affairs - NEW)
+- **RBAC** dengan 3 roles & 12 jabatan
+- **Session Management** dengan auto-logout & productivity tracking
+- **Dark/Light mode** dengan Chakra UI
+- **Real-time monitoring** dengan React Query
 
 ## 2. Tech Stack Utama
 
@@ -65,35 +73,102 @@ Untuk menjalankan project ini di mesin lokal, ikutin langkah-langkah berikut:
 
 ## 4. Arsitektur & Struktur Folder
 
-Arsitektur project ini didesain agar scalable dan mudah di-maintain dengan menerapkan prinsip *Separation of Concerns*.
+Arsitektur project ini didesain agar scalable dan mudah di-maintain dengan menerapkan prinsip *Separation of Concerns* dengan **90+ routes** untuk 5 divisi operasional.
 
 ```
 src/
 |
-|-- components/        # Komponen UI reusable (InfoCard, Table, Tabs)
+|-- components/        # Komponen UI reusable (30+ components)
 |   |-- InfoCard/
 |   |-- Table/
-|   `-- ...
+|   |-- Navbar/
+|   |-- Sidebar/
+|   |-- SessionTimeout/
+|   |-- ProtectedRoute/
+|   `-- ... (Chakra UI + Styled Components)
 |
-|-- context/           # React Context untuk state global (AuthContext)
-|   `-- AuthContext.jsx
+|-- context/           # React Context untuk state global
+|   |-- AuthContext.jsx  # User auth & session management
+|   `-- SidebarContext.jsx
 |
-|-- features/          # Folder untuk fitur-fitur besar, dipisah per domain
+|-- features/          # API services per divisi
+|   |-- auth/
+|   |   `-- authApiService.jsx
 |   |-- cso/
-|   |   `-- csoApiService.js  # Kumpulan fungsi API khusus untuk fitur CSO
-|   `-- divisiLainnya/
-|       `-- divisiLainnya.js # Seterusnya kumpulan fungsi dikelompokkan per masing-masing divisi
+|   |   `-- csoApiService.jsx (100+ functions)
+|   |-- eso/
+|   |   `-- esoApiService.jsx
+|   |-- finance/
+|   |   `-- financeApiService.jsx
+|   `-- hr/
+|       |-- hrApiService.jsx
+|       `-- assetApiServices.jsx
 |
-|-- pages/             # Komponen yang merepresentasikan satu halaman penuh
-|   |-- DailyStoryPage/
-|   |   |-- index.jsx         # "Otak" halaman: state, data fetching (useQuery), handlers
-|   |   `-- DailyStoryPage.styled.jsx
-|   `-- LoginPage/
-|       |-- index.jsx
-|       `-- Login.Styled.jsx
+|-- pages/             # Full-page components (90+ pages)
+|   |-- Staff/
+|   |   |-- OverviewPage.jsx
+|   |   |-- CSO/
+|   |   |   |-- Bersama/  (30+ pages)
+|   |   |   `-- Personal/ (20+ pages)
+|   |   |-- ESO/
+|   |   |   |-- Bersama/  (10+ pages)
+|   |   |   `-- Personal/ (5+ pages)
+|   |   |-- Finance/       # 16 pages
+|   |   |   |-- Bersama/  (9 pages: Approval, Daftar Harga, etc)
+|   |   |   `-- Personal/ (7 pages: Dashboard Pendapatan, etc)
+|   |   `-- HRGA/          # 16 pages
+|   |       |-- HRRecruitmen/ (7 pages: Dashboard, Candidates, etc)
+|   |       `-- Asset/     (9 pages: Dashboard, Inventory, Maintenance, etc)
+|   |-- Admin/
+|   |-- Login.jsx
+|   |-- ForgotPassword.jsx
+|   |-- UpdatePassword.jsx
+|   |-- ProfilePage.jsx
+|   |-- SettingsPage.jsx
+|   `-- AccessDenied/
 |
-|-- App.jsx            # Pusat routing aplikasi
-`-- main.jsx           # Entry point, tempat setup semua Provider (QueryClient, Chakra, Auth)
+|-- hooks/             # Custom React hooks
+|   |-- useDebounce.js
+|   |-- useLocalStorage.js
+|   |-- usePagination.js
+|   |-- useTaskSummary.js
+|   |-- useLoadingState.js
+|   `-- useTheme.js
+|
+|-- utils/             # Utility functions
+|   |-- storage.js
+|   |-- formatters.js
+|   |-- errorHandler.js
+|   |-- validation.js
+|   |-- logger.js
+|   |-- themeColors.js
+|   `-- constants/
+|       `-- accessControl.js (RBAC: 3 roles, 12 jabatan, 8 access groups)
+|
+|-- config/            # Configuration
+|   |-- api.config.js (8 endpoints: Auth, CSO, ESO, Finance, HR, Asset)
+|   `-- navigation.config.js (menu dengan RBAC filtering)
+|
+|-- App.jsx            # Main routing (90+ routes)
+`-- main.jsx           # Entry point (QueryClient, Chakra, AuthProvider)
+```
+
+**Alur Data Utama (Pola Arsitektur):**
+
+Data mengalir dari API Service → React Query → Page Component → UI Component:
+
+```
+API Service (/features/{division}/)
+    ↓ (axios POST/GET dengan URLSearchParams)
+Google Apps Script Backend
+    ↓ (raw data dari Google Sheets)
+React Query useQuery/useMutation
+    ↓ (cached data + invalidation)
+Page Component (/pages/)
+    ↓ (data transformation, business logic)
+UI Component (/components/)
+    ↓ (render with props)
+User Interface
 ```
 
 **Alur Data Utama (Pola Arsitektur):**
@@ -139,18 +214,18 @@ Seiring aplikasi membesar, *state* di sisi UI (*client state*) juga akan makin k
 
 ### Tahap 3: Otentikasi Profesional
 
-* **Status**: ✅ Selesai - Full authentication system sudah diimplementasikan
+* **Status**: Selesai - Full authentication system sudah diimplementasikan
 * **Yang Sudah Ada**:
-    * ✅ Auth API V2.0 dengan POST method (Feb 2026)
-    * ✅ Auto-logout saat token expired (9 jam)
-    * ✅ Session tracking dengan productive/idle time (Feb 2026)
-    * ✅ Session monitoring dengan warning notification
-    * ✅ Real-time session timer di Navbar
-    * ✅ Manual session extension capability
-    * ✅ Forgot password flow dengan email (Feb 2026)
-    * ✅ Update password dengan password strength indicator (Feb 2026)
-    * ✅ Auto-logout setelah password change (Feb 2026)
-    * ✅ Orphaned session detection & recovery (Feb 2026)
+    * Auth API V2.0 dengan POST method (Feb 2026)
+    * Auto-logout saat token expired (9 jam)
+    * Session tracking dengan productive/idle time (Feb 2026)
+    * Session monitoring dengan warning notification
+    * Real-time session timer di Navbar
+    * Manual session extension capability
+    * Forgot password flow dengan email (Feb 2026)
+    * Update password dengan password strength indicator (Feb 2026)
+    * Auto-logout setelah password change (Feb 2026)
+    * Orphaned session detection & recovery (Feb 2026)
 * **Rencana Lanjutan**: 
     * Two-Factor Authentication (2FA) dengan email OTP
     * Social login (Google OAuth)
@@ -160,92 +235,147 @@ Seiring aplikasi membesar, *state* di sisi UI (*client state*) juga akan makin k
 
 ## 6. Security & Access Control
 
-Project ini sudah dilengkapi dengan sistem keamanan multi-layer:
+Project ini sudah dilengkapi dengan sistem keamanan multi-layer untuk melindungi data operasional:
 
 ### Role-Based Access Control (RBAC)
 * **3 Roles**: Staff, Admin, Super Admin
-* **12 Jabatan**: CSO, ESO, Finance, IT, Marcom, Mentor, dll.
+* **12 Jabatan**: CSO, ESO, Finance, HRGA, IT, Marcom, Mentor, Intern, Operation, EDU, SMS, OB
 * **Route Protection**: Protected berdasarkan role dan jabatan
 * **Menu Visibility**: Dynamic menu rendering sesuai permission
-* Dokumentasi lengkap: `RBAC_GUIDE.md`
+* **Access Groups**: ADMIN_ONLY, CSO_ONLY, ESO_ONLY, FINANCE_ONLY, HRGA_ONLY, dan kombinasinya
+* **Dokumentasi**: [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md)
 
 ### Token Expiry & Session Management
-* **Auto-logout**: Token expired otomatis logout setelah 9 jam (540 menit)
-* **Warning System**: Toast notification 15 menit sebelum expired
-* **Session Extension**: User bisa perpanjang sesi manual
+* **Auto-logout**: Token expired otomatis logout setelah 8 jam (480 menit)
+* **Warning System**: 
+  - Toast notification 15 menit sebelum expired
+  - Modal dialog 10 menit sebelum expired
+  - User dapat memperpanjang sesi atau logout
+* **Session Extension**: User bisa perpanjang sesi manual (tambah 8 jam)
 * **Real-time Badge**: Timer di Navbar dengan color coding
-* Dokumentasi lengkap: `TOKEN_EXPIRY_GUIDE.md`
+* **Dokumentasi**: [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md)
 
-### Productivity Tracking (NEW - Feb 2026)
+### Productivity Tracking (Feb 2026)
 * **Session Monitoring**: Real-time productive vs idle time tracking
 * **Grace Period**: 30 menit tolerance untuk multitasking
 * **Session Recovery**: Auto-restore session setelah browser refresh
-* **Orphaned Detection**: Cleanup session yang tidak selesai dengan benar
-* **Backend Integration**: Productive/idle duration otomatis terkirim saat logout
-* **Format**: HH:mm:ss untuk analytics dashboard
+* **Orphaned Detection**: Cleanup session yang tidak selesai dengan benar (9-hour threshold)
+* **Backend Integration**: Productive/idle duration terkirim saat logout untuk analytics
 
-### Password Management (NEW - Feb 2026)
+### Password Management (Feb 2026)
 * **Forgot Password**: Reset password via email dengan temporary password
 * **Update Password**: Self-service password change dengan validasi
 * **Password Strength**: Real-time indicator dengan 5 requirements
+  - 8-20 karakter
+  - 1+ uppercase letter
+  - 1+ lowercase letter
+  - 1+ number
+  - 1+ special character
 * **Auto-logout**: Force re-login setelah password berhasil diubah
-* **Validation**: Client-side dan server-side validation
-* **Requirements**: 8-20 karakter, uppercase, lowercase, number, symbol
+* **Server Validation**: Backend validation untuk security
 
-### Storage Security
-* **Prefix isolation**: `carrot_academy_` prefix untuk semua keys
-* **Expiry check**: Otomatis hapus expired data
-* **Safe wrappers**: Error handling untuk semua localStorage operations
-* **No sensitive data**: Password tidak pernah disimpan di client
-* **Session persistence**: Encrypted session data dengan localStorage
+### Divisi Access Control (NEW - June 2026)
+* **Finance Division**: Finance-specific pages & API endpoints
+  - Finance_ONLY access untuk staff dengan jabatan Finance
+  - Finance_OR_ADMIN untuk Admin juga bisa akses
+  - 16 pages dengan dedicated API service
+* **HRGA Division**: HR & Asset management pages
+  - HRGA_ONLY access untuk staff dengan jabatan HRGA
+  - HRGA_OR_ADMIN untuk Admin juga bisa akses
+  - 16 pages dengan 2 dedicated API services (HR + Asset)
 
 **Catatan Penting**: Client-side security adalah UX layer. Backend validation tetap WAJIB untuk security sesungguhnya.
 
 ## 7. Dokumentasi & Learning Path
 
-Project ini memiliki dokumentasi lengkap yang terstruktur. Untuk memahami project dengan baik, ikuti urutan baca dokumentasi berikut:
+Project ini memiliki dokumentasi lengkap yang terstruktur untuk memudahkan handover dan onboarding developer baru.
 
-### Quick Start (Untuk Developer Baru)
-1. **[README.md](README.md)** (dokumen ini) - Overview project, instalasi, dan arsitektur
-2. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Cheat sheet utilities dan hooks
-3. **[IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)** - Status fitur dan utilities yang sudah dibuat
+### START HERE - Handover Documentation
 
-### Core Documentation (Developer)
-4. **[RBAC_GUIDE.md](RBAC_GUIDE.md)** - Access control dan permission system
-5. **[TOKEN_EXPIRY_GUIDE.md](TOKEN_EXPIRY_GUIDE.md)** - Session management dan token expiry
-6. **[THEME_GUIDE.md](THEME_GUIDE.md)** - Dark/Light mode dan theming system
+** [HANDOVER_DOCUMENTATION.md](HANDOVER_DOCUMENTATION.md)** - Comprehensive handover guide dengan:
+- System Overview & Current State (fitur yang sudah selesai)
+- Credentials & Endpoint Mapping (env vars, GAS endpoints, database structure)
+- Pending Tasks & Next Steps (checklist untuk developer berikutnya)
 
-### Feature-Specific Guides
-7. **[DASHBOARD_PROSPEKTIF_GUIDE.md](DASHBOARD_PROSPEKTIF_GUIDE.md)** - Dashboard Prospektif features
-8. **[DASHBOARD_REMINDER_GUIDE.md](DASHBOARD_REMINDER_GUIDE.md)** - Dashboard Reminder & Janjian Temu
+**Mulai baca dari sini untuk quick understanding tentang project status dan apa yang perlu dikerjakan selanjutnya.**
 
-### Workflow & Process
-9. **[GIT_WORKFLOW.md](GIT_WORKFLOW.md)** - Git branching strategy dan commit conventions
-10. **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment process dan environment setup
-11. **[APP_NAVIGATION_FLOW.md](APP_NAVIGATION_FLOW.md)** - User navigation flows
+---
 
-### Planning & Stories
-12. **[USER_STORIES.md](USER_STORIES.md)** - User stories dan requirements
-13. **[USER_FLOW_GUIDE.md](USER_FLOW_GUIDE.md)** - Detailed user flow diagrams
-14. **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - Known issues dan planned improvements
+### View All Documentation
 
-### Theme Migration (Historical)
-15. **[THEME_MIGRATION.md](THEME_MIGRATION.md)** - Migration dari Chakra v2 ke v3
-16. **[THEME_UPDATE_SUMMARY.md](THEME_UPDATE_SUMMARY.md)** - Summary of theme changes
+**[Klik di sini untuk melihat SEMUA dokumentasi →](docs/)**
 
-### Master Documentation Index
-17. **[FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md)** - Complete documentation navigation guide
+Semua dokumentasi teknis sudah terorganisir di folder `/docs/` dengan index, tabel lengkap, dan rekomendasi reading by role.
+
+---
+
+### Complete Documentation Guide
+
+#### Essential Reading (HARUS BACA)
+|                    Document                    |                      Purpose                | Read Time |
+|------------------------------------------------|---------------------------------------------|-----------|
+| [README.md](README.md)                         | Project overview, tech stack, arsitektur    | 15 min    |
+| [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)       | Cheat sheet untuk developer                 | 5 min     |
+| [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md)                 | Role-Based Access Control sistem            | 15 min    |
+| [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md) | Session management & auto-logout            | 10 min    |
+| [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)             | Git branching strategy & commit conventions | 10 min    |
+
+#### Technical Guides
+|                        Document                      |              Purpose             |          For         |
+|------------------------------------------------------|----------------------------------|----------------------|
+| [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) | Utilities & features status      | Developer            |
+| [docs/THEME_GUIDE.md](docs/THEME_GUIDE.md)                     | Dark/Light mode & theming system | Frontend Developer   |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)                       | Vercel deployment process        | DevOps/DevOps-minded |
+| [docs/LOGGING_GUIDE.md](docs/LOGGING_GUIDE.md)                 | Logging & debugging patterns     | Developer            |
+
+#### Feature Guides (Optional)
+|                               Document                         |             Purpose            | When Needed |
+|----------------------------------------------------------------|--------------------------------|-------------|
+| [docs/DASHBOARD_PROSPEKTIF_GUIDE.md](docs/DASHBOARD_PROSPEKTIF_GUIDE.md) | CSO Prospektif dashboard       | Working on CSO prospektif |
+| [docs/DASHBOARD_REMINDER_GUIDE.md](docs/DASHBOARD_REMINDER_GUIDE.md)     | CSO Reminder dashboard         | Working on CSO reminder |
+| [docs/APP_NAVIGATION_FLOW.md](docs/APP_NAVIGATION_FLOW.md)               | Navigation & routing structure | Understanding menu structure |
+
+#### User Documentation
+|                   Document               |              Purpose            |               For             |
+|------------------------------------------|---------------------------------|-------------------------------|
+| [docs/USER_STORIES.md](docs/USER_STORIES.md)       | User stories & workflows        | Business analyst, Stakeholder |
+| [docs/USER_FLOW_GUIDE.md](docs/USER_FLOW_GUIDE.md) | Detailed user journey flows     | QA, Product Manager           |
+| [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md)       | Known issues & planned features | Project tracking              |
+
+---
 
 ### Recommended Reading by Role
 
-**Frontend Developer (New)**: 1 → 2 → 3 → 4 → 5 → 6 → 9  
-**Backend Integration**: 4 → 5 → 11 → 9  
-**UI/UX Designer**: 6 → 15 → 16 → 11  
-**QA/Testing**: 3 → 7 → 8 → 11 → 14  
-**Project Manager**: 1 → 3 → 12 → 13 → 14  
-**DevOps**: 9 → 10
+**Frontend Developer (New to project)**:
+1. README.md → [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md) → [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md) → [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md) → [docs/THEME_GUIDE.md](docs/THEME_GUIDE.md) → [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)
 
-**Tips**: Gunakan [FLOW_DOCUMENTATION_INDEX.md](FLOW_DOCUMENTATION_INDEX.md) sebagai navigation guide untuk menjelajahi dokumentasi berdasarkan kebutuhan spesifik Anda.
+**Backend/GAS Developer**:
+1. README.md → HANDOVER_DOCUMENTATION.md (fokus ke section 2) → [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)
+
+**QA/Tester**:
+1. README.md → [docs/USER_STORIES.md](docs/USER_STORIES.md) → [docs/USER_FLOW_GUIDE.md](docs/USER_FLOW_GUIDE.md) → [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
+
+**DevOps/Deployment**:
+1. [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) → [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md) → HANDOVER_DOCUMENTATION.md (section 2 - environment vars)
+
+**Project Manager/Stakeholder**:
+1. README.md → [docs/USER_STORIES.md](docs/USER_STORIES.md) → [docs/IMPROVEMENTS.md](docs/IMPROVEMENTS.md)
+
+**UI/UX Designer**:
+1. [docs/THEME_GUIDE.md](docs/THEME_GUIDE.md) → [docs/APP_NAVIGATION_FLOW.md](docs/APP_NAVIGATION_FLOW.md) → [docs/DASHBOARD_PROSPEKTIF_GUIDE.md](docs/DASHBOARD_PROSPEKTIF_GUIDE.md)
+
+---
+
+### Handover Checklist
+
+Sebelum mulai development, pastikan Anda sudah:
+- [ ] Baca README.md & [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)
+- [ ] Pahami RBAC dari [docs/RBAC_GUIDE.md](docs/RBAC_GUIDE.md)
+- [ ] Pahami session management dari [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md)
+- [ ] Setup local development environment
+- [ ] Baca [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md) untuk understand branching strategy
+- [ ] Baca HANDOVER_DOCUMENTATION.md untuk know current status
+- [ ] Siap untuk start development atau maintenance
 
 ## 8. Recent Updates & Features (February 2026)
 
@@ -305,4 +435,4 @@ Project ini memiliki dokumentasi lengkap yang terstruktur. Untuk memahami projec
 
 Dokumentasi ini adalah dokumen hidup. Selalu perbarui seiring dengan perkembangan project.
 
-Last update: 28 February 2026
+Last update: 23 June 2026
