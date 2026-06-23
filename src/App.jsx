@@ -96,6 +96,8 @@ const MaintenancePage = lazy(() => import('./pages/Staff/HRGA/Asset/MaintenanceP
 const PeminjamanBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/PeminjamanBarang'));
 const DetailBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/DetailBarangPage'));
 const AssetHistoryPage = lazy(() => import('./pages/Staff/HRGA/Asset/AssetHistoryPage'));
+const KelompokBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/KelompokBarangPage'));
+const PengkodeanPage = lazy(() => import('./pages/Staff/HRGA/Asset/PengkodeanPage'));
 
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
@@ -117,678 +119,694 @@ function App() {
       <div data-theme={colorMode}>
         <Suspense fallback={<Loading />}>
           <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route 
-            path="/update-password" 
-            element={
-              <ProtectedRoute>
-                <UpdatePasswordPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/settings" 
-            element={
-              <ProtectedRoute>
+              <Route path="/" element={<Login />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route 
+                path="/update-password" 
+                element={
+                  <ProtectedRoute>
+                    <UpdatePasswordPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <SettingsPage />
+                    </Layout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <ProfilePage />
+                    </Layout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/home" 
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <OverviewPage />
+                  </Layout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/home/kpi" 
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <KpiDetailsPage />
+                  </Layout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/attendance" 
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <AttendancePage />
+                  </Layout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/payslip" 
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PayslipPage />
+                  </Layout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/my-tasks/daftar-kirim-merch" 
+              element={
+                <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                  <Layout>
+                    <DaftarKirimMerchPage />
+                  </Layout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/my-tasks/daftar-siswa-trial" 
+              element={
+                <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                  <Layout>
+                    <DaftarSiswaTrialPage />
+                  </Layout>
+                </ProtectedRoute>
+              } 
+            />
+            <Route path='/my-tasks/daily-story' element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
                 <Layout>
-                  <SettingsPage />
+                  <DailyStoryPage />
                 </Layout>
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
+            } />
+            <Route path='/my-tasks/daftar-offboarding' element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
                 <Layout>
-                  <ProfilePage />
+                  <DaftarOffboardingPage />
                 </Layout>
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/home" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <OverviewPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/home/kpi" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <KpiDetailsPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/attendance" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <AttendancePage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/payslip" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <PayslipPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/my-tasks/daftar-kirim-merch" 
-          element={
-            <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-              <Layout>
-                <DaftarKirimMerchPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/my-tasks/daftar-siswa-trial" 
-          element={
-            <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-              <Layout>
-                <DaftarSiswaTrialPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route path='/my-tasks/daily-story' element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DailyStoryPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/my-tasks/daftar-offboarding' element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DaftarOffboardingPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/my-tasks/pendaftaranfd-course' element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <PendaftaranFdPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/my-tasks/lostnfound' element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <LostNFoundPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/my-tasks/prospektif-dari-marcom' element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <ProspektifMarcomPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/daftar-kelas-tersedia" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DaftarKelasTersediaPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/rekap-jadwal-mentor" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <RekapJadwalMentorPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/statistik-prospektif" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <StatistikProspektifPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/janji-temu" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <JanjiTemuPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/ticket-external" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <TicketExternalPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/pendaftaran-lanjutan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <PendaftaranLanjutanPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/partnership" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <PartnershipPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-siswa-aktif" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DashboardSiswaAktifPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-prospektif" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DashboardProspektifPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-reminder" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DashboardReminderPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-daily" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DashboardDailyPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-invoice" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DashboardInvoicePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-portfolio" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <DashboardPortfolioPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/review-karyawan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <ReviewKaryawanPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/dashboard-karyawan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <RekapAbsensiPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/profil-siswa" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <ProfilSiswaPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/prospektif-form" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <ProspektifFormPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/create-ticketing" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <CreateTicketingPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/ticketing-internal" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <TicketingInternalPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/fd-student-identity" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <FdStudentIdentityPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/my-tasks/track-ticket-fme" element={
-          <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
-            <Layout>
-              <TrackTicketFmePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            } />
+            <Route path='/my-tasks/pendaftaranfd-course' element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <PendaftaranFdPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path='/my-tasks/lostnfound' element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <LostNFoundPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path='/my-tasks/prospektif-dari-marcom' element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <ProspektifMarcomPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/daftar-kelas-tersedia" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DaftarKelasTersediaPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/rekap-jadwal-mentor" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <RekapJadwalMentorPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/statistik-prospektif" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <StatistikProspektifPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/janji-temu" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <JanjiTemuPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/ticket-external" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <TicketExternalPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/pendaftaran-lanjutan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <PendaftaranLanjutanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/partnership" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <PartnershipPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-siswa-aktif" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DashboardSiswaAktifPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-prospektif" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DashboardProspektifPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-reminder" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DashboardReminderPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-daily" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DashboardDailyPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-invoice" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DashboardInvoicePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-portfolio" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <DashboardPortfolioPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/review-karyawan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <ReviewKaryawanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/dashboard-karyawan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <RekapAbsensiPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/profil-siswa" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <ProfilSiswaPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/prospektif-form" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <ProspektifFormPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/create-ticketing" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <CreateTicketingPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/ticketing-internal" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <TicketingInternalPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/fd-student-identity" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <FdStudentIdentityPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/my-tasks/track-ticket-fme" element={
+              <ProtectedRoute {...ACCESS_GROUPS.CSO_OR_ADMIN}>
+                <Layout>
+                  <TrackTicketFmePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        {/* ESO Routes */}
-        {/* ESO Bersama */}
-        <Route path="/eso/nomor-urut-sertifikat" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <NomorUrutSertifikatPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/pendaftaran-lanjutan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <PendaftaranLanjutanPageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/kelengkapan-data" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <KelengkapanDataPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/artwork-of-the-month" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <ArtworkOfTheMonthPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/student-report" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <StudentReportPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/progress-report-monthly" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <ProgressReportMonthlyPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/cari-nama-monthly" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <CariNamaMonthlyPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/daftar-offboarding" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <DaftarOffboardingPageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/eso/ticket-external" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <TicketExternalPageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        
-        {/* ESO Personal */}
-        <Route path="/eso/track-ticket-fme" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <TrackTicketFmePageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            {/* ESO Routes */}
+            {/* ESO Bersama */}
+            <Route path="/eso/nomor-urut-sertifikat" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <NomorUrutSertifikatPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/pendaftaran-lanjutan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <PendaftaranLanjutanPageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/kelengkapan-data" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <KelengkapanDataPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/artwork-of-the-month" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <ArtworkOfTheMonthPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/student-report" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <StudentReportPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/progress-report-monthly" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <ProgressReportMonthlyPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/cari-nama-monthly" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <CariNamaMonthlyPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/daftar-offboarding" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <DaftarOffboardingPageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/eso/ticket-external" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <TicketExternalPageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            {/* ESO Personal */}
+            <Route path="/eso/track-ticket-fme" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <TrackTicketFmePageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/eso/ticketing-internal" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <TicketingInternalPageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/eso/ticketing-internal" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <TicketingInternalPageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/eso/create-ticketing-internal" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <CreateTicketingInternalPageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/eso/create-ticketing-internal" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <CreateTicketingInternalPageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/eso/cari-data-student-report" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <CariDataStudentReportPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        
-        <Route path='/eso/dashboard-fulltime' element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <DashboardFDPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/eso/dashboard-ticketing-mentor' element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <DashboardTicketingMentorPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/eso/fd-identity' element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <FDIdentityPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path='/eso/review-karyawan' element={
-          <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
-            <Layout>
-              <ReviewKaryawanPageEso />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/eso/cari-data-student-report" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <CariDataStudentReportPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path='/eso/dashboard-fulltime' element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <DashboardFDPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path='/eso/dashboard-ticketing-mentor' element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <DashboardTicketingMentorPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path='/eso/fd-identity' element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <FDIdentityPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path='/eso/review-karyawan' element={
+              <ProtectedRoute {...ACCESS_GROUPS.ESO_OR_ADMIN}>
+                <Layout>
+                  <ReviewKaryawanPageEso />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        {/* Finance Routes */}
-        <Route path="/finance/approval-pendaftaran" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <ApprovalPendaftaranPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            {/* Finance Routes */}
+            <Route path="/finance/approval-pendaftaran" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <ApprovalPendaftaranPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/daftar-harga" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <DaftarHargaPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/daftar-harga" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <DaftarHargaPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/data-bkm" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <DataBKMPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/data-bkm" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <DataBKMPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/bukti-pembayaran" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <BuktiPembayaranPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/bukti-pembayaran" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <BuktiPembayaranPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/tagihan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <TagihanPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/tagihan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <TagihanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/daftar-offboarding" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <DaftarOffboardingFinancePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/daftar-offboarding" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <DaftarOffboardingFinancePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/pendaftaran-fulltime" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <PendaftaranFulltimeCoursePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/pendaftaran-fulltime" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <PendaftaranFulltimeCoursePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/ticket-external" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <TicketExternalFinancePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/ticket-external" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <TicketExternalFinancePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/track-ticket-from-me" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <TrackTicketFromMePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/track-ticket-from-me" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <TrackTicketFromMePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/daftar-kirim-merch" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <DaftarKirimMerchFinancePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/daftar-kirim-merch" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <DaftarKirimMerchFinancePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/ticketing-internal" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <TicketingInternalFinancePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/ticketing-internal" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <TicketingInternalFinancePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/daftar-harga-personal" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <DaftarHargaPersonalPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/daftar-harga-personal" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <DaftarHargaPersonalPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/review-karyawan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <ReviewKaryawanFinPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/review-karyawan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <ReviewKaryawanFinPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/statistik-tagihan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <StatistikTagihanPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/statistik-tagihan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <StatistikTagihanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/dashboard-pendapatan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <DashboardPendapatanPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/dashboard-pendapatan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <DashboardPendapatanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/finance/profile-siswa" element={
-          <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
-            <Layout>
-              <ProfileSiswaPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/finance/profile-siswa" element={
+              <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+                <Layout>
+                  <ProfileSiswaPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/dashboard-report" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <DashboardReportPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/dashboard-report" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DashboardReportPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/jam-kerja" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <JamKerjaPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/jam-kerja" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <JamKerjaPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/tugas-interview" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <TugasInterviewPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/tugas-interview" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <TugasInterviewPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/hasil-response-test-kandidat" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <HasilResponseTestKandidatPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/hasil-response-test-kandidat" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <HasilResponseTestKandidatPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/applicant-data" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <ApplicantDataPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/applicant-data" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <ApplicantDataPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/human-resource-requests" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <HumanResourceRequestsPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/human-resource-requests" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <HumanResourceRequestsPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/penilaian-kandidat" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <PenilaianKandidatPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/penilaian-kandidat" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PenilaianKandidatPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/asset-data" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <AssetDataPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/asset-data" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <AssetDataPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/dashboard-asset" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <DashboardAssetPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/dashboard-asset" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DashboardAssetPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/daily-asset" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <DailyAssetPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/daily-asset" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DailyAssetPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/penyusutan" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <PenyusutanPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/penyusutan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PenyusutanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/services" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <ServicesPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/services" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <ServicesPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/maintenance" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <MaintenancePage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/maintenance" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <MaintenancePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/peminjaman-barang" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <PeminjamanBarangPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/peminjaman-barang" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PeminjamanBarangPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/detail-barang" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <DetailBarangPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/detail-barang" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DetailBarangPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        <Route path="/hrga/asset-history" element={
-          <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
-            <Layout>
-              <AssetHistoryPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
+            <Route path="/hrga/asset-history" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <AssetHistoryPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
 
-        {/* Admin Routes */}
-        <Route path="/admin/register-user" element={
-          <ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
-            <Layout>
-              <RegisterUserPage />
-            </Layout>
-          </ProtectedRoute>
-        } />
-        <Route path="/access-denied" element={<AccessDenied />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Suspense>
-    </div>
+            <Route path="/hrga/kelompok-barang" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <KelompokBarangPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/pengkodean" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PengkodeanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Admin Routes */}
+            <Route path="/admin/register-user" element={
+              <ProtectedRoute {...ACCESS_GROUPS.ADMIN_ONLY}>
+                <Layout>
+                  <RegisterUserPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/access-denied" element={<AccessDenied />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </div>
     </ErrorBoundary>
   );
 }

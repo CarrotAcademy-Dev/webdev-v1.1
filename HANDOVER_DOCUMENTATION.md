@@ -1,6 +1,7 @@
 # CarrotAcademy v1.1 - Handover Documentation
 
 **Created**: June 22, 2026  
+**Last Updated**: June 23, 2026  
 **Purpose**: Complete handover guide untuk developer/team berikutnya  
 **Status**: Ready for handover
 
@@ -69,7 +70,7 @@
 
 ---
 
-### 1.3 Development Status (Per 22 Juni 2026)
+### 1.3 Development Status (Per 23 Juni 2026)
 
 #### COMPLETED FEATURES
 
@@ -121,25 +122,21 @@
 - Nomor Urut Sertifikat
 - Artwork of the Month
 - Progress Report Monthly
+- Daftar Offboarding
 - & lainnya
 
-**Finance Features**
-- Approval Pendaftaran
-- Daftar Harga
-- Data BKM
-- Bukti Pembayaran
-- Tagihan
-- Statistik Tagihan
-- Dashboard Pendapatan
-- Merchandise Delivery
-- & lainnya
+**Finance Division Features**
+- **Bersama (Shared)**: Approval Pendaftaran, Daftar Harga, Data BKM, Bukti Pembayaran, Tagihan, Daftar Offboarding, Pendaftaran Fulltime Course, Merchandise Delivery, Ticketing External
+- **Personal**: Dashboard Pendapatan, Daftar Harga, Ticketing Internal, Track Ticket, Review Karyawan, Statistik Tagihan, Profile Siswa
+- Total: 16 pages
+- API Service: `financeApiService.jsx`
 
-**HRGA Features**
-- HR Recruitment (Dashboard, Candidates, Interviews)
-- Asset Management (Dashboard, Asset Data, Maintenance)
-- Daily Asset Tracking
-- Depreciation Calculation
-- Asset Services & Maintenance
+**HRGA Division Features**
+- **HR Recruitment** (7 pages): Dashboard Report, HR Requests, Jam Kerja, Tugas Interview, Hasil Response Test, Applicant Data, Penilaian Kandidat
+- **Asset Management** (9 pages): Dashboard Asset, Asset Data, Daily Asset, Detail Barang, Maintenance, Peminjaman Barang, Penyusutan, Services, Asset History
+- Total: 16 pages
+- API Services: `hrApiService.jsx` + `assetApiServices.jsx`
+- Endpoints: HR Recruitment & HRGA Asset Management
 
 **System Features**
 - Dark/Light mode toggle
@@ -228,14 +225,14 @@ src/
 │   │   │   ├── Bersama/            # Shared CSO tasks (50+ pages)
 │   │   │   └── Personal/           # Personal CSO tasks
 │   │   ├── ESO/
-│   │   │   ├── Bersama/
-│   │   │   └── Personal/
+│   │   │   ├── Bersama/            # ESO shared (10+ pages)
+│   │   │   └── Personal/           # ESO personal (5+ pages)
 │   │   ├── Finance/
-│   │   │   ├── Bersama/
-│   │   │   └── Personal/
+│   │   │   ├── Bersama/            # Finance shared (9 pages)
+│   │   │   └── Personal/           # Finance personal (7 pages)
 │   │   └── HRGA/
-│   │       ├── HRRecruitmen/
-│   │       └── Asset/
+│   │       ├── HRRecruitmen/       # HR Recruitment (7 pages)
+│   │       └── Asset/              # Asset Management (9 pages)
 │   ├── Admin/
 │   │   └── RegisterUserPage.jsx
 │   ├── Login.jsx
@@ -251,12 +248,12 @@ src/
 │   ├── cso/
 │   │   └── csoApiService.jsx        # CSO API functions (100+ functions)
 │   ├── eso/
-│   │   └── esoApiService.jsx
+│   │   └── esoApiService.jsx        # ESO API functions
 │   ├── finance/
-│   │   └── financeApiService.jsx
+│   │   └── financeApiService.jsx    # Finance API functions
 │   └── hr/
-│       ├── hrApiService.jsx
-│       └── assetApiServices.jsx
+│       ├── hrApiService.jsx         # HR Recruitment API functions
+│       └── assetApiServices.jsx     # Asset Management API functions
 │
 ├── context/                         # React Context
 │   ├── AuthContext.jsx              # Auth state + session management
@@ -332,6 +329,10 @@ VITE_API_ESO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[ESO_PERSONAL_
 # Finance API Endpoints
 VITE_API_FINANCE_BERSAMA_ENDPOINT=https://script.google.com/macros/s/[FINANCE_BERSAMA_SCRIPT_ID]/exec
 VITE_API_FINANCE_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[FINANCE_PERSONAL_SCRIPT_ID]/exec
+
+# HR API Endpoints
+VITE_HR_RECRUITMENT_ENDPOINT=https://script.google.com/macros/s/[HR_RECRUITMENT_SCRIPT_ID]/exec
+VITE_HRGA_ASSET_ENDPOINT=https://script.google.com/macros/s/[HRGA_ASSET_SCRIPT_ID]/exec
 
 # Auth API Endpoint
 VITE_API_AUTH_ENDPOINT=https://script.google.com/macros/s/[AUTH_SCRIPT_ID]/exec
@@ -412,14 +413,87 @@ VITE_ENABLE_ANALYTICS=false
 
 ---
 
-#### **ESO BERSAMA & PERSONAL ENDPOINTS**
-Similar structure untuk ESO operations (student reports, FD data, certifications, etc)
+#### **ESO BERSAMA ENDPOINT** - Shared ESO Tasks
 
-#### **FINANCE ENDPOINTS**
-Finance-specific operations (invoices, payments, pricing, offboarding, etc)
+|       Function      |            Action         | Method | Parameters |            Returns             |
+|---------------------|---------------------------|--------|------------|--------------------------------|
+| Student Report      | `get-student-report`      | GET    | `date`     | Student learning progress      |
+| Ticketing External  | `get-ticketing-external`  | GET    | `year`     | External tickets by year       |
+| Artwork Month       | `get-artwork-month`       | GET    | `date`     | Monthly artwork data           |
+| Kelengkapan Data    | `get-kelengkapan-data`    | GET    | -          | Data completeness records      |
+| Nomor Urut Sertifikat | `get-nomor-urut-sertif` | GET    | `type`     | Certificate number assignments |
+| Progress Report     | `get-progress-report`     | GET    | `month,year` | Monthly progress reports      |
+| & more              | ...                       | ...    | ...        | ...                            |
 
-#### **HR ENDPOINTS**
-HR Recruitment & Asset Management operations
+#### **ESO PERSONAL ENDPOINT** - Personal ESO Tasks
+
+|       Function      |            Action         | Method | Parameters |            Returns             |
+|---------------------|---------------------------|--------|------------|--------------------------------|
+| Dashboard FD        | `get-dashboard-fd`        | GET    | -          | Foundation dashboard data      |
+| Ticketing Internal  | `get-ticketing-internal`  | GET    | -          | Internal tickets               |
+| & more              | ...                       | ...    | ...        | ...                            |
+
+---
+
+#### **FINANCE BERSAMA ENDPOINT** - Shared Finance Tasks
+
+|       Function      |            Action         | Method | Parameters |            Returns             |
+|---------------------|---------------------------|--------|------------|--------------------------------|
+| Approval Pendaftaran | `get-approval-pendaft`   | GET    | -          | Pending registrations for approval |
+| Daftar Harga        | `get-daftar-harga`        | GET    | -          | Price list                     |
+| Data BKM            | `get-data-bkm`            | GET    | -          | Bank & Component Master data   |
+| Bukti Pembayaran    | `get-bukti-pembayaran`    | GET    | -          | Payment proofs                 |
+| Tagihan             | `get-tagihan`             | GET    | -          | Invoice list                   |
+| Daftar Offboarding  | `get-daftar-offboarding`  | GET    | -          | Offboarding records            |
+| Pendaftaran FTC     | `get-pendaft-fulltime`    | GET    | -          | Fulltime course registrations  |
+| Merchandise         | `get-kirim-merchandise`   | GET    | -          | Merchandise delivery list      |
+| Ticketing External  | `get-ticketing-external`  | GET    | -          | External tickets               |
+| & more              | ...                       | ...    | ...        | ...                            |
+
+#### **FINANCE PERSONAL ENDPOINT** - Personal Finance Tasks
+
+|       Function      |            Action         | Method | Parameters |            Returns             |
+|---------------------|---------------------------|--------|------------|--------------------------------|
+| Dashboard Pendapatan | `get-dashboard-pendapat` | GET    | -          | Revenue dashboard              |
+| Daftar Harga Personal | `get-daftar-harga-pers` | GET    | -          | Personal price list            |
+| Ticketing Internal  | `get-ticketing-internal`  | GET    | -          | Internal tickets               |
+| Track Ticket        | `get-track-ticket-from-me` | GET   | -          | Tickets from this user         |
+| Review Karyawan     | `get-review-karyawan`     | GET    | -          | Employee reviews               |
+| Statistik Tagihan   | `get-statistik-tagihan`   | GET    | `date`     | Invoice statistics             |
+| Profile Siswa       | `get-profile-siswa`       | GET    | `psid`     | Student profile                |
+| & more              | ...                       | ...    | ...        | ...                            |
+
+---
+
+#### **HR RECRUITMENT ENDPOINT** - Hiring & Recruitment
+
+|       Function      |            Action         | Method | Parameters |            Returns             |
+|---------------------|---------------------------|--------|------------|--------------------------------|
+| Dashboard Report    | `get-dashboard-report`    | GET    | -          | Recruitment dashboard data    |
+| HR Requests         | `get-hr-requests`         | GET    | -          | Open HR requests               |
+| Jam Kerja           | `get-jam-kerja`           | GET    | -          | Working hours data             |
+| Tugas Interview     | `get-tugas-interview`     | GET    | -          | Interview assignments         |
+| Hasil Response Test | `get-hasil-response-test` | GET    | -          | Candidate test results         |
+| Applicant Data      | `get-applicant-data`      | GET    | -          | All applicants                 |
+| Penilaian Kandidat  | `get-penilaian-kandidat`  | GET    | `id_kandidat` | Candidate assessment       |
+| & more              | ...                       | ...    | ...        | ...                            |
+
+---
+
+#### **HRGA ASSET ENDPOINT** - Asset Management
+
+|       Function      |            Action         | Method | Parameters |            Returns             |
+|---------------------|---------------------------|--------|------------|--------------------------------|
+| Dashboard Asset     | `get-dashboard-asset`     | GET    | -          | Asset overview                 |
+| Asset Data          | `get-asset-data`          | GET    | -          | All assets inventory           |
+| Daily Asset         | `get-daily-asset`         | GET    | `date`     | Daily asset movements          |
+| Detail Barang       | `get-detail-barang`       | GET    | `asset_id` | Item details                   |
+| Maintenance         | `get-maintenance`         | GET    | -          | Maintenance records            |
+| Peminjaman Barang   | `get-peminjaman-barang`   | GET    | -          | Item loans & returns           |
+| Penyusutan          | `get-penyusutan`          | GET    | `periode`  | Depreciation calculations      |
+| Services            | `get-services`            | GET    | -          | Service records                |
+| Asset History       | `get-asset-history`       | GET    | `asset_id` | Asset transaction history      |
+| & more              | ...                       | ...    | ...        | ...                            |
 
 ---
 
@@ -433,10 +507,14 @@ HR Recruitment & Asset Management operations
 | CSO Personal Tasks  | Personal dashboard data         | CSO      | Active |
 | ESO Student Reports | Student learning progress       | ESO      | Active |
 | ESO FD Data         | Foundation data & tracking      | ESO      | Active |
+| ESO Offboarding     | Offboarding process tracking    | ESO      | Active |
 | Finance Tagihan     | Invoicing data                  | Finance  | Active |
 | Finance Pembayaran  | Payment records                 | Finance  | Active |
+| Finance BKM         | Bank & Component Master         | Finance  | Active |
+| Finance Pricing     | Price list management           | Finance  | Active |
 | HR Candidates       | Recruitment candidate data      | HRGA     | Active |
 | HR Assets           | Asset inventory & tracking      | HRGA     | Active |
+| HR Maintenance      | Asset maintenance records       | HRGA     | Active |
 | Auth Users          | User accounts & credentials     | Auth     | Active |
 | System Logs         | Activity logging                | System   | Active |
 
@@ -469,9 +547,47 @@ HR Recruitment & Asset Management operations
 - ... & many more
 
 // esoApiService.jsx
-// financeApiService.jsx
-// hrApiService.jsx
-// assetApiServices.jsx
+- getStudentReport()
+- getTicketingExternal()
+- getArtworkMonth()
+- getKelengkapanData()
+- getNomorUrutSertifikat()
+- getProgressReport()
+- ... & many more
+
+// financeApiService.jsx (NEW - 16 pages)
+- getApprovalPendaftaran()
+- getDaftarHarga()
+- getDataBKM()
+- getBuktiPembayaran()
+- getTagihan()
+- getStatistikTagihan()
+- getDashboardPendapatan()
+- getTicketingInternal()
+- getTrackTicket()
+- getProfileSiswa()
+- ... & more
+
+// hrApiService.jsx (NEW - HR Recruitment)
+- getDashboardReport()
+- getHRRequests()
+- getApplicantData()
+- getTugasInterview()
+- getHasilResponseTest()
+- getPenilaianKandidat()
+- ... & more
+
+// assetApiServices.jsx (NEW - Asset Management)
+- getDashboardAsset()
+- getAssetData()
+- getDailyAsset()
+- getDetailBarang()
+- getMaintenance()
+- getPeminjamanBarang()
+- getPenyusutan()
+- getServices()
+- getAssetHistory()
+- ... & more
 ```
 
 All services use centralized Axios client from `API_CONFIG.baseURL`
@@ -593,6 +709,8 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 ### 3.2 Feature Enhancements (NEXT ROADMAP)
 
 #### Q3 2026 (Jul - Sep)
+- [ ] Finance module testing & validation
+- [ ] HRGA module testing & validation  
 - [ ] Export to Excel functionality (all pages)
 - [ ] Print-friendly layouts
 - [ ] Advanced filtering & search
@@ -607,14 +725,17 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 - [ ] Mobile app (beta)
 - [ ] Offline mode support
 - [ ] Custom dashboard builder
+- [ ] Automated database backup
+- [ ] Performance monitoring (Sentry/Vercel Analytics)
 
 #### 2027 (Future)
-- [ ] Backend migration ke Node.js
+- [ ] Backend migration ke Node.js + Express/NestJS
 - [ ] Database upgrade (PostgreSQL)
 - [ ] Microservices architecture
-- [ ] Advanced analytics
+- [ ] Advanced analytics & BI
 - [ ] AI-powered insights
 - [ ] Multi-tenant support
+- [ ] WebSocket real-time features
 
 ---
 
@@ -775,6 +896,6 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 
 ---
 
-**Last Updated**: June 22, 2026  
+**Last Updated**: June 23, 2026  
 **Maintained By**: Nadaa  
 **Next Review**: September 22, 2026

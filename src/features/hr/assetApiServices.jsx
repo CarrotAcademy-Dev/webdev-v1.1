@@ -291,4 +291,73 @@ export const getAssetHistory = async () => {
   }
 };
 
+/**
+ * Get Data Kelompok Barang
+ * Endpoint: GET action=get-kelompok-barang
+ * Response: { status, data: [{ kode_kategori, nama_kategori, items: [{ no, nama_barang }] }] }
+ */
+export const getKelompokBarang = async () => {
+  try {
+    logger.debug('[HRGA Asset API] Fetching Kelompok Barang');
+    const response = await assetService.get('asset', 'get-kelompok-barang');
+    logger.info('[HRGA Asset API] Kelompok Barang fetched', { count: response?.length || 0 });
+    return response || [];
+  } catch (error) {
+    logError(error, { context: 'getKelompokBarang', service: 'HRGA Asset' });
+    throw error;
+  }
+};
+
+/**
+ * Tambah Kategori Kelompok Barang
+ * Endpoint: POST action=add-kelompok-barang-kategori
+ * @param {{ nama_kategori: string, items: string }} payload
+ * items dikirim sebagai daftar nama barang dipisah newline
+ */
+export const addKelompokBarangKategori = async (payload) => {
+  try {
+    logger.debug('[HRGA Asset API] Add Kelompok Barang Kategori', { nama_kategori: payload.nama_kategori });
+    const response = await assetService.post('asset', 'add-kelompok-barang-kategori', payload);
+    logger.info('[HRGA Asset API] Add Kelompok Barang Kategori success');
+    return response;
+  } catch (error) {
+    logError(error, { context: 'addKelompokBarangKategori', service: 'HRGA Asset' });
+    throw error;
+  }
+};
+
+/**
+ * Get Data Pengkodean
+ * Endpoint: GET action=get-pengkodean
+ * Response: { status, data: [{ deskripsi, kode_header, items: [{ nama, kode }] }] }
+ */
+export const getPengkodean = async () => {
+  try {
+    logger.debug('[HRGA Asset API] Fetching Pengkodean');
+    const response = await assetService.get('asset', 'get-pengkodean');
+    logger.info('[HRGA Asset API] Pengkodean fetched', { count: response?.length || 0 });
+    return response || [];
+  } catch (error) {
+    logError(error, { context: 'getPengkodean', service: 'HRGA Asset' });
+    throw error;
+  }
+};
+
+/**
+ * Tambah Data Pengkodean
+ * Endpoint: POST action=add-pengkodean
+ * @param {{ deskripsi: string, nama: string, kode?: string }} payload
+ */
+export const addPengkodean = async (payload) => {
+  try {
+    logger.debug('[HRGA Asset API] Add Pengkodean', { deskripsi: payload.deskripsi, nama: payload.nama });
+    const response = await assetService.post('asset', 'add-pengkodean', payload);
+    logger.info('[HRGA Asset API] Add Pengkodean success');
+    return response;
+  } catch (error) {
+    logError(error, { context: 'addPengkodean', service: 'HRGA Asset' });
+    throw error;
+  }
+};
+
 export default assetService;

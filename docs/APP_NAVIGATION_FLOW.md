@@ -140,20 +140,27 @@
 ┌─────────────────────────────────────────────────────────┐
 │  MY TASKS MENU                                          │
 │  Icon: 💼                                               │
-│  Access: Staff dan admin                                │
+│  Access: Staff (CSO, ESO, Finance, HRGA) dan admin     │
 └─────────────────────────────────────────────────────────┘
                             │
-                ┌───────────┴───────────┐
-                │                       │
-                ↓                       ↓
-        ┌───────────────┐       ┌───────────────┐
-        │   BERSAMA     │       │   PERSONAL    │
-        │   (Shared)    │       │  (Individual) │
-        └───────────────┘       └───────────────┘
-                │                       │
-                │                       │
-         [Menu Bersama]         [Menu Personal]
+                ┌───────────┴───────────────────┐
+                │                               │
+         ┌──────┴──────┐              ┌────────┴────────┐
+         │             │              │                 │
+         ↓             ↓              ↓                 ↓
+    [CSO]         [ESO]         [Finance]        [HRGA]
+    Bersama       Bersama       Bersama          Bersama
+    Personal      Personal      Personal         Personal
+         │             │              │                 │
+         ├─ Div Menu   ├─ Div Menu   ├─ Div Menu      ├─ Div Menu
+         │             │              │                 │
 ```
+
+**Access Control:**
+- **CSO Menu**: Visible untuk jabatan CSO (atau Admin/Super Admin)
+- **ESO Menu**: Visible untuk jabatan ESO (atau Admin/Super Admin)
+- **Finance Menu**: ✨ NEW - Visible untuk jabatan Finance (atau Admin/Super Admin)
+- **HRGA Menu**: ✨ NEW - Visible untuk jabatan HRGA (atau Admin/Super Admin)
 
 ---
 
@@ -457,7 +464,243 @@
 
 ---
 
-### Special Pages
+#### MY TASKS → ESO (Education Support Officer)
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  ESO MENU (15+ halaman)                                      │
+│  Access: ESO staff, Admin                                    │
+│  API Endpoint: VITE_API_ESO_BERSAMA_ENDPOINT                 │
+│                VITE_API_ESO_PERSONAL_ENDPOINT                │
+└──────────────────────────────────────────────────────────────┘
+
+BERSAMA (Shared - 10+ pages):
+├─ Ticketing External - Manage external support tickets
+├─ Student Report - Laporan perkembangan siswa
+├─ Artwork of the Month - Showcase karya siswa terbaik
+├─ Kelengkapan Data - Data completion tracking
+├─ Nomor Urut Sertifikat - Certificate number assignment
+├─ Progress Report Monthly - Monthly student progress
+├─ Daftar Offboarding - Student exit process
+└─ ... & more
+
+PERSONAL (Individual - 5+ pages):
+├─ Dashboard FD (Foundation) - FD program dashboard
+├─ Ticketing Internal - Internal support tickets
+└─ ... & more
+```
+
+---
+
+#### MY TASKS → FINANCE (Keuangan)
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  FINANCE MENU (16 halaman)                                   │
+│  Access: Finance staff, Admin                                │
+│  API Endpoint: VITE_API_FINANCE_BERSAMA_ENDPOINT             │
+│                VITE_API_FINANCE_PERSONAL_ENDPOINT            │
+│  Jabatan: "Finance Accounting"                               │
+│  Access Group: FINANCE_ONLY | FINANCE_OR_ADMIN              │
+└──────────────────────────────────────────────────────────────┘
+
+BERSAMA (Shared - 9 pages):
+1.  Approval Pendaftaran
+    URL: /my-tasks/finance-bersama/approval-pendaftaran
+    Approve student registrations & payment
+
+2.  Daftar Harga
+    URL: /my-tasks/finance-bersama/daftar-harga
+    Price list management
+
+3.  Data BKM (Bank & Component Master)
+    URL: /my-tasks/finance-bersama/data-bkm
+    Bank account & component data
+
+4.  Bukti Pembayaran
+    URL: /my-tasks/finance-bersama/bukti-pembayaran
+    Payment proof documentation
+
+5.  Tagihan (Invoicing)
+    URL: /my-tasks/finance-bersama/tagihan
+    Invoice management & tracking
+
+6.  Daftar Offboarding Finance
+    URL: /my-tasks/finance-bersama/daftar-offboarding
+    Financial offboarding process
+
+7.  Pendaftaran Fulltime Course
+    URL: /my-tasks/finance-bersama/pendaftaran-ft-course
+    FTC student registration & fees
+
+8.  Daftar Kirim Merchandise
+    URL: /my-tasks/finance-bersama/daftar-kirim-merchandise
+    Track merchandise delivery costs
+
+9.  Ticketing External Finance
+    URL: /my-tasks/finance-bersama/ticketing-external
+    External finance support tickets
+
+PERSONAL (Individual - 7 pages):
+1.  Dashboard Pendapatan (Revenue Dashboard)
+    URL: /my-tasks/finance-personal/dashboard-pendapatan
+    Personal revenue & income tracking
+
+2.  Daftar Harga Personal
+    URL: /my-tasks/finance-personal/daftar-harga
+    Personal price list access
+
+3.  Ticketing Internal Finance
+    URL: /my-tasks/finance-personal/ticketing-internal
+    Internal finance tickets
+
+4.  Track Ticket From Me
+    URL: /my-tasks/finance-personal/track-ticket-from-me
+    Track own submitted tickets
+
+5.  Review Karyawan Finance
+    URL: /my-tasks/finance-personal/review-karyawan
+    Employee salary review
+
+6.  Statistik Tagihan
+    URL: /my-tasks/finance-personal/statistik-tagihan
+    Invoice statistics & analytics
+
+7.  Profile Siswa Finance
+    URL: /my-tasks/finance-personal/profile-siswa
+    Student financial profile
+```
+
+---
+
+#### MY TASKS → HRGA (HR & General Affairs)
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  HRGA MENU (16 halaman)                                      │
+│  Access: HRGA staff, Admin                                   │
+│  API Endpoint: VITE_HR_RECRUITMENT_ENDPOINT                  │
+│                VITE_HRGA_ASSET_ENDPOINT                      │
+│  Jabatan: "HR&GA Officer"                                    │
+│  Access Group: HRGA_ONLY | HRGA_OR_ADMIN                    │
+│  Sub-divisions: HR Recruitment + Asset Management           │
+└──────────────────────────────────────────────────────────────┘
+
+HR RECRUITMENT (7 pages):
+1.  Dashboard Report
+    URL: /my-tasks/hrga/hr-recruitment/dashboard-report
+    Recruitment overview & metrics
+
+2.  Human Resource Requests
+    URL: /my-tasks/hrga/hr-recruitment/hr-requests
+    Manage HR position requests
+
+3.  Jam Kerja (Working Hours)
+    URL: /my-tasks/hrga/hr-recruitment/jam-kerja
+    Staff working hours tracking
+
+4.  Tugas Interview
+    URL: /my-tasks/hrga/hr-recruitment/tugas-interview
+    Interview assignment & schedule
+
+5.  Hasil Response Test Kandidat
+    URL: /my-tasks/hrga/hr-recruitment/hasil-response-test
+    Candidate test results
+
+6.  Applicant Data
+    URL: /my-tasks/hrga/hr-recruitment/applicant-data
+    Applicant database & tracking
+
+7.  Penilaian Kandidat (Candidate Assessment)
+    URL: /my-tasks/hrga/hr-recruitment/penilaian-kandidat
+    Assessment & evaluation form
+
+ASSET MANAGEMENT (9 pages):
+1.  Dashboard Asset
+    URL: /my-tasks/hrga/asset/dashboard-asset
+    Asset overview & KPI
+
+2.  Asset Data / Asset Page
+    URL: /my-tasks/hrga/asset/asset-data
+    Asset inventory database
+
+3.  Daily Asset Tracking
+    URL: /my-tasks/hrga/asset/daily-asset
+    Daily asset movements & updates
+
+4.  Detail Barang (Item Details)
+    URL: /my-tasks/hrga/asset/detail-barang
+    Individual asset details & specs
+
+5.  Maintenance
+    URL: /my-tasks/hrga/asset/maintenance
+    Maintenance records & scheduling
+
+6.  Peminjaman Barang (Item Loan)
+    URL: /my-tasks/hrga/asset/peminjaman-barang
+    Track loaned items & returns
+
+7.  Penyusutan (Depreciation)
+    URL: /my-tasks/hrga/asset/penyusutan
+    Asset depreciation calculation
+
+8.  Services
+    URL: /my-tasks/hrga/asset/services
+    Asset service records
+
+9.  Asset History
+    URL: /my-tasks/hrga/asset/asset-history
+    Complete asset transaction history
+```
+
+---
+
+### Menu 3: ADMIN (Admin Only)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  ADMIN MENU                                             │
+│  Icon: 🛡️                                               │
+│  Access: Admin & Super Admin only                       │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ↓
+┌──────────────────────────────────────────────────────┐
+│  ADMIN FEATURES:                                     │
+│                                                      │
+│  1. Register User                                    │
+│     URL: /admin/register-user                        │
+│     - Create new user accounts                       │
+│     - Assign role & jabatan                          │
+│     - Set active status                              │
+│                                                      │
+│  2. Can also access ALL CSO, ESO, Finance, HRGA     │
+│     pages (Admin OR_ADMIN groups enabled)            │
+│                                                      │
+│  3. View full system for monitoring & oversight      │
+│                                                      │
+│  Note: Super Admin has same access as Admin          │
+│        (both can see all divisi menus)               │
+└──────────────────────────────────────────────────────┘
+```
+
+---
+
+### Menu 4: PROFILE (Semua User)
+
+```
+┌─────────────────────────────────────────────────────┐
+│  PROFILE MENU                                       │
+│  Icon: 👤                                           │
+│  Access: Semua user yang sudah login                │
+└─────────────────────────────────────────────────────┘
+                            │
+         ┌──────────────────┼──────────────────┐
+         │                  │                  │
+         ↓                  ↓                  ↓
+    /profile            /settings          /logout
+    (View Profil)      (Preferences)      (Logout)
+```
 
 #### Access Denied Page
 
@@ -466,7 +709,7 @@
 │  ACCESS DENIED PAGE                                     │
 │  URL: /access-denied                                    │
 │  ┌────────────────────────────────────────────────────┐ │
-│  │  🚫 Access Denied                                  │ │
+│  │  Access Denied                                  │ │
 │  │                                                    │ │
 │  │  You don't have permission to access this page.    │ │
 │  │                                                    │ │
@@ -749,11 +992,11 @@ User TIDAK LIHAT menu Admin atau jabatan lain
     • User role: "staff" ≠ admin
     ↓
 [Menu yang terlihat di Navbar]
-    ✅ 🏠 Home
-    ✅ 💼 My Tasks
-    ❌ 🛡️ Admin (HIDDEN)
-    ✅ 👤 Profile
-    ✅ 🚪 Logout
+    🏠 Home
+    💼 My Tasks
+    🛡️ Admin (HIDDEN)
+    👤 Profile
+    🚪 Logout
 ```
 
 ---

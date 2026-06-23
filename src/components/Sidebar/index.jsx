@@ -211,6 +211,8 @@ function Sidebar({ userRole }) {
             { label: "Peminjaman Barang", path: "/hrga/peminjaman-barang" },
             { label: "Detail Barang", path: "/hrga/detail-barang" },
             { label: "Asset History", path: "/hrga/asset-history" },
+            { label: "Kelompok Barang", path: "/hrga/kelompok-barang" },
+            { label: "Pengkodean", path: "/hrga/pengkodean" },
           ]
         }
       ]
