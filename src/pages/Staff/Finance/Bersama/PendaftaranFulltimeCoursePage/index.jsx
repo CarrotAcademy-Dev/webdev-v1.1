@@ -10,7 +10,6 @@ import { PendaftaranFulltimeCourseStyled } from "./PendaftaranFulltimeCourse.sty
 import InfoCard from "@/components/InfoCard";
 import { Tooltip } from "recharts";
 import Pagination from "@/components/Pagination";
-import { B } from "../../../../../../dist/assets/react-vendor-CDRimKli";
 
 const PendaftaranFulltimeCoursePage = () => {
     const { colorMode } = useColorMode();
@@ -201,25 +200,27 @@ const PendaftaranFulltimeCoursePage = () => {
     
     // Component for read-only fields in the edit form
     const ReadOnlyField = ({ label, value, isTextArea }) => {
-        <Box>
-            <Text fontWeight="medium" mb={2}>
-                {label}
-            </Text>
-            {isTextArea ? (
-                <Box
-                    p={2} borderRadius="md" fontSize="sm" minH="60px"
-                    bg={colorMode === "dark" ? "gray.700" : "gray.100"}
-                >
-                    {value || "-"}
-                </Box>
-            ) : (
-                <Input
-                    value={value}
-                    isReadOnly
-                    bg={colorMode === "dark" ? "gray.700" : "gray.100"}
-                />
-            )}
-        </Box>
+        return (
+            <Box>
+                <Text fontWeight="medium" mb={2}>
+                    {label}
+                </Text>
+                {isTextArea ? (
+                    <Box
+                        p={2} borderRadius="md" fontSize="sm" minH="60px"
+                        bg={colorMode === "dark" ? "gray.700" : "gray.100"}
+                    >
+                        {value || "-"}
+                    </Box>
+                ) : (
+                    <Input
+                        value={value}
+                        isReadOnly
+                        bg={colorMode === "dark" ? "gray.700" : "gray.100"}
+                    />
+                )}
+            </Box>
+        );
     };
 
     // Sortable column header helper
