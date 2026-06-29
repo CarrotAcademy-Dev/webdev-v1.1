@@ -90,7 +90,7 @@ const ArtworkOfTheMonthPage = () => {
                     type: "success",
                     duration: 3000,
                 });
-                queryClient.invalidateQueries(["aotm-data"]);
+                queryClient.invalidateQueries({ queryKey: ["aotm-data"] });
                 onClose();
             } else {
                 toaster.create({

@@ -8,6 +8,21 @@ import { ColorModeScript } from '@chakra-ui/react'
 import { AuthProvider } from './context/AuthContext'
 import { SidebarProvider } from './context/SidebarContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { validateEnv } from './utils/validateEnv'
+
+// Validate environment variables before app starts
+try {
+  validateEnv();
+} catch (error) {
+  console.error(error.message);
+  // Show error in DOM for better visibility
+  document.getElementById('root').innerHTML = `
+    <div style="font-family: monospace; padding: 20px; background: #fee; color: #c00; white-space: pre-wrap;">
+      ${error.message}
+    </div>
+  `;
+  throw error;
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

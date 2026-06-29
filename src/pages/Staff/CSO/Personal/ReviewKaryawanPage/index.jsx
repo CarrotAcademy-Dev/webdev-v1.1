@@ -34,14 +34,14 @@ const KARYAWAN_LIST = [
 ];
 
 function ReviewKaryawanPage() {
-    const { user } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
+    const reviewerName = currentUser?.nama || currentUser?.name || 'Unknown';
     const toast = useToast();
     const queryClient = useQueryClient();
     const { colorMode } = useColorMode();
 
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
-    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
 
     const [selectedKaryawan, setSelectedKaryawan] = useState('');
     const [karyawanData, setKaryawanData] = useState(null);
@@ -87,7 +87,7 @@ function ReviewKaryawanPage() {
                 review: ''
             });
             // Refetch history
-            queryClient.invalidateQueries(['reviewKaryawan', selectedKaryawan]);
+            queryClient.invalidateQueries({ queryKey: ['reviewKaryawan', selectedKaryawan] });
         },
         onError: (error) => {
             toast({
@@ -155,7 +155,7 @@ function ReviewKaryawanPage() {
 
         // Submit
         submitMutation.mutate({
-            reviewer: user?.name || 'Unknown',
+            reviewer: reviewerName,
             nama_karyawan: karyawanData.nama,
             id_karyawan: karyawanData.id,
             jabatan: karyawanData.jabatan,
@@ -171,7 +171,7 @@ function ReviewKaryawanPage() {
         
         // Filter hanya review yang dibuat oleh user saat ini
         const currentUserReviews = reviewHistory.result.filter(
-            item => item.reviewer === user?.name
+            item => item.reviewer === reviewerName
         );
         
         return currentUserReviews.map((item, index) => ({
@@ -192,7 +192,7 @@ function ReviewKaryawanPage() {
             kinerja_umum: item.kinerja_umum,
             komentar: item.komentar || '-'
         }));
-    }, [reviewHistory, user]);
+    }, [reviewHistory, reviewerName]);
 
     const headerHistory = [
         { key: 'no', label: 'No' },

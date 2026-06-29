@@ -42,7 +42,7 @@ function NomorUrutSertifikatPage() {
     const addMutation = useMutation({
         mutationFn: addNomorUrutSertifikat,
         onSuccess: () => {
-            queryClient.invalidateQueries(['nomorUrutSertifikat']);
+            queryClient.invalidateQueries({ queryKey: ['nomorUrutSertifikat'] });
             toast({
                 title: 'Berhasil!',
                 description: 'Data nomor urut sertifikat berhasil ditambahkan',

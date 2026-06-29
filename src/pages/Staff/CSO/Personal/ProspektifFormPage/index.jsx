@@ -56,7 +56,7 @@ function ProspektifFormPage() {
             setIsNewMode(false);
             setIsEditMode(false);
             setEditedData({});
-            queryClient.invalidateQueries(['prospektifData']);
+            queryClient.invalidateQueries({ queryKey: ['prospektifData'] });
             queryClient.invalidateQueries({ queryKey: ['dashboardProspektifPersonal'] });
         },
         onError: (error) => {
@@ -93,7 +93,7 @@ function ProspektifFormPage() {
                 });
             }
             setIsEditMode(false);
-            queryClient.invalidateQueries(['prospektifData', currentPsid]);
+            queryClient.invalidateQueries({ queryKey: ['prospektifData', currentPsid] });
             // Invalidate dashboard query agar checklist terupdate (semua query yang match prefix)
             queryClient.invalidateQueries({ queryKey: ['dashboardProspektifPersonal'] });
             

@@ -68,7 +68,7 @@ const DaftarOffboardingPage = () => {
     const updateMutation = useMutation({
         mutationFn: ceklisDaftarOffboarding,
         onSuccess: () => {
-            queryClient.invalidateQueries(["daftarOffboarding"]);
+            queryClient.invalidateQueries({ queryKey: ["daftarOffboarding"] });
             toaster.create({
                 title: "Berhasil update data",
                 type: "success",

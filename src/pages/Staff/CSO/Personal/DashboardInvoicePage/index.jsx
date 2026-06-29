@@ -19,11 +19,10 @@ import { AuthContext } from "@/context/AuthContext";
 
 function DashboardInvoicePage() {
     const currentDate = new Date();
-    const { user } = useContext(AuthContext);
+        const { currentUser } = useContext(AuthContext);
     
     // Theme colors
     const cardBg = useColorModeValue('white', 'dark.bg.card');
-    const textColor = useColorModeValue('gray.600', 'dark.text.secondary');
     
     // Format date untuk backend: "d mmm yyyy" e.g., "1 Dec 2025"
     const formatDateForBackend = (date) => {
@@ -85,7 +84,7 @@ function DashboardInvoicePage() {
     // Mutation for studio naik umur
     const studioMutation = useMutation({
         mutationFn: ({ uniqueId, nama }) => {
-            const pic = user?.name || 'Unknown';
+              const pic = currentUser?.nama || currentUser?.name || 'Unknown';
             return submitStudioNaikUmur(uniqueId, nama, pic);
         },
         onSuccess: () => {
@@ -96,7 +95,7 @@ function DashboardInvoicePage() {
                 duration: 3000,
                 isClosable: true,
             });
-            queryClient.invalidateQueries(['studioNaikUmur']);
+            queryClient.invalidateQueries({ queryKey: ['studioNaikUmur'] });
         },
         onError: (error) => {
             toast({

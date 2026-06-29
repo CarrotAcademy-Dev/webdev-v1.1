@@ -84,7 +84,7 @@ function ReviewKaryawanPage() {
                 review: ''
             });
             // Refetch history
-            queryClient.invalidateQueries(['reviewKaryawan', selectedKaryawan]);
+            queryClient.invalidateQueries({ queryKey: ['reviewKaryawan', selectedKaryawan] });
         },
         onError: (error) => {
             toast({

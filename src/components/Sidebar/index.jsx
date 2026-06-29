@@ -16,6 +16,7 @@ function Sidebar({ userRole }) {
     'Bersama': true,
     'Personal': true,
     'Admin': true,
+    'Asset': true,
   });
 
   // Check if user is admin
@@ -34,6 +35,8 @@ function Sidebar({ userRole }) {
     const path = location.pathname;
     if (path.startsWith('/my-tasks')) return 'cso';
     if (path.startsWith('/eso')) return 'eso';
+    if (path.startsWith('/finance')) return 'finance';
+    if (path.startsWith('/hrga')) return 'hrga';
     if (path.startsWith('/admin')) return 'admin';
     if (path.startsWith('/profile') || path.startsWith('/payslip') || path.startsWith('/settings')) return 'profile';
     if (path === '/home' || path.startsWith('/attendance') || path.startsWith('/leave-request') || path.startsWith('/home/kpi')) return 'home';
@@ -144,6 +147,76 @@ function Sidebar({ userRole }) {
           }
         ]
       };
+
+    // Add Finance menu
+    menus.finance = {
+      title: 'Finance',
+      icon: <FiCreditCard />,
+      categories: [
+        {
+          name: 'Bersama',
+          items: [
+            { label: "Approval Pendaftaran", path: "/finance/approval-pendaftaran" },
+            { label: "Daftar Harga", path: "/finance/daftar-harga" },
+            { label: "Bukti Pembayaran", path: "/finance/bukti-pembayaran" },
+            { label: "Pendaftaran Fulltime", path: "/finance/pendaftaran-fulltime" },
+            { label: "Daftar Offboarding", path: "/finance/daftar-offboarding" },
+            { label: "Data BKM", path: "/finance/data-bkm" },
+            { label: "Daftar Kirim Merch", path: "/finance/daftar-kirim-merch" },
+            { label: "Tagihan Siswa", path: "/finance/tagihan" },
+            { label: "Ticketing External", path: "/finance/ticket-external" },
+          ]
+        },
+        {
+          name: 'Personal',
+          items: [
+            { label: "Statistik Tagihan", path: "/finance/statistik-tagihan" },
+            { label: "Dashboard Pendapatan", path: "/finance/dashboard-pendapatan" },
+            { label: "Profile Siswa", path: "/finance/profile-siswa" },
+            { label: "Daftar Harga", path: "/finance/daftar-harga-personal" },
+            { label: "Track Ticket From Me", path: "/finance/track-ticket-from-me" },
+            { label: "Ticketing Internal", path: "/finance/ticketing-internal" },
+            { label: "Review Karyawan", path: "/finance/review-karyawan" },
+          ]
+        }
+      ]
+    };
+
+    // Add HRGA menu
+    menus.hrga = {
+      title: 'HRGA',
+      icon: <FiUser />,
+      categories: [
+        {
+          name: 'Recruitment',
+          items: [
+            { label: "Dashboard Report", path: "/hrga/recruitment/dashboard-report" },
+            { label: "Applicant Data", path: "/hrga/applicant-data" },
+            { label: "Human Resource Requests", path: "/hrga/human-resource-requests" },
+            { label: "Jam Kerja", path: "/hrga/jam-kerja" },
+            { label: "Tugas Interview", path: "/hrga/tugas-interview" },
+            { label: "Hasil Response Test Kandidat", path: "/hrga/hasil-response-test-kandidat" },
+            { label: "Penilaian Kandidat", path: "/hrga/penilaian-kandidat" },
+          ]
+        },
+        {
+          name: 'Asset',
+          items: [
+            { label: "Data Asset", path: "/hrga/asset-data" },
+            { label: "Dashboard Asset", path: "/hrga/dashboard-asset" },
+            { label: "Daily Asset", path: "/hrga/daily-asset" },
+            { label: "Penyusutan Asset", path: "/hrga/penyusutan" },
+            { label: "Services", path: "/hrga/services" },
+            { label: "Maintenance", path: "/hrga/maintenance" },
+            { label: "Peminjaman Barang", path: "/hrga/peminjaman-barang" },
+            { label: "Detail Barang", path: "/hrga/detail-barang" },
+            { label: "Asset History", path: "/hrga/asset-history" },
+            { label: "Kelompok Barang", path: "/hrga/kelompok-barang" },
+            { label: "Pengkodean", path: "/hrga/pengkodean" },
+          ]
+        }
+      ]
+    };
 
     // Add Admin menu - only for admin users
     if (isAdmin) {

@@ -1,6 +1,14 @@
 import axios from 'axios';
 import { API_CONFIG } from '@/config/api.config';
 
+const isDebugLoggingEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEBUG_MODE === 'true';
+const debugLog = (...args) => {
+    if (isDebugLoggingEnabled) console.log(...args);
+};
+const debugError = (...args) => {
+    if (isDebugLoggingEnabled) console.error(...args);
+};
+
 const authClient = axios.create({
     baseURL: API_CONFIG.baseURL,
     withCredentials: false,
@@ -38,7 +46,7 @@ export const registerUser = async (userData) => {
             throw new Error(result.message || 'Failed to register user');
         }
     } catch (error) {
-        console.error("Error registering user:", error);
+        debugError("Error registering user:", error);
         throw error;
     }
 };
@@ -71,18 +79,13 @@ export const updatePassword = async (email, oldPassword, newPassword) => {
     params.append('old_password', oldPassword || '');
     params.append('new_password', newPassword || '');
 
-    console.log('[Update Password] Sending request with:', {
-        action: 'update-password',
-        email,
-        oldPasswordLength: oldPassword?.length || 0,
-        newPasswordLength: newPassword?.length || 0
-    });
+    debugLog('[Update Password] Sending password update request');
 
     try {
         const response = await authClient.post(AUTH_ENDPOINT, params);
         const result = response.data;
 
-        console.log('[Update Password] Backend response:', result);
+        debugLog('[Update Password] Backend response received');
 
         if (result.status === 'success') {
             return result;
@@ -91,7 +94,7 @@ export const updatePassword = async (email, oldPassword, newPassword) => {
             throw new Error(result.message || 'Failed to update password');
         }
     } catch (error) {
-        console.error("[Update Password] Error:", error);
+        debugError("[Update Password] Error:", error);
         // If error has response data, use that message
         if (error.response?.data?.message) {
             throw new Error(error.response.data.message);
@@ -121,7 +124,7 @@ export const forgotPassword = async (email) => {
             throw new Error(result.message || 'Failed to process forgot password request');
         }
     } catch (error) {
-        console.error("Error processing forgot password:", error);
+        debugError("Error processing forgot password:", error);
         throw error;
     }
 };

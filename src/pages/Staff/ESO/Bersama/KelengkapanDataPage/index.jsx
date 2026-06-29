@@ -78,7 +78,7 @@ const KelengkapanDataPage = () => {
   const updateMutation = useMutation({
     mutationFn: updateKelengkapanData,
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['kelengkapanDataEso']);
+      queryClient.invalidateQueries({ queryKey: ['kelengkapanDataEso'] });
       toast({
         title: 'Berhasil',
         description: data.message || 'Data berhasil diperbaharui',
@@ -280,7 +280,7 @@ const KelengkapanDataPage = () => {
           bg={cardBg}
           borderRadius="md"
           border="1px solid"
-          borderColor={borderColor}
+          borderColor={borderColor} 
         >
           <FiInbox size={48} color="gray" />
           <Text fontSize="xl" fontWeight="600" mt={4}>Gagal memuat data</Text>

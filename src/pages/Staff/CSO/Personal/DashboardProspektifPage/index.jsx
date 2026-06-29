@@ -78,7 +78,7 @@ function DashboardProspektifPage() {
             });
             refetch();
             // Invalidate prospektifData query agar form juga terupdate
-            queryClient.invalidateQueries(['prospektifData']);
+            queryClient.invalidateQueries({ queryKey: ['prospektifData'] });
         },
         onError: (error) => {
             toast({
@@ -187,7 +187,7 @@ function DashboardProspektifPage() {
         { key: 'no', label: 'No' },
         { key: 'psid', label: 'PSID' },
         { key: 'nama', label: 'Nama' },
-        { key: 'tanggal', label: 'Tanggal' },
+        { key: 'tanggal', label: 'Tanggal' }, 
         { key: 'noHp', label: 'No. Handphone' },
         {
             key: 'edit',

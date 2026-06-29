@@ -73,11 +73,18 @@ export const JABATAN = {
     OB: 'Office Boy',
 };
 
-// 6 Predefined Access Groups
+// 8 Predefined Access Groups
 export const ACCESS_GROUPS = {
     // Admin & Super Admin only
     ADMIN_ONLY: {
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        allowedJabatan: [],
+        requireAny: false,
+    },
+    
+    // Super Admin only
+    SUPER_ADMIN_ONLY: {
+        allowedRoles: [ROLES.SUPER_ADMIN],
         allowedJabatan: [],
         requireAny: false,
     },
@@ -94,6 +101,48 @@ export const ACCESS_GROUPS = {
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
         allowedJabatan: [JABATAN.CSO],
         requireAny: true, // Either role OR jabatan
+    },
+    
+    // ESO Jabatan only
+    ESO_ONLY: {
+        allowedRoles: [],
+        allowedJabatan: [JABATAN.ESO],
+        requireAny: false,
+    },
+    
+    // ESO or Admin
+    ESO_OR_ADMIN: {
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        allowedJabatan: [JABATAN.ESO],
+        requireAny: true,
+    },
+    
+    // Finance Jabatan onl
+    FINANCE_ONLY: {
+        allowedRoles: [],
+        allowedJabatan: [JABATAN.FINANCE],
+        requireAny: false,
+    },
+    
+    // Finance or Admi
+    FINANCE_OR_ADMIN: {
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        allowedJabatan: [JABATAN.FINANCE],
+        requireAny: true,
+    },
+    
+    // HRGA Jabatan only
+    HRGA_ONLY: {
+        allowedRoles: [],
+        allowedJabatan: [JABATAN.HRGA],
+        requireAny: false,
+    },
+    
+    // HRGA or Admin
+    HRGA_OR_ADMIN: {
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        allowedJabatan: [JABATAN.HRGA],
+        requireAny: true,
     },
     
     // All staff members
@@ -285,9 +334,66 @@ import { ACCESS_GROUPS } from '@/utils/constants/accessControl';
 ```
 
 **Protected Routes**:
-- 28 CSO Routes: `CSO_OR_ADMIN` (CSO jabatan OR Admin role)
+- 50+ CSO Routes: `CSO_OR_ADMIN` (CSO jabatan OR Admin role)
+- 15+ ESO Routes: `ESO_OR_ADMIN` (ESO jabatan OR Admin role)
+- 16 Finance Routes: `FINANCE_OR_ADMIN` (Finance jabatan OR Admin role)
+- 16 HRGA Routes: `HRGA_OR_ADMIN` (HRGA jabatan OR Admin role)
 - 1 Admin Route: `ADMIN_ONLY` (Admin/Super Admin only)
 - Common Routes: `ALL_ROLES` (All authenticated users)
+
+**Example: Finance Pages**
+```javascript
+// Finance Bersama (Shared) - Route Protection
+<Route 
+    path="/my-tasks/finance-bersama/tagihan" 
+    element={
+        <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+                <TagihanPage />
+            </Layout>
+        </ProtectedRoute>
+    } 
+/>
+
+// Finance Personal - Route Protection
+<Route 
+    path="/my-tasks/finance-personal/dashboard-pendapatan" 
+    element={
+        <ProtectedRoute {...ACCESS_GROUPS.FINANCE_OR_ADMIN}>
+            <Layout>
+                <DashboardPendapatanPage />
+            </Layout>
+        </ProtectedRoute>
+    } 
+/>
+```
+
+**Example: HRGA Pages**
+```javascript
+// HR Recruitment - Route Protection
+<Route 
+    path="/my-tasks/hrga/hr-recruitment/dashboard-report" 
+    element={
+        <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+                <DashboardReportPage />
+            </Layout>
+        </ProtectedRoute>
+    } 
+/>
+
+// Asset Management - Route Protection
+<Route 
+    path="/my-tasks/hrga/asset/dashboard-asset" 
+    element={
+        <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+            <Layout>
+                <DashboardAssetPage />
+            </Layout>
+        </ProtectedRoute>
+    } 
+/>
+```
 
 ---
 
@@ -824,6 +930,6 @@ export const ACCESS_GROUPS = {
 ---
 
 **Version**: 1.0.0  
-**Last Updated**: December 13, 2025  
+**Last Updated**: June 23, 2026  
 **Status**: Production Ready  
 **Next Steps**: Implement backend validation for all protected endpoints

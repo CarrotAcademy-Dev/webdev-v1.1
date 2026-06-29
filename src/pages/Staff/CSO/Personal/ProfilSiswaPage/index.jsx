@@ -46,7 +46,7 @@ const ProfilSiswaPage = () => {
                 isClosable: true,
             });
             setIsEditMode(false);
-            queryClient.invalidateQueries(['profilSiswa', searchQuery]);
+            queryClient.invalidateQueries({ queryKey: ['profilSiswa', searchQuery] });
         },
         onError: (error) => {
             toast({
