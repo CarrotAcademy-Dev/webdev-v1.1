@@ -133,10 +133,10 @@
 
 **HRGA Division Features**
 - **HR Recruitment** (7 pages): Dashboard Report, HR Requests, Jam Kerja, Tugas Interview, Hasil Response Test, Applicant Data, Penilaian Kandidat
-- **Asset Management** (9 pages): Dashboard Asset, Asset Data, Daily Asset, Detail Barang, Maintenance, Peminjaman Barang, Penyusutan, Services, Asset History
-- Total: 16 pages
+- **Asset Management** (11 pages) ✨ UPDATED: Dashboard Asset, Asset Data, Daily Asset, Detail Barang, Maintenance, Peminjaman Barang, Penyusutan, Services, Asset History, **Kelompok Barang**, **Pengkodean**
+- Total: 18 pages (7 HR + 11 Asset)
 - API Services: `hrApiService.jsx` + `assetApiServices.jsx`
-- Endpoints: HR Recruitment & HRGA Asset Management
+- Endpoints: HR Recruitment + Asset Management (6 endpoints total)
 
 **System Features**
 - Dark/Light mode toggle
@@ -330,16 +330,16 @@ VITE_API_ESO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[ESO_PERSONAL_
 VITE_API_FINANCE_BERSAMA_ENDPOINT=https://script.google.com/macros/s/[FINANCE_BERSAMA_SCRIPT_ID]/exec
 VITE_API_FINANCE_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[FINANCE_PERSONAL_SCRIPT_ID]/exec
 
-# HR API Endpoints
+# HR & HRGA API Endpoints
 VITE_HR_RECRUITMENT_ENDPOINT=https://script.google.com/macros/s/[HR_RECRUITMENT_SCRIPT_ID]/exec
 VITE_HRGA_ASSET_ENDPOINT=https://script.google.com/macros/s/[HRGA_ASSET_SCRIPT_ID]/exec
+VITE_HRGA_STOCK_ENDPOINT=https://script.google.com/macros/s/[HRGA_STOCK_SCRIPT_ID]/exec
+VITE_HRGA_GAMAINDATA_ENDPOINT=https://script.google.com/macros/s/[HRGA_GAMAINDATA_SCRIPT_ID]/exec
+VITE_HRGA_HRMAINDATA_ENDPOINT=https://script.google.com/macros/s/[HRGA_HRMAINDATA_SCRIPT_ID]/exec
+VITE_HRGA_HRGAPERSONAL_ENDPOINT=https://script.google.com/macros/s/[HRGA_HRGAPERSONAL_SCRIPT_ID]/exec
 
 # Auth API Endpoint
 VITE_API_AUTH_ENDPOINT=https://script.google.com/macros/s/[AUTH_SCRIPT_ID]/exec
-
-# HR API Endpoints
-VITE_HR_RECRUITMENT_ENDPOINT=https://script.google.com/macros/s/[HR_RECRUITMENT_SCRIPT_ID]/exec
-VITE_HRGA_ASSET_ENDPOINT=https://script.google.com/macros/s/[HRGA_ASSET_SCRIPT_ID]/exec
 
 # App Configuration
 VITE_APP_NAME=CarrotAcademy Dashboard
@@ -843,17 +843,11 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 
 ### 3.7 Contact & Support
 
-#### Key Contacts (Update as needed)
-- **Project Manager**: [Name]
-- **Lead Developer**: [Name]
-- **Backend (GAS)**: [Name]
-- **DevOps/Deployment**: [Name]
-
 #### Important Links
 - **Repository**: https://github.com/CarrotAcademy-Dev/webdev-v1.1
-- **Issue Tracker**: [GitHub Issues URL]
-- **Deployment Dashboard**: []
-- **Database**: [Google Sheets shared folder URL]
+- **Issue Tracker**: -
+- **Deployment Dashboard**: -
+- **Database**: -
 - **Backend Documentation**: https://app.notion.com/p/21e7887e2d2380c782b9e8b3fe31c2f6?v=21e7887e2d2380dd9044000c85e0b847&source=copy_link
 
 ---
@@ -896,6 +890,6 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 
 ---
 
-**Last Updated**: June 23, 2026  
-**Maintained By**: Nadaa  
+**Last Updated**: July 8, 2026  
+**Maintained By**: JSD
 **Next Review**: September 22, 2026

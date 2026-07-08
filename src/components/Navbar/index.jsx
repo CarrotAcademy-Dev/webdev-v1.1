@@ -249,6 +249,57 @@ function Navbar() {
               { label: "Kelompok Barang", path: "/hrga/kelompok-barang" },
               { label: "Pengkodean", path: "/hrga/pengkodean" },
             ]
+          },
+          {
+            category: "Stock",
+            items: [
+              { label: "Data Stock", path: "/hrga/stock" },
+              { label: "Stock History", path: "/hrga/stock-history" },
+              { label: "Monthly Stock History", path: "/hrga/monthly-stock-history" },
+              { label: "List Barang Jual", path: "/hrga/list-barang-jual" },
+              { label: "Kelompok Barang", path: "/hrga/kelompok-barang-stock" },
+              { label: "Pengkodean", path: "/hrga/pengkodean-stock" },
+            ]
+          },
+          {
+            category: "GA Main Data",
+            items: [
+              { label: "Purchase Request", path: "/hrga/purchase-request" },
+              { label: "Repair Barang", path: "/hrga/repair-barang" },
+              { label: "Draft Kas Keluar", path: "/hrga/draft-kas-keluar" },
+              { label: "Perizinan Perpanjang", path: "/hrga/perizinan-perpanjang" },
+              { label: "Ticketing Perizinan", path: "/hrga/ticketing-perizinan" },
+              { label: "Search Barang", path: "/hrga/search-barang" },
+              { label: "Master Vendor", path: "/hrga/master-vendor" },
+              { label: "Tagihan", path: "/hrga/tagihan" },
+              { label: "Jenis Merchandise", path: "/hrga/jenis-merchandise" },
+              { label: "Jenis Map", path: "/hrga/jenis-map" }
+            ]
+          },
+          {
+            category: "HRGA Personal",
+            items: [
+              { label: "Data Friendship", path: "/hrga/data-friendship" },
+              { label: "Interview", path: "/hrga/interview" },
+              { label: "Dashboard Recruitment", path: "/hrga/dashboard-recruitment" },
+              { label: "Offering", path: "/hrga/offering" },
+              { label: "Ticketing Internal", path: "/hrga/ticketing-internal" },
+              { label: "Ticketing External", path: "/hrga/ticketing-external" },
+              { label: "Track Ticket From Me", path: "/hrga/track-ticket-from-me" },
+            ]
+          },
+          {
+            category: "HR Main Data",
+            items: [
+              { label: "Database Karyawan", path: "/hrga/database-karyawan" },
+              { label: "Probation Training", path: "/hrga/probation-training" },
+              { label: "Onboarding", path: "/hrga/onboarding" },
+              { label: "Offboarding", path: "/hrga/offboarding" },
+              { label: "Data Ticket ESO", path: "/hrga/data-ticket-eso" },
+              { label: "Database Slip Gaji", path: "/hrga/database-slip-gaji" },
+              { label: "Pengajuan Cuti", path: "/hrga/pengajuan-cuti" },
+              { label: "Pengajuan Izin", path: "/hrga/pengajuan-izin" },
+            ]
           }
         ],
       });

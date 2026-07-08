@@ -156,10 +156,10 @@ Backend is currently **Google Apps Script (GAS)** with **Google Sheets as databa
 - **0 min**: Auto-logout with redirect to login
 
 **Real-time Tracking**: Session badge in Navbar shows remaining time with color coding:
-- 🟢 Green: > 2 hours
-- 🟡 Yellow: 30 min - 2 hours
-- 🟠 Orange: 10-30 min
-- 🔴 Red: < 10 min
+- Green: > 2 hours
+- Yellow: 30 min - 2 hours
+- Orange: 10-30 min
+- Red: < 10 min
 
 **Productivity Monitoring** (Feb 2026):
 - Tracks productive vs idle time
@@ -470,32 +470,32 @@ See `DEPLOYMENT.md` for detailed deployment steps.
 ## Common Pitfalls
 
 ### 1. Direct localStorage Usage
-❌ **Don't**: `localStorage.setItem('user', JSON.stringify(user))`  
-✅ **Do**: `auth.setUser(user)`
+**Don't**: `localStorage.setItem('user', JSON.stringify(user))`  
+**Do**: `auth.setUser(user)`
 
 ### 2. Missing Query Invalidation
-❌ **Don't**: Forget to invalidate after mutations  
-✅ **Do**: Always invalidate related queries in `onSuccess`
+**Don't**: Forget to invalidate after mutations  
+**Do**: Always invalidate related queries in `onSuccess`
 
 ### 3. Props Passing to DOM
-❌ **Don't**: `<StyledDiv hoverable={true}>` (warning in console)  
-✅ **Do**: `<StyledDiv $hoverable={true}>` (transient prop)
+**Don't**: `<StyledDiv hoverable={true}>` (warning in console)  
+**Do**: `<StyledDiv $hoverable={true}>` (transient prop)
 
 ### 4. Hardcoded Access Control
-❌ **Don't**: `allowedRoles={['admin', 'super_admin']}`  
-✅ **Do**: `{...ACCESS_GROUPS.ADMIN_ONLY}`
+**Don't**: `allowedRoles={['admin', 'super_admin']}`  
+**Do**: `{...ACCESS_GROUPS.ADMIN_ONLY}`
 
 ### 5. Theme-Unaware Styles
-❌ **Don't**: `background: #1a1a1a;` (hardcoded color)  
-✅ **Do**: `background: var(--chakra-colors-chakra-body-bg);` (theme-aware)
+**Don't**: `background: #1a1a1a;` (hardcoded color)  
+**Do**: `background: var(--chakra-colors-chakra-body-bg);` (theme-aware)
 
 ### 6. Mixing Server and UI State
-❌ **Don't**: Store API response in Context  
-✅ **Do**: Use React Query for API data, Context only for UI state (auth, sidebar)
+**Don't**: Store API response in Context  
+**Do**: Use React Query for API data, Context only for UI state (auth, sidebar)
 
 ### 7. Missing Loading States
-❌ **Don't**: Render data without checking `isLoading`  
-✅ **Do**: Always handle `isLoading`, `isError`, and empty states
+**Don't**: Render data without checking `isLoading`  
+**Do**: Always handle `isLoading`, `isError`, and empty states
 
 ## Performance Considerations
 
@@ -505,14 +505,3 @@ See `DEPLOYMENT.md` for detailed deployment steps.
 - **Component Memoization**: Use `memo()` for list items and stable components
 - **Bundle Size**: Chart.js, Recharts, and react-chartjs-2 are code-split to `charts-vendor` chunk
 - **Image Optimization**: SVGs imported as components via `vite-plugin-svgr`
-
-## Recent Major Updates (February 2026)
-
-- ✅ Auth API V2.0 with POST method and device tracking
-- ✅ Session productivity monitoring with real-time tracking
-- ✅ Forgot password flow with email integration
-- ✅ Update password with strength indicator
-- ✅ Orphaned session detection & recovery
-- ✅ Settings page with profile management
-
-See `PROGRESS_REPORT_FEB28_2026.md` for details.

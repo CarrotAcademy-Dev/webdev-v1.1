@@ -4,13 +4,13 @@ Ini merupakan dokumentasi resmi untuk project Internal Carrot Academy. Dokumen i
 
 ## 1. Tentang Proyek
 
-Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun menggunakan React (Vite) dan Chakra UI. Tujuannya adalah untuk menyediakan dashboard internal bagi tim Carrot Academy untuk memonitor dan mengelola berbagai data operasional dari **5 divisi utama**: CSO, ESO, Finance, HRGA, Admin - mulai dari data siswa, jadwal, hingga logistik seperti pengiriman merchandise, asset management, dan recruitment.
+Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun menggunakan React (Vite) dan Chakra UI. Tujuannya adalah untuk menyediakan dashboard internal bagi tim Carrot Academy untuk memonitor dan mengelola berbagai data operasional dari  divisi utama: CSO, ESO, Finance, HRGA, Mentor, Operation, Education, dan Marcom - mulai dari data siswa, jadwal, hingga logistik seperti pengiriman merchandise, asset management, dan recruitment.
 
 **Fitur Utama**:
 - **50+ pages** untuk CSO (Customer Support Officer)
 - **15+ pages** untuk ESO (Education Support Officer)
-- **16+ pages** untuk Finance (Keuangan - NEW)
-- **16+ pages** untuk HRGA (HR & General Affairs - NEW)
+- **16+ pages** untuk Finance (Keuangan)
+- **18+ pages** untuk HRGA (HR & General Affairs)
 - **RBAC** dengan 3 roles & 12 jabatan
 - **Session Management** dengan auto-logout & productivity tracking
 - **Dark/Light mode** dengan Chakra UI
@@ -18,7 +18,7 @@ Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun mengguna
 
 ## 2. Tech Stack Utama
 
-Berikut adalah teknologi dan library utama yang menjadi tulang punggung aplikasi ini:
+Berikut adalah teknologi dan library utama yang menjadi base aplikasi ini:
 
 * **Framework**: [React](https://react.dev/) via [Vite](https://vitejs.dev/) - Untuk UI yang cepat dan modern.
 * **Styling**:
@@ -26,7 +26,7 @@ Berikut adalah teknologi dan library utama yang menjadi tulang punggung aplikasi
     * [Styled Components](https://styled-components.com/): Digunakan untuk komponen-komponen dengan style yang sangat spesifik dan custom.
     * [React Icons](https://react-icons.github.io/react-icons/): Untuk semua kebutuhan ikonografi.
 * **Data Fetching & State Management**:
-    * [TanStack Query (React Query)](https://tanstack.com/query/latest): Sebagai "manajer" utama untuk semua data dari server (*server state*). Meng-handle *fetching, caching, dan updating* data API.
+    * [TanStack Query (React Query)](https://tanstack.com/query/latest): Sebagai management untuk semua data dari server (*server state*). Meng-handle *fetching, caching, dan updating* data API.
     * [Axios](https://axios-http.com/): HTTP Client untuk melakukan panggilan HTTP (GET, POST) ke API.
     * **React Context API**: Digunakan khusus untuk state global yang jarang berubah, seperti data otentikasi user (`AuthContext`).
 * **Routing**: [React Router DOM](https://reactrouter.com/) - Untuk navigasi antar halaman di dalam SPA.
@@ -116,9 +116,9 @@ src/
 |   |   |-- Finance/       # 16 pages
 |   |   |   |-- Bersama/  (9 pages: Approval, Daftar Harga, etc)
 |   |   |   `-- Personal/ (7 pages: Dashboard Pendapatan, etc)
-|   |   `-- HRGA/          # 16 pages
+|   |   `-- HRGA/          # 18 pages
 |   |       |-- HRRecruitmen/ (7 pages: Dashboard, Candidates, etc)
-|   |       `-- Asset/     (9 pages: Dashboard, Inventory, Maintenance, etc)
+|   |       `-- Asset/     (11 pages: Dashboard, Inventory, Maintenance, Kelompok Barang, Pengkodean, etc)
 |   |-- Admin/
 |   |-- Login.jsx
 |   |-- ForgotPassword.jsx
@@ -153,7 +153,7 @@ src/
 `-- main.jsx           # Entry point (QueryClient, Chakra, AuthProvider)
 ```
 
-**Alur Data Utama (Pola Arsitektur):**
+**Alur Data Utama (Arsitektur):**
 
 Data mengalir dari API Service → React Query → Page Component → UI Component:
 
@@ -171,11 +171,11 @@ UI Component (/components/)
 User Interface
 ```
 
-**Alur Data Utama (Pola Arsitektur):**
+**Alur Data Utama (Arsitektur):**
 
 1.  **`main.jsx`**: Membungkus seluruh aplikasi dengan *Provider* yang dibutuhkan (`QueryClientProvider`, `ChakraProvider`, `AuthProvider`).
 2.  **`App.jsx`**: Mengatur semua rute halaman menggunakan `react-router-dom` dan melindungi rute privat dengan `ProtectedRoute`.
-3.  **Komponen Halaman (`/pages`)**: Bertindak sebagai "Otak" atau *controller*.
+3.  **Komponen Halaman (`/pages`)**: Bertindak sebagai *controller*.
     * Menggunakan *hook* `useQuery` dari React Query untuk memanggil fungsi dari *API Service*.
     * Melakukan transformasi data di dalam opsi `select` jika diperlukan.
     * Menggunakan *hook* `useMutation` untuk mendefinisikan aksi `POST`/`UPDATE`.
@@ -255,14 +255,14 @@ Project ini sudah dilengkapi dengan sistem keamanan multi-layer untuk melindungi
 * **Real-time Badge**: Timer di Navbar dengan color coding
 * **Dokumentasi**: [docs/TOKEN_EXPIRY_GUIDE.md](docs/TOKEN_EXPIRY_GUIDE.md)
 
-### Productivity Tracking (Feb 2026)
+### Productivity Tracking
 * **Session Monitoring**: Real-time productive vs idle time tracking
 * **Grace Period**: 30 menit tolerance untuk multitasking
 * **Session Recovery**: Auto-restore session setelah browser refresh
 * **Orphaned Detection**: Cleanup session yang tidak selesai dengan benar (9-hour threshold)
 * **Backend Integration**: Productive/idle duration terkirim saat logout untuk analytics
 
-### Password Management (Feb 2026)
+### Password Management
 * **Forgot Password**: Reset password via email dengan temporary password
 * **Update Password**: Self-service password change dengan validasi
 * **Password Strength**: Real-time indicator dengan 5 requirements
@@ -274,7 +274,7 @@ Project ini sudah dilengkapi dengan sistem keamanan multi-layer untuk melindungi
 * **Auto-logout**: Force re-login setelah password berhasil diubah
 * **Server Validation**: Backend validation untuk security
 
-### Divisi Access Control (NEW - June 2026)
+### Divisi Access Control
 * **Finance Division**: Finance-specific pages & API endpoints
   - Finance_ONLY access untuk staff dengan jabatan Finance
   - Finance_OR_ADMIN untuk Admin juga bisa akses
@@ -282,7 +282,7 @@ Project ini sudah dilengkapi dengan sistem keamanan multi-layer untuk melindungi
 * **HRGA Division**: HR & Asset management pages
   - HRGA_ONLY access untuk staff dengan jabatan HRGA
   - HRGA_OR_ADMIN untuk Admin juga bisa akses
-  - 16 pages dengan 2 dedicated API services (HR + Asset)
+  - 18 pages dengan 2 dedicated API services (HR + Asset)
 
 **Catatan Penting**: Client-side security adalah UX layer. Backend validation tetap WAJIB untuk security sesungguhnya.
 
@@ -377,7 +377,7 @@ Sebelum mulai development, pastikan Anda sudah:
 - [ ] Baca HANDOVER_DOCUMENTATION.md untuk know current status
 - [ ] Siap untuk start development atau maintenance
 
-## 8. Recent Updates & Features (February 2026)
+## 8. Recent Updates & Features
 
 ### Authentication System V2.0
 * **Auth API Migration**: Migrasi dari GET ke POST method untuk security
@@ -435,4 +435,4 @@ Sebelum mulai development, pastikan Anda sudah:
 
 Dokumentasi ini adalah dokumen hidup. Selalu perbarui seiring dengan perkembangan project.
 
-Last update: 23 June 2026
+Last update: 8 July 2026

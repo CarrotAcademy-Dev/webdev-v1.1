@@ -615,7 +615,7 @@ HR RECRUITMENT (7 pages):
     URL: /my-tasks/hrga/hr-recruitment/penilaian-kandidat
     Assessment & evaluation form
 
-ASSET MANAGEMENT (9 pages):
+ASSET MANAGEMENT (11 pages):
 1.  Dashboard Asset
     URL: /my-tasks/hrga/asset/dashboard-asset
     Asset overview & KPI
@@ -651,6 +651,14 @@ ASSET MANAGEMENT (9 pages):
 9.  Asset History
     URL: /my-tasks/hrga/asset/asset-history
     Complete asset transaction history
+
+10. Kelompok Barang (Asset Categories)
+    URL: /my-tasks/hrga/asset/kelompok-barang
+    Manage asset categories & groupings
+
+11. Pengkodean (Asset Coding)
+    URL: /my-tasks/hrga/asset/pengkodean
+    Asset numbering & coding system
 ```
 
 ---
