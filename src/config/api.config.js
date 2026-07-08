@@ -10,6 +10,10 @@ export const API_CONFIG = {
         financePersonal: import.meta.env.VITE_API_FINANCE_PERSONAL_ENDPOINT,
         hrRecruitment: import.meta.env.VITE_HR_RECRUITMENT_ENDPOINT,
         hrgaAsset: import.meta.env.VITE_HRGA_ASSET_ENDPOINT,
+        hrgaStock: import.meta.env.VITE_HRGA_STOCK_ENDPOINT,
+        hrgaGaMainData: import.meta.env.VITE_HRGA_GAMAINDATA_ENDPOINT,
+        hrgaPersonal: import.meta.env.VITE_HRGA_HRGAPERSONAL_ENDPOINT,
+        hrgaHrMainData: import.meta.env.VITE_HRGA_HRMAINDATA_ENDPOINT,
         auth: import.meta.env.VITE_API_AUTH_ENDPOINT,
     },
     timeout: 150000, // 2.5 minutes
