@@ -98,7 +98,40 @@ const DetailBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/DetailBaran
 const AssetHistoryPage = lazy(() => import('./pages/Staff/HRGA/Asset/AssetHistoryPage'));
 const KelompokBarangPage = lazy(() => import('./pages/Staff/HRGA/Asset/KelompokBarangPage'));
 const PengkodeanPage = lazy(() => import('./pages/Staff/HRGA/Asset/PengkodeanPage'));
-
+// HRGA Stock
+const KelompokBarangPageStock = lazy(() => import('./pages/Staff/HRGA/Stock/KelompokBarangStockPage'));
+const PengkodeanPageStock = lazy(() => import('./pages/Staff/HRGA/Stock/PengkodeanPageStock'));
+const StockPage = lazy(() => import('./pages/Staff/HRGA/Stock/StockPage'));
+const StockHistoryPage = lazy(() => import('./pages/Staff/HRGA/Stock/StockHistoryPage'));
+const MonthlyStockHistoryPage = lazy(() => import('./pages/Staff/HRGA/Stock/MonthlyStockHistoryPage'));
+const ListBarangJualPage = lazy(() => import('./pages/Staff/HRGA/Stock/ListBarangJualPage'));
+// HRGA GA Main Data
+const PurchaseRequestPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/RequestPurchasePage'));
+const RepairBarangPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/RepairBarangPage'));
+const DraftKasKeluarPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/DraftKasKeluar'));
+const PerizinanPerpanjangPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/PerizinanPerpanjangPage'));
+const TicketingPerizinanPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/TicketingPerizinanPage'));
+const SearchBarangPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/SearchBarangPage'));
+const MasterVendorPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/MasterVendorPage'));
+const TagihanPageHRGA = lazy(() => import('./pages/Staff/HRGA/GAMainData/TagihanPage'));
+const JenisMerchandisePage = lazy(() => import('./pages/Staff/HRGA/GAMainData/JenisMerchandisePage'));
+const JenisMapPage = lazy(() => import('./pages/Staff/HRGA/GAMainData/JenisMapPage'));
+// HRGA Personal
+const DataFriendshipPage = lazy(() => import('./pages/Staff/HRGA/HRGAPersonal/DataFriendshipPage'));
+const InterviewPage = lazy(() => import('./pages/Staff/HRGA/HRGAPersonal/InterviewPage'));
+const DashboardRecruitmentPage = lazy(() => import('./pages/Staff/HRGA/HRGAPersonal/DashboardRecruitment'));
+const TicketingInternalHRGAPage = lazy(() => import('./pages/Staff/HRGA/HRGAPersonal/TicketingInternalPage'));
+const TrackTicketFromMeHRGAPage = lazy(() => import('./pages/Staff/HRGA/HRGAPersonal/TrackTicketFromMe'));
+const TicketingExternalHRGAPage = lazy(() => import('./pages/Staff/HRGA/HRGAPersonal/TicketingExternalPage'));
+// HRGA HR Main Data
+const DatabaseKaryawanPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/DatabaseKaryawanPage'));
+const ProbationTrainingPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/ProbationTrainingPage'));
+const DataTicketEsoPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/DataTicketEsoPage'));
+const DatabaseSlipGajiPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/DatabaseSlipGajiPage'));
+const OnboardingPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/OnboardingPage'));
+const OffboardingPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/OffboardingPage'));
+const PengajuanCutiPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/PengajuanCutiPage'));
+const PengajuanIzinPage = lazy(() => import('./pages/Staff/HRGA/HRMainData/PengajuanIzinPage'));
 // Admin & Other
 const RegisterUserPage = lazy(() => import('./pages/Admin/RegisterUserPage'));
 const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
@@ -650,6 +683,7 @@ function App() {
               </ProtectedRoute>
             } />
 
+            {/* HRGA Routes */}
             <Route path="/hrga/dashboard-report" element={
               <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
                 <Layout>
@@ -790,6 +824,246 @@ function App() {
               <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
                 <Layout>
                   <PengkodeanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/kelompok-barang-stock" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <KelompokBarangPageStock />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/pengkodean-stock" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PengkodeanPageStock />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/stock" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <StockPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/stock-history" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <StockHistoryPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/monthly-stock-history" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <MonthlyStockHistoryPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/list-barang-jual" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <ListBarangJualPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/purchase-request" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PurchaseRequestPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/repair-barang" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <RepairBarangPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/draft-kas-keluar" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DraftKasKeluarPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/perizinan-perpanjang" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PerizinanPerpanjangPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/ticketing-perizinan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <TicketingPerizinanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/search-barang" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <SearchBarangPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/master-vendor" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <MasterVendorPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/tagihan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <TagihanPageHRGA />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/jenis-merchandise" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <JenisMerchandisePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/jenis-map" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <JenisMapPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/data-friendship" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DataFriendshipPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/interview" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <InterviewPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/dashboard-recruitment" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DashboardRecruitmentPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/ticketing-internal" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <TicketingInternalHRGAPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/track-ticket-from-me" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <TrackTicketFromMeHRGAPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/ticketing-external" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <TicketingExternalHRGAPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/database-karyawan" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DatabaseKaryawanPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/probation-training" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <ProbationTrainingPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/data-ticket-eso" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DataTicketEsoPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/database-slip-gaji" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <DatabaseSlipGajiPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/onboarding" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <OnboardingPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/offboarding" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <OffboardingPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/pengajuan-cuti" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PengajuanCutiPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/hrga/pengajuan-izin" element={
+              <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
+                <Layout>
+                  <PengajuanIzinPage />
                 </Layout>
               </ProtectedRoute>
             } />
