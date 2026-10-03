@@ -11,7 +11,8 @@ export const JABATAN = {
     ESO: 'Education Support Officer', 
     FINANCE: 'Finance Accounting',
     IT: 'IT Developer',
-    MARCOM: 'Marketing Communications Spesialist',
+    MARCOM: 'Marketing Communications Specialist',
+    MARCOM_ALT: 'Marketing Communications Spesialist',
     MENTOR: 'Illustation Drawing Teacher',
     INTERN: 'Intern',
     OPERATION: 'Operation Director',
@@ -63,6 +64,29 @@ export const ACCESS_GROUPS = {
     // Admin can also access HRGA pages
     HRGA_OR_ADMIN: {
         allowedJabatan: [JABATAN.HRGA],
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        requireAny: true
+    },
+    // Marcom access groups
+    MARCOM_ONLY: {
+        allowedJabatan: [
+            JABATAN.MARCOM,
+            JABATAN.MARCOM_ALT,
+            JABATAN.SMS,
+            'Marketing Communications Specialist',
+            'Marketing Communications Spesialist',
+            'Marcom'
+        ]
+    },
+    MARCOM_OR_ADMIN: {
+        allowedJabatan: [
+            JABATAN.MARCOM,
+            JABATAN.MARCOM_ALT,
+            JABATAN.SMS,
+            'Marketing Communications Specialist',
+            'Marketing Communications Spesialist',
+            'Marcom'
+        ],
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
         requireAny: true
     }

@@ -1,0 +1,7 @@
+{
+  "timeZone": "Asia/Krasnoyarsk",
+  "dependencies": {
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
+}

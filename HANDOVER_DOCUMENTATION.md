@@ -1,7 +1,8 @@
 # CarrotAcademy v1.1 - Handover Documentation
 
 **Created**: June 22, 2026  
-**Last Updated**: June 23, 2026  
+**Last Updated**: July 8, 2026  
+**Latest Source of Truth**: DOKUMEN SERAH TERIMA SISTEM (HANDOVER DOCUMENT), effective 8 July 2026  
 **Purpose**: Complete handover guide untuk developer/team berikutnya  
 **Status**: Ready for handover
 
@@ -16,6 +17,26 @@
 ---
 
 ## 1. System Overview & Current State
+
+### 1.0 Latest Handover Scope (Effective 8 July 2026)
+
+The latest handover document expands the project scope beyond the web dashboard to include:
+
+1. **Spreadsheet Accounting Tahunan**
+   - Understand table schema and relationships between sheets.
+   - Preserve existing formulas and embedded Google Apps Script triggers.
+   - Refer to the dedicated *Dokumentasi Project Spreadsheet Accounting Tahunan* for technical procedures, data-flow diagrams, and maintenance instructions.
+
+2. **ACC Personal**
+   - Monitor synchronization between spreadsheets.
+   - Periodically review Google Apps Script runtime execution and formulas on each sheet.
+   - Refer to the dedicated *Dokumentasi Proyek ACC Personal* for troubleshooting, maintenance, and sheet/data-flow guidance.
+
+3. **Web System / Staff Dashboard**
+   - GitHub repository, Vercel deployment, environment variables, RBAC, user provisioning, and password-recovery procedures are governed by the 8 July 2026 handover.
+
+
+> **Latest handover update (8 July 2026):** Operational/infrastructure details in this document have been synchronized with the latest PDF handover. Where the June 23 feature-status snapshot is retained, it is explicitly labeled as a historical snapshot because the July 8 PDF does not provide a replacement feature-status inventory.
 
 ### 1.1 Project Summary
 
@@ -70,7 +91,9 @@
 
 ---
 
-### 1.3 Development Status (Per 23 Juni 2026)
+### 1.3 Development Status (Historical Snapshot — 23 June 2026)
+
+> This feature inventory is retained from the June documentation because the 8 July PDF focuses on operational handover/infrastructure and does not provide a replacement feature-status list.
 
 #### COMPLETED FEATURES
 
@@ -137,6 +160,13 @@
 - Total: 18 pages (7 HR + 11 Asset)
 - API Services: `hrApiService.jsx` + `assetApiServices.jsx`
 - Endpoints: HR Recruitment + Asset Management (6 endpoints total)
+
+**Marcom Division Features** ✨ NEW
+- **Bersama** (4 pages): Prospektif Marcom (CRUD + Staging to CSO), Cek Folder Dropbox (Monitoring upload & checklist), Dashboard Daily (Jadwal Kelas & Birthday Siswa), Track Ticket From Me (Internal Tickets)
+- Total: 4 pages (Bersama)
+- API Service: `marcomApiService.js`
+- Endpoint: `VITE_API_MARCOM_ENDPOINT`
+- Database: Google Sheets Marcom (`1KHlDAPVI2hSFjkp8mj8hCNuLWjmGvn4rm5KC4XsPSLg`)
 
 **System Features**
 - Dark/Light mode toggle
@@ -303,52 +333,46 @@ src/
 
 **Last Deployment**: 22 Juni 2026 (manual merge from develop to main)
 
+> **Operational handover note (8 July 2026):** Vercel infrastructure authentication is described in the latest handover as **Google SSO / Login by Google Account** using `system@carrotacademy.com`; it does not use a static Vercel password. The 22 June line above is retained as the historical deployment snapshot from the original June documentation.
+
 ---
 
 ## 2. Credentials & Endpoint Mapping
 
 ### 2.1 Environment Variables (REQUIRED)
 
-Semua env vars harus dikonfigurasi di `.env` file untuk production deployment.
+> **Latest configuration: 8 July 2026.** These values supersede the placeholder endpoint IDs in the June 23 documentation.
+
+All environment variables must be configured securely in the Vercel dashboard / local `.env.local` as appropriate. Do **not** commit `.env` files to Git.
 
 ```bash
-# .env file structure
-# ==================
-
-# API Base URL (Google Apps Script base)
+# API Configuration
 VITE_API_BASE_URL=https://script.google.com/macros/s
-
-# CSO API Endpoints (Google Apps Script)
-VITE_API_CSO_BERSAMA_ENDPOINT=https://script.google.com/macros/s/[CSO_BERSAMA_SCRIPT_ID]/exec
-VITE_API_CSO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[CSO_PERSONAL_SCRIPT_ID]/exec
-
-# ESO API Endpoints
-VITE_API_ESO_BERSAMA_ENDPOINT=https://script.google.com/macros/s/[ESO_BERSAMA_SCRIPT_ID]/exec
-VITE_API_ESO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[ESO_PERSONAL_SCRIPT_ID]/exec
-
-# Finance API Endpoints
-VITE_API_FINANCE_BERSAMA_ENDPOINT=https://script.google.com/macros/s/[FINANCE_BERSAMA_SCRIPT_ID]/exec
-VITE_API_FINANCE_PERSONAL_ENDPOINT=https://script.google.com/macros/s/[FINANCE_PERSONAL_SCRIPT_ID]/exec
-
-# HR & HRGA API Endpoints
-VITE_HR_RECRUITMENT_ENDPOINT=https://script.google.com/macros/s/[HR_RECRUITMENT_SCRIPT_ID]/exec
-VITE_HRGA_ASSET_ENDPOINT=https://script.google.com/macros/s/[HRGA_ASSET_SCRIPT_ID]/exec
-VITE_HRGA_STOCK_ENDPOINT=https://script.google.com/macros/s/[HRGA_STOCK_SCRIPT_ID]/exec
-VITE_HRGA_GAMAINDATA_ENDPOINT=https://script.google.com/macros/s/[HRGA_GAMAINDATA_SCRIPT_ID]/exec
-VITE_HRGA_HRMAINDATA_ENDPOINT=https://script.google.com/macros/s/[HRGA_HRMAINDATA_SCRIPT_ID]/exec
-VITE_HRGA_HRGAPERSONAL_ENDPOINT=https://script.google.com/macros/s/[HRGA_HRGAPERSONAL_SCRIPT_ID]/exec
-
-# Auth API Endpoint
-VITE_API_AUTH_ENDPOINT=https://script.google.com/macros/s/[AUTH_SCRIPT_ID]/exec
+VITE_API_CSO_BERSAMA_ENDPOINT=https://script.google.com/macros/s/AKfycbyDTye9Z2GFj2NuXi8ik0FiazXhK56J0zNKyEEvmUcC-V_U_kn1NvwsMy1zgu_HUBqMjg/exec
+VITE_API_CSO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfycby89UyE4OF71-PruxKQR4xc3_FaKpHr-kPJhzZe22WyVNDpAD1SsuayWl0X4OXdtbiz/exec
+VITE_API_AUTH_ENDPOINT=https://script.google.com/macros/s/AKfycbyahDtXx3gAZecwMd7KENmOs83jjq7ZByrHoowDNNrGLXb8AfkNQa_UHMDJvKz2q8plVw/exec
+VITE_API_ESO_PERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfycbydUmAr1xD5D3RVtheta3M51KnokYNiqT_eMLaibKTFRLaAJLqWDA47H-PJz2aIz4mITw/exec
+VITE_API_ESO_BERSAMA_ENDPOINT=https://script.google.com/macros/s/AKfycbwXT0bh7NikzvLJNiYEkPGyfFsqQJ1fyrYixWZsb_mLnvMjQMqsELeV5ZWW2kbYIiOcZA/exec
+VITE_API_FINANCE_BERSAMA_ENDPOINT=https://script.google.com/macros/s/AKfycbxREImRslsBxpgHrp236mSLlOCrmWGJdFQwemWUUh42SOwAsm50Z4EwXY5GN9XZZ7aO/exec
+VITE_API_FINANCE_PERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfycbyHjbbzp-FG3EypDZoMzJ12jWl-iZeaaD73CXEZ0p_FG-4KRlcCmlbMGRmWXJnIime5/exec
+VITE_HR_RECRUITMENT_ENDPOINT=https://script.google.com/macros/s/AKfycbyP1Wvol7VUa7BmleeM0DSwr5pp6uJiQusdDugOcU2Gb2p_KYQ7EYpPdPfQr1LdY1IVbQ/exec
+VITE_HRGA_ASSET_ENDPOINT=https://script.google.com/macros/s/AKfycbzik5Jkn1UnbokG-09hJursgAnpNGyIvybOpenx2aOxwKWu0ztEwBPEbpKvDLmYIlY7/exec
+VITE_HRGA_STOCK_ENDPOINT=https://script.google.com/macros/s/AKfycbxH6F2tAMHdWDCJlbBhhM9rRCg9Abg3_FWkq0W9KFLbqxsx0SqxRxGT36ypKCdI65U/exec
+VITE_HRGA_GAMAINDATA_ENDPOINT=https://script.google.com/macros/s/AKfycbxKqZoXIKVm1RIkL0Pyd9Dh9o4qZTRnN3_s99aIgaXNCqdQFPSCYYcJWnyIvg4tv8zjeQ/exec
+VITE_HRGA_HRGAPERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfycbwNtydTDb_rRAa9NnTs6zPX2dbQR40Usc2zK28hWJbGpD1iF8X_9jdtWJZNpopxGSO7/exec
+VITE_HRGA_HRMAINDATA_ENDPOINT=https://script.google.com/macros/s/AKfycby8dxT0odqLnsewdpuYuwXVvZnbNCv7MVAOP5A7LqfKnzfSxovvd45wkbl7VNcKu7QTOg/exec
+VITE_API_MARCOM_ENDPOINT=https://script.google.com/macros/s/AKfycbwhil2pdPuGMnYyaH2TnIgB6IhcMq7EL-zyn1AWJYgSFrqC_MlBANkCZrORxXTlk5xZ/exec
 
 # App Configuration
 VITE_APP_NAME=CarrotAcademy Dashboard
 VITE_APP_VERSION=1.1.0
 
 # Feature Flags
-VITE_ENABLE_DEBUG_MODE=false  # Set to 'true' for dev logging
+VITE_ENABLE_DEBUG_MODE=true
 VITE_ENABLE_ANALYTICS=false
 ```
+
+**Security note:** The July 8 handover contains live-looking credentials and endpoint values. Treat this document as sensitive and avoid committing it to a public repository. Rotate credentials/tokens if they have been exposed.
 
 ### 2.2 Google Apps Script Endpoints
 
@@ -612,6 +636,47 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 4. Production credentials set via Vercel dashboard → Settings → Environment Variables
 
 ---
+
+## 2.6 Latest Access, RBAC & Account Governance (8 July 2026)
+
+### GitHub Organization
+- Repository: `https://github.com/CarrotAcademy-Dev/webdev-v1.1`
+- Official system email: `system@carrotacademy.com`
+- Git username: `systemcarrotacademy`
+- Offboarding: remove the departing developer from **Carrot Academy → People/Members**.
+- Onboarding: invite the new developer's GitHub username and grant only the permissions required for the dashboard repository/staging workflow.
+- Follow the staging branch and README.md Git workflow before production release.
+
+### Vercel
+- Deployment is serverless through Vercel.
+- The 8 July handover specifies **Google SSO / Login by Google Account** with `system@carrotacademy.com`; no static Vercel password is used.
+
+### User Provisioning / RBAC
+- Access is controlled by structural position recorded in **HR MAIN DATA**.
+- Jabatan and Divisi values must exactly follow HR MAIN DATA naming conventions.
+- Admin/Super Admin access is reserved for System Developer use for debugging/testing; ordinary staff should not receive these levels.
+
+### Existing Integrated Staff Accounts (8 July 2026)
+| Division / Position | Name | Login Email | Default Password |
+|---|---|---|---|
+| JSD (Admin) | Nada | `pretti@jsd.carrotacademy.com` | `adminJSD1!` |
+| CSO (CM) | Cristin | `cristin@cso.carrotacademy.com` | `cso` |
+| CSO (YS) | Yuliarti | `yuliarti@cso.carrotacademy.com` | `yuliartiCSO2!` |
+| ESO / MR | Reza | `reza@eso.carrotacademy.com` | `staffESO1!` |
+| Finance | Eka Dwis | `ekadwis@finance.carrotacademy.com` | `staffFinance1!` |
+| HRGA | Belum dibuat | — | Register via Admin dashboard |
+
+> **Security:** These credentials are reproduced from the 8 July handover source. Store this document securely and rotate default/shared passwords if required by the organization's security policy.
+
+### Offboarding
+When staff change, the old account can be deleted and a new account created for the replacement staff member. The July handover states that deleting the web account does not remove operational transaction data because the data is attached to the global database entity rather than the personal web account.
+
+### Forgot Password Lifecycle
+1. Staff submits a forgot-password request from the frontend.
+2. The system generates a temporary password and stores it in the Auth Spreadsheet `login_history`.
+3. Admin checks the relevant log row's `Info` field for the temporary-password string.
+4. Admin verifies the staff member's identity directly before handing over the temporary password.
+5. User logs in with the temporary password and immediately sets a permanent password through **Settings**.
 
 ## 3. Pending Tasks & Next Steps
 
@@ -891,5 +956,6 @@ All services use centralized Axios client from `API_CONFIG.baseURL`
 ---
 
 **Last Updated**: July 8, 2026  
-**Maintained By**: JSD
+**Maintained By**: JSD  
+**Latest Source**: DOKUMEN SERAH TERIMA SISTEM (HANDOVER DOCUMENT), effective 8 July 2026  
 **Next Review**: September 22, 2026
