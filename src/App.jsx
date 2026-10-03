@@ -138,6 +138,11 @@ const PayslipPage = lazy(() => import('./pages/Staff/PayslipPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const AccessDenied = lazy(() => import('./pages/AccessDenied'));
+// Marcom
+const MarcomProspektifPage = lazy(() => import('./pages/Staff/Marcom/Bersama/ProspektifMarcomPage'));
+const MarcomCekFolderDropboxPage = lazy(() => import('./pages/Staff/Marcom/Bersama/CekFolderDropboxPage'));
+const MarcomDashboardDailyPage = lazy(() => import('./pages/Staff/Marcom/Bersama/DashboardDailyPage'));
+const MarcomTrackTicketFromMePage = lazy(() => import('./pages/Staff/Marcom/Bersama/TrackTicketFromMePage'));
 
 function App() {
   const { colorMode } = useColorMode();
@@ -1064,6 +1069,39 @@ function App() {
               <ProtectedRoute {...ACCESS_GROUPS.HRGA_OR_ADMIN}>
                 <Layout>
                   <PengajuanIzinPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Marcom Routes */}
+            <Route path="/marcom/prospektif" element={
+              <ProtectedRoute {...ACCESS_GROUPS.MARCOM_OR_ADMIN}>
+                <Layout>
+                  <MarcomProspektifPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/marcom/cek-folder-dropbox" element={
+              <ProtectedRoute {...ACCESS_GROUPS.MARCOM_OR_ADMIN}>
+                <Layout>
+                  <MarcomCekFolderDropboxPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/marcom/dashboard-daily" element={
+              <ProtectedRoute {...ACCESS_GROUPS.MARCOM_OR_ADMIN}>
+                <Layout>
+                  <MarcomDashboardDailyPage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/marcom/track-ticket-fme" element={
+              <ProtectedRoute {...ACCESS_GROUPS.MARCOM_OR_ADMIN}>
+                <Layout>
+                  <MarcomTrackTicketFromMePage />
                 </Layout>
               </ProtectedRoute>
             } />

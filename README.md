@@ -11,6 +11,7 @@ Project ini adalah sebuah *Single Page Application* (SPA) yang dibangun mengguna
 - **15+ pages** untuk ESO (Education Support Officer)
 - **16+ pages** untuk Finance (Keuangan)
 - **18+ pages** untuk HRGA (HR & General Affairs)
+- **4 pages** untuk Marcom (Marketing Communications)
 - **RBAC** dengan 3 roles & 12 jabatan
 - **Session Management** dengan auto-logout & productivity tracking
 - **Dark/Light mode** dengan Chakra UI

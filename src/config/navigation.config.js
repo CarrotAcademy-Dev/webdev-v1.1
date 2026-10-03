@@ -12,7 +12,7 @@
 
 import { 
   FiHome, FiTrendingUp, FiCheckSquare, FiBriefcase, 
-  FiUser, FiSettings, FiCreditCard, FiUserPlus 
+  FiUser, FiSettings, FiCreditCard, FiUserPlus, FiShare2 
 } from 'react-icons/fi';
 import { PiSuitcaseBold } from 'react-icons/pi';
 import { ACCESS_GROUPS, JABATAN } from '@/utils/constants/accessControl';
@@ -265,6 +265,28 @@ export const NAVIGATION_CONFIG = {
           ]
         }
       ]
+    },
+
+    /**
+     * Marcom Division
+     */
+    marcom: {
+      id: 'marcom',
+      title: 'Marcom Tasks',
+      icon: <FiShare2 />,
+      access: ACCESS_GROUPS.MARCOM_OR_ADMIN,
+      basePath: '/marcom',
+      categories: [
+        {
+          name: 'Bersama',
+          items: [
+            { label: 'Prospektif Marcom', path: '/marcom/prospektif' },
+            { label: 'Cek Folder Dropbox', path: '/marcom/cek-folder-dropbox' },
+            { label: 'Dashboard Daily', path: '/marcom/dashboard-daily' },
+            { label: 'Track Ticket From Me', path: '/marcom/track-ticket-fme' },
+          ]
+        }
+      ]
     }
   },
 
@@ -332,6 +354,7 @@ export const getActiveSection = (pathname) => {
   if (pathname.startsWith('/my-tasks')) return 'cso';
   if (pathname.startsWith('/eso')) return 'eso';
   if (pathname.startsWith('/finance')) return 'finance';
+  if (pathname.startsWith('/marcom')) return 'marcom';
   if (pathname.startsWith('/admin')) return 'admin';
   if (pathname.startsWith('/profile') || pathname.startsWith('/payslip') || pathname.startsWith('/settings')) return 'profile';
   if (pathname === '/home' || pathname.startsWith('/attendance') || pathname.startsWith('/leave-request') || pathname.startsWith('/home/kpi')) return 'home';

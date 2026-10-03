@@ -4,7 +4,7 @@ import { Box, IconButton } from '@chakra-ui/react';
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi';
 import { 
   FiHome, FiTrendingUp, FiCheckSquare, FiBriefcase, 
-  FiUser, FiSettings, FiCreditCard 
+  FiUser, FiSettings, FiCreditCard, FiShare2 
 } from 'react-icons/fi';
 import { PiSuitcaseBold } from 'react-icons/pi';
 import { useSidebar } from '@/context/SidebarContext';
@@ -37,6 +37,7 @@ function Sidebar({ userRole }) {
     if (path.startsWith('/eso')) return 'eso';
     if (path.startsWith('/finance')) return 'finance';
     if (path.startsWith('/hrga')) return 'hrga';
+    if (path.startsWith('/marcom')) return 'marcom';
     if (path.startsWith('/admin')) return 'admin';
     if (path.startsWith('/profile') || path.startsWith('/payslip') || path.startsWith('/settings')) return 'profile';
     if (path === '/home' || path.startsWith('/attendance') || path.startsWith('/leave-request') || path.startsWith('/home/kpi')) return 'home';
@@ -264,6 +265,23 @@ function Sidebar({ userRole }) {
             { label: "Database Slip Gaji", path: "/hrga/database-slip-gaji" },
             { label: "Pengajuan Cuti", path: "/hrga/pengajuan-cuti" },
             { label: "Pengajuan Izin", path: "/hrga/pengajuan-izin" },
+          ]
+        }
+      ]
+    };
+
+    // Add Marcom menu
+    menus.marcom = {
+      title: 'Marcom Tasks',
+      icon: <FiShare2 />,
+      categories: [
+        {
+          name: 'Bersama',
+          items: [
+            { label: "Prospektif Marcom", path: "/marcom/prospektif" },
+            { label: "Cek Folder Dropbox", path: "/marcom/cek-folder-dropbox" },
+            { label: "Dashboard Daily", path: "/marcom/dashboard-daily" },
+            { label: "Track Ticket From Me", path: "/marcom/track-ticket-fme" },
           ]
         }
       ]

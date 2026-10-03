@@ -161,6 +161,13 @@ The latest handover document expands the project scope beyond the web dashboard 
 - API Services: `hrApiService.jsx` + `assetApiServices.jsx`
 - Endpoints: HR Recruitment + Asset Management (6 endpoints total)
 
+**Marcom Division Features** ✨ NEW
+- **Bersama** (4 pages): Prospektif Marcom (CRUD + Staging to CSO), Cek Folder Dropbox (Monitoring upload & checklist), Dashboard Daily (Jadwal Kelas & Birthday Siswa), Track Ticket From Me (Internal Tickets)
+- Total: 4 pages (Bersama)
+- API Service: `marcomApiService.js`
+- Endpoint: `VITE_API_MARCOM_ENDPOINT`
+- Database: Google Sheets Marcom (`1KHlDAPVI2hSFjkp8mj8hCNuLWjmGvn4rm5KC4XsPSLg`)
+
 **System Features**
 - Dark/Light mode toggle
 - Responsive design (mobile, tablet, desktop)
@@ -354,6 +361,7 @@ VITE_HRGA_STOCK_ENDPOINT=https://script.google.com/macros/s/AKfycbxH6F2tAMHdWDCJ
 VITE_HRGA_GAMAINDATA_ENDPOINT=https://script.google.com/macros/s/AKfycbxKqZoXIKVm1RIkL0Pyd9Dh9o4qZTRnN3_s99aIgaXNCqdQFPSCYYcJWnyIvg4tv8zjeQ/exec
 VITE_HRGA_HRGAPERSONAL_ENDPOINT=https://script.google.com/macros/s/AKfycbwNtydTDb_rRAa9NnTs6zPX2dbQR40Usc2zK28hWJbGpD1iF8X_9jdtWJZNpopxGSO7/exec
 VITE_HRGA_HRMAINDATA_ENDPOINT=https://script.google.com/macros/s/AKfycby8dxT0odqLnsewdpuYuwXVvZnbNCv7MVAOP5A7LqfKnzfSxovvd45wkbl7VNcKu7QTOg/exec
+VITE_API_MARCOM_ENDPOINT=https://script.google.com/macros/s/AKfycbwhil2pdPuGMnYyaH2TnIgB6IhcMq7EL-zyn1AWJYgSFrqC_MlBANkCZrORxXTlk5xZ/exec
 
 # App Configuration
 VITE_APP_NAME=CarrotAcademy Dashboard

@@ -15,6 +15,7 @@ export const API_CONFIG = {
         hrgaPersonal: import.meta.env.VITE_HRGA_HRGAPERSONAL_ENDPOINT,
         hrgaHrMainData: import.meta.env.VITE_HRGA_HRMAINDATA_ENDPOINT,
         auth: import.meta.env.VITE_API_AUTH_ENDPOINT,
+        marcom: import.meta.env.VITE_API_MARCOM_ENDPOINT,
     },
     timeout: 150000, // 2.5 minutes
     retryAttempts: 3,

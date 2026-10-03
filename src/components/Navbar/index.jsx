@@ -1,7 +1,7 @@
 import Logo from "../../assets/images/logo1.svg?react";
 import StyledNavbar from "./Navbar.Styled";
 import { IconButton, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, VStack, Text, Tooltip, Badge, HStack } from "@chakra-ui/react"
-import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu, FiShield, FiClock } from "react-icons/fi";
+import { FiBriefcase, FiCheckSquare, FiHome, FiLogOut, FiTrendingUp, FiUser, FiMenu, FiShield, FiClock, FiShare2 } from "react-icons/fi";
 import { PiSuitcaseBold } from "react-icons/pi";
 import NavbarMenu from "../Menu";
 import ThemeToggle from "../ThemeToggle";
@@ -26,6 +26,14 @@ function Navbar() {
     const isFinance = currentUser?.jabatan === JABATAN.FINANCE;
     // Check if user is HRGA
     const isHRGA = currentUser?.jabatan === JABATAN.HRGA;
+    // Check if user is Marcom
+    const userJabatanLower = (currentUser?.jabatan || '').toLowerCase().trim();
+    const isMarcom =
+      userJabatanLower.includes('marketing communication') ||
+      userJabatanLower.includes('social media specialist') ||
+      currentUser?.jabatan === JABATAN.MARCOM ||
+      currentUser?.jabatan === JABATAN.MARCOM_ALT ||
+      currentUser?.jabatan === JABATAN.SMS;
     // Show CSO menu if user is CSO or Admin
     const showCSOMenu = isCSO || isAdmin;
     // Show ESO menu if user is ESO or Admin
@@ -34,6 +42,8 @@ function Navbar() {
     const showFinanceMenu = isFinance || isAdmin;
     // Show HRGA menu if user is HRGA or Admin
     const showHRGAMenu = isHRGA || isAdmin;
+    // Show Marcom menu if user is Marcom or Admin
+    const showMarcomMenu = isMarcom || isAdmin;
 
     // Update session time every minute
     useEffect(() => {
@@ -299,6 +309,24 @@ function Navbar() {
               { label: "Database Slip Gaji", path: "/hrga/database-slip-gaji" },
               { label: "Pengajuan Cuti", path: "/hrga/pengajuan-cuti" },
               { label: "Pengajuan Izin", path: "/hrga/pengajuan-izin" },
+            ]
+          }
+        ],
+      });
+    }
+
+    // Add Marcom menu only for Marcom jabatan or Admin
+    if (showMarcomMenu) {
+      baseMenu.splice(baseMenu.length - 2, 0, {
+        mainIcon: <FiShare2 />,
+        items: [
+          {
+            category: "Bersama",
+            items: [
+              { label: "Prospektif Marcom", path: "/marcom/prospektif" },
+              { label: "Cek Folder Dropbox", path: "/marcom/cek-folder-dropbox" },
+              { label: "Dashboard Daily", path: "/marcom/dashboard-daily" },
+              { label: "Track Ticket From Me", path: "/marcom/track-ticket-fme" },
             ]
           }
         ],
