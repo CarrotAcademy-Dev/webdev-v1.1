@@ -149,12 +149,12 @@ function SocmedFreelancePage() {
   const filteredProduksi = useMemo(() => {
     return produksiList.filter((item) => {
       const matchSearch = searchProduksi
-        ? (item.judul_topik_konten || '').toLowerCase().includes(searchProduksi.toLowerCase())
+        ? String(item.judul_topik_konten || '').toLowerCase().includes(searchProduksi.toLowerCase())
         : true;
       const matchTipe =
         filterTipeKonten === 'ALL'
           ? true
-          : (item.tipe_konten || '').toLowerCase().includes(filterTipeKonten.toLowerCase());
+          : String(item.tipe_konten || '').toLowerCase().includes(filterTipeKonten.toLowerCase());
       return matchSearch && matchTipe;
     });
   }, [produksiList, searchProduksi, filterTipeKonten]);
@@ -163,7 +163,7 @@ function SocmedFreelancePage() {
   const filteredTracking = useMemo(() => {
     return trackingList.filter((item) => {
       return searchTracking
-        ? (item.judul_deskripsi_konten || '').toLowerCase().includes(searchTracking.toLowerCase())
+        ? String(item.judul_deskripsi_konten || '').toLowerCase().includes(searchTracking.toLowerCase())
         : true;
     });
   }, [trackingList, searchTracking]);
@@ -429,7 +429,7 @@ function SocmedFreelancePage() {
                     <div className="stat-info">
                       <span className="stat-label">Carousel</span>
                       <span className="stat-value">
-                        {produksiList.filter((x) => (x.tipe_konten || '').toLowerCase().includes('carousel')).length}
+                        {produksiList.filter((x) => String(x.tipe_konten || '').toLowerCase().includes('carousel')).length}
                       </span>
                     </div>
                   </div>
@@ -440,7 +440,7 @@ function SocmedFreelancePage() {
                     <div className="stat-info">
                       <span className="stat-label">Reels</span>
                       <span className="stat-value">
-                        {produksiList.filter((x) => (x.tipe_konten || '').toLowerCase().includes('reels')).length}
+                        {produksiList.filter((x) => String(x.tipe_konten || '').toLowerCase().includes('reels')).length}
                       </span>
                     </div>
                   </div>
@@ -513,21 +513,11 @@ function SocmedFreelancePage() {
                         ) : (
                           paginatedProduksi.map((item, index) => {
                             const rowNumber = (pageProduksi - 1) * ITEMS_PER_PAGE + index + 1;
-                            const tipeLower = (item.tipe_konten || '').toLowerCase();
-                            const statusLower = (item.status_produksi || '').toLowerCase();
+                            const tipeLower = String(item.tipe_konten || '').toLowerCase();
 
                             let tipeBadgeScheme = 'gray';
                             if (tipeLower.includes('carousel')) tipeBadgeScheme = 'purple';
                             else if (tipeLower.includes('reels')) tipeBadgeScheme = 'pink';
-
-                            let statusBadgeScheme = 'gray';
-                            if (statusLower.includes('selesai') || statusLower.includes('siap') || statusLower.includes('done')) {
-                              statusBadgeScheme = 'green';
-                            } else if (statusLower.includes('revisi') || statusLower.includes('review')) {
-                              statusBadgeScheme = 'orange';
-                            } else if (statusLower.includes('proses') || statusLower.includes('draft')) {
-                              statusBadgeScheme = 'blue';
-                            }
 
                             return (
                               <tr key={index}>
@@ -839,7 +829,7 @@ function SocmedFreelancePage() {
                           </tr>
                         ) : (
                           mingguanList.map((item, index) => {
-                            const statusLower = (item.status_target_mingguan || '').toLowerCase();
+                            const statusLower = String(item.status_target_mingguan || '').toLowerCase();
                             let badgeScheme = 'gray';
                             if (statusLower.includes('tercapai') || statusLower.includes('lengkap') || statusLower.includes('pass')) {
                               badgeScheme = 'green';
