@@ -44,6 +44,9 @@ function Navbar() {
     const showHRGAMenu = isHRGA || isAdmin;
     // Show Marcom menu if user is Marcom or Admin
     const showMarcomMenu = isMarcom || isAdmin;
+    // Show Socmed Freelance menu if user is Ayustia or Admin
+    const isAyustia = (currentUser?.nama || '').toLowerCase().trim() === 'ayustia putri handayani';
+    const showSocmedFreelanceMenu = isAyustia || isAdmin;
 
     // Update session time every minute
     useEffect(() => {
@@ -333,6 +336,21 @@ function Navbar() {
       });
     }
 
+    // Add Socmed Freelance menu only for Ayustia or Admin
+    if (showSocmedFreelanceMenu) {
+      baseMenu.splice(baseMenu.length - 2, 0, {
+        mainIcon: <FiShare2 />,
+        items: [
+          {
+            category: "Freelance",
+            items: [
+              { label: "Socmed Freelance", path: "/socmed-freelance" },
+            ]
+          }
+        ],
+      });
+    }
+
     // Add Admin menu only for admin/super_admin
     if (isAdmin) {
       baseMenu.splice((showCSOMenu ? 1 : 0) + (showESOMenu ? 1 : 0) + (showFinanceMenu ? 1 : 0) + 1, 0, {
@@ -349,7 +367,7 @@ function Navbar() {
     }
 
     return baseMenu;
-  }, [logout, isAdmin, showCSOMenu, showESOMenu, showFinanceMenu, showHRGAMenu]);
+  }, [logout, isAdmin, showCSOMenu, showESOMenu, showFinanceMenu, showHRGAMenu, showMarcomMenu, showSocmedFreelanceMenu]);
 
     return (
       <StyledNavbar>

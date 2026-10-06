@@ -11,7 +11,7 @@ import { Navigate, useLocation } from 'react-router-dom';
  * @param {string[]} props.allowedJabatan - Array of allowed jabatan (e.g., ['Customer Support Officer'])
  * @param {boolean} props.requireAny - If true, user needs EITHER role OR jabatan. If false, needs BOTH (default: true)
  */
-function ProtectedRoute({ children, allowedRoles = [], allowedJabatan = [], requireAny = true }) {
+function ProtectedRoute({ children, allowedRoles = [], allowedJabatan = [], allowedUsers = [], requireAny = true }) {
     const { currentUser } = useContext(AuthContext);
     const location = useLocation();
 
@@ -23,25 +23,33 @@ function ProtectedRoute({ children, allowedRoles = [], allowedJabatan = [], requ
     // If no restrictions specified, allow access
     const hasRoleRestriction = allowedRoles.length > 0;
     const hasJabatanRestriction = allowedJabatan.length > 0;
+    const hasUserRestriction = allowedUsers.length > 0;
 
-    if (!hasRoleRestriction && !hasJabatanRestriction) {
+    if (!hasRoleRestriction && !hasJabatanRestriction && !hasUserRestriction) {
         return children;
     }
 
     // Check role access
     const hasRoleAccess = hasRoleRestriction 
         ? allowedRoles.includes(currentUser.role)
-        : true;
+        : false;
 
     // Check jabatan access
     const hasJabatanAccess = hasJabatanRestriction
         ? allowedJabatan.includes(currentUser.jabatan)
-        : true;
+        : false;
+
+    // Check user name access (case-insensitive)
+    const hasUserAccess = hasUserRestriction
+        ? allowedUsers.some(name => name.toLowerCase() === (currentUser.nama || '').trim().toLowerCase())
+        : false;
 
     // Determine final access based on requireAny flag
     const hasAccess = requireAny
-        ? (hasRoleAccess || hasJabatanAccess)
-        : (hasRoleAccess && hasJabatanAccess);
+        ? (hasRoleAccess || hasJabatanAccess || hasUserAccess)
+        : ((!hasRoleRestriction || hasRoleAccess) &&
+           (!hasJabatanRestriction || hasJabatanAccess) &&
+           (!hasUserRestriction || hasUserAccess));
 
     if (!hasAccess) {
         // Redirect to access denied or dashboard

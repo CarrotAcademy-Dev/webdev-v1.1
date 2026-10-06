@@ -27,24 +27,32 @@ export const checkMenuAccess = (user, access) => {
   if (!user) return false;
   if (!access) return true; // No access restriction
 
-  const { allowedRoles = [], allowedJabatan = [], requireAny = true } = access;
+  const { allowedRoles = [], allowedJabatan = [], allowedUsers = [], requireAny = true } = access;
 
   // If no restrictions specified, allow access
-  if (allowedRoles.length === 0 && allowedJabatan.length === 0) return true;
+  if (allowedRoles.length === 0 && allowedJabatan.length === 0 && allowedUsers.length === 0) return true;
 
   const hasRoleAccess = allowedRoles.length > 0 
     ? allowedRoles.includes(user.role)
-    : true;
+    : false;
 
   const hasJabatanAccess = allowedJabatan.length > 0
     ? allowedJabatan.includes(user.jabatan)
-    : true;
+    : false;
 
-  // requireAny: true = OR logic (role OR jabatan)
-  // requireAny: false = AND logic (role AND jabatan)
+  const hasUserAccess = allowedUsers.length > 0
+    ? allowedUsers.some(name => name.toLowerCase() === (user.nama || '').trim().toLowerCase())
+    : false;
+
+  const hasRoleRestriction = allowedRoles.length > 0;
+  const hasJabatanRestriction = allowedJabatan.length > 0;
+  const hasUserRestriction = allowedUsers.length > 0;
+
   return requireAny
-    ? (hasRoleAccess || hasJabatanAccess)
-    : (hasRoleAccess && hasJabatanAccess);
+    ? (hasRoleAccess || hasJabatanAccess || hasUserAccess)
+    : ((!hasRoleRestriction || hasRoleAccess) &&
+       (!hasJabatanRestriction || hasJabatanAccess) &&
+       (!hasUserRestriction || hasUserAccess));
 };
 
 /**
@@ -287,6 +295,25 @@ export const NAVIGATION_CONFIG = {
           ]
         }
       ]
+    },
+
+    /**
+     * Social Media Freelance
+     */
+    socmedFreelance: {
+      id: 'socmed-freelance',
+      title: 'Socmed Freelance',
+      icon: <FiShare2 />,
+      access: ACCESS_GROUPS.SOCMED_FREELANCE_OR_ADMIN,
+      basePath: '/socmed-freelance',
+      categories: [
+        {
+          name: 'Freelance',
+          items: [
+            { label: 'Socmed Freelance', path: '/socmed-freelance' },
+          ]
+        }
+      ]
     }
   },
 
@@ -355,6 +382,7 @@ export const getActiveSection = (pathname) => {
   if (pathname.startsWith('/eso')) return 'eso';
   if (pathname.startsWith('/finance')) return 'finance';
   if (pathname.startsWith('/marcom')) return 'marcom';
+  if (pathname.startsWith('/socmed-freelance')) return 'socmed-freelance';
   if (pathname.startsWith('/admin')) return 'admin';
   if (pathname.startsWith('/profile') || pathname.startsWith('/payslip') || pathname.startsWith('/settings')) return 'profile';
   if (pathname === '/home' || pathname.startsWith('/attendance') || pathname.startsWith('/leave-request') || pathname.startsWith('/home/kpi')) return 'home';

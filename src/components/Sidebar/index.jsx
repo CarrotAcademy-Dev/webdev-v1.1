@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Box, IconButton } from '@chakra-ui/react';
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi';
@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import { PiSuitcaseBold } from 'react-icons/pi';
 import { useSidebar } from '@/context/SidebarContext';
+import { AuthContext } from '@/context/AuthContext';
 
 function Sidebar({ userRole }) {
   const location = useLocation();
@@ -21,6 +22,8 @@ function Sidebar({ userRole }) {
 
   // Check if user is admin
   const isAdmin = userRole === 'admin' || userRole === 'super_admin';
+  const { currentUser } = useContext(AuthContext);
+  const isAyustia = (currentUser?.nama || '').toLowerCase().trim() === 'ayustia putri handayani';
 
   // Toggle category expansion
   const toggleCategory = (category) => {
@@ -38,6 +41,7 @@ function Sidebar({ userRole }) {
     if (path.startsWith('/finance')) return 'finance';
     if (path.startsWith('/hrga')) return 'hrga';
     if (path.startsWith('/marcom')) return 'marcom';
+    if (path.startsWith('/socmed-freelance')) return 'socmed-freelance';
     if (path.startsWith('/admin')) return 'admin';
     if (path.startsWith('/profile') || path.startsWith('/payslip') || path.startsWith('/settings')) return 'profile';
     if (path === '/home' || path.startsWith('/attendance') || path.startsWith('/leave-request') || path.startsWith('/home/kpi')) return 'home';
@@ -287,6 +291,22 @@ function Sidebar({ userRole }) {
       ]
     };
 
+    // Add Socmed Freelance menu (only for Ayustia or admin)
+    if (isAyustia || isAdmin) {
+      menus['socmed-freelance'] = {
+        title: 'Socmed Freelance',
+        icon: <FiShare2 />,
+        categories: [
+          {
+            name: 'Freelance',
+            items: [
+              { label: "Socmed Freelance", path: "/socmed-freelance" },
+            ]
+          }
+        ]
+      };
+    }
+
     // Add Admin menu - only for admin users
     if (isAdmin) {
       menus.admin = {
@@ -304,7 +324,7 @@ function Sidebar({ userRole }) {
     }
 
     return menus;
-  }, [isAdmin]);
+  }, [isAdmin, isAyustia]);
 
   // Get current menu based on section
   const currentMenu = menuData[currentSection];

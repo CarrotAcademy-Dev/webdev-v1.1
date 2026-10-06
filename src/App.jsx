@@ -143,6 +143,8 @@ const MarcomProspektifPage = lazy(() => import('./pages/Staff/Marcom/Bersama/Pro
 const MarcomCekFolderDropboxPage = lazy(() => import('./pages/Staff/Marcom/Bersama/CekFolderDropboxPage'));
 const MarcomDashboardDailyPage = lazy(() => import('./pages/Staff/Marcom/Bersama/DashboardDailyPage'));
 const MarcomTrackTicketFromMePage = lazy(() => import('./pages/Staff/Marcom/Bersama/TrackTicketFromMePage'));
+// Socmed Freelance
+const SocmedFreelancePage = lazy(() => import('./pages/Staff/SocmedFreelance'));
 
 function App() {
   const { colorMode } = useColorMode();
@@ -1102,6 +1104,15 @@ function App() {
               <ProtectedRoute {...ACCESS_GROUPS.MARCOM_OR_ADMIN}>
                 <Layout>
                   <MarcomTrackTicketFromMePage />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            {/* Social Media Freelance Routes */}
+            <Route path="/socmed-freelance" element={
+              <ProtectedRoute {...ACCESS_GROUPS.SOCMED_FREELANCE_OR_ADMIN}>
+                <Layout>
+                  <SocmedFreelancePage />
                 </Layout>
               </ProtectedRoute>
             } />
