@@ -72,7 +72,6 @@ export const ACCESS_GROUPS = {
         allowedJabatan: [
             JABATAN.MARCOM,
             JABATAN.MARCOM_ALT,
-            JABATAN.SMS,
             'Marketing Communications Specialist',
             'Marketing Communications Spesialist',
             'Marcom'
@@ -82,7 +81,6 @@ export const ACCESS_GROUPS = {
         allowedJabatan: [
             JABATAN.MARCOM,
             JABATAN.MARCOM_ALT,
-            JABATAN.SMS,
             'Marketing Communications Specialist',
             'Marketing Communications Spesialist',
             'Marcom'

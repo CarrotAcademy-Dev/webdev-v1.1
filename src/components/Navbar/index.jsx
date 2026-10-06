@@ -30,10 +30,8 @@ function Navbar() {
     const userJabatanLower = (currentUser?.jabatan || '').toLowerCase().trim();
     const isMarcom =
       userJabatanLower.includes('marketing communication') ||
-      userJabatanLower.includes('social media specialist') ||
       currentUser?.jabatan === JABATAN.MARCOM ||
-      currentUser?.jabatan === JABATAN.MARCOM_ALT ||
-      currentUser?.jabatan === JABATAN.SMS;
+      currentUser?.jabatan === JABATAN.MARCOM_ALT;
     // Show CSO menu if user is CSO or Admin
     const showCSOMenu = isCSO || isAdmin;
     // Show ESO menu if user is ESO or Admin
