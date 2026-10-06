@@ -89,5 +89,11 @@ export const ACCESS_GROUPS = {
         ],
         allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
         requireAny: true
+    },
+    // Social Media Freelance access group
+    SOCMED_FREELANCE_OR_ADMIN: {
+        allowedUsers: ['Ayustia Putri Handayani'],
+        allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
+        requireAny: true
     }
 };

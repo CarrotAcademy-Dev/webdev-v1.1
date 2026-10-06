@@ -28,3 +28,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Google Apps Script clones (managed via clasp)
+gas/
