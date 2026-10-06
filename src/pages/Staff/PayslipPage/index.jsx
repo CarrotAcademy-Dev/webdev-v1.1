@@ -1,338 +1,235 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import {
   Box,
   Heading,
   Grid,
   Text,
-  Button,
   Badge,
   Stack,
   Flex,
-  Select,
   useColorModeValue,
+  Icon,
 } from '@chakra-ui/react';
-import { FiDownload, FiDollarSign, FiCalendar, FiFileText } from 'react-icons/fi';
+import {
+  FiFileText,
+  FiUser,
+  FiBriefcase,
+  FiMail,
+  FiClock,
+  FiAlertCircle,
+  FiShield
+} from 'react-icons/fi';
 import Container from '@/components/Container';
-
-/**
- * EXPECTED BACKEND API STRUCTURE:
- * 
- * GET /api/payslip/summary
- * Response: {
- *   status: 'success',
- *   result: {
- *     employee_name: string,
- *     employee_id: string,
- *     position: string,
- *     department: string,
- *     base_salary: number,
- *     last_payment_date: string (YYYY-MM-DD),
- *     last_payment_amount: number
- *   }
- * }
- * 
- * GET /api/payslip/list?year=2026
- * Response: {
- *   status: 'success',
- *   result: [
- *     {
- *       id: string,
- *       month: string (e.g., "Januari 2026"),
- *       payment_date: string (YYYY-MM-DD),
- *       gross_salary: number,
- *       deductions: number,
- *       net_salary: number,
- *       status: string ('paid' | 'pending' | 'processing'),
- *       pdf_url: string (download link)
- *     }
- *   ]
- * }
- */
+import { AuthContext } from '@/context/AuthContext';
 
 function PayslipPage() {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
-
-  // Mock data - akan diganti dengan data dari backend
-  const summaryData = {
-    employee_name: 'Cristin Magdalena Sitompul',
-    employee_id: 'EMP-001',
-    position: 'Customer Support Officer',
-    department: 'Customer Service',
-    base_salary: 5000000,
-    last_payment_date: '2026-01-25',
-    last_payment_amount: 5250000,
-  };
-
-  const payslipList = [
-    {
-      id: '1',
-      month: 'Januari 2026',
-      payment_date: '2026-01-25',
-      gross_salary: 5500000,
-      deductions: 250000,
-      net_salary: 5250000,
-      status: 'paid',
-      pdf_url: 'https://example.com/payslip/2026-01.pdf',
-    },
-    {
-      id: '2',
-      month: 'Desember 2025',
-      payment_date: '2025-12-25',
-      gross_salary: 5500000,
-      deductions: 250000,
-      net_salary: 5250000,
-      status: 'paid',
-      pdf_url: 'https://example.com/payslip/2025-12.pdf',
-    },
-    {
-      id: '3',
-      month: 'November 2025',
-      payment_date: '2025-11-25',
-      gross_salary: 5000000,
-      deductions: 200000,
-      net_salary: 4800000,
-      status: 'paid',
-      pdf_url: 'https://example.com/payslip/2025-11.pdf',
-    },
-  ];
-
-  // Generate year options (current year and 2 years back)
-  const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from({ length: 3 }, (_, i) => currentYear - i);
+  const { currentUser } = useContext(AuthContext);
 
   // Color values
   const cardBg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const labelColor = useColorModeValue('gray.600', 'gray.400');
   const valueColor = useColorModeValue('gray.900', 'white');
+  const inProgressBg = useColorModeValue('orange.50', 'rgba(254, 119, 67, 0.12)');
+  const inProgressBorder = useColorModeValue('orange.200', 'rgba(254, 119, 67, 0.3)');
 
-  // Format currency
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  // Format date
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  };
-
-  // Get status badge
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      paid: { colorScheme: 'green', label: 'Dibayar' },
-      pending: { colorScheme: 'yellow', label: 'Pending' },
-      processing: { colorScheme: 'blue', label: 'Diproses' },
-    };
-    const config = statusConfig[status] || statusConfig.pending;
-    return <Badge colorScheme={config.colorScheme}>{config.label}</Badge>;
-  };
-
-  // Handle download
-  const handleDownload = (pdfUrl) => {
-    // Backend akan provide direct download link
-    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
-  };
+  // Data profil user yang sedang login
+  const employeeName = currentUser?.nama || 'Karyawan Carrot Academy';
+  const employeeId = currentUser?.id_karyawan || currentUser?.['Nama + ID Karyawan']?.split(' - ')?.[1] || '-';
+  const employeePosition = currentUser?.jabatan || currentUser?.['Nama Jabatan Sekarang'] || '-';
+  const employeeDepartment = currentUser?.['Divisi'] || 'Carrot Academy';
+  const employeeEmail = currentUser?.email || '-';
+  const employeeStatus = currentUser?.['Status'] || currentUser?.['Aktif/Tidak Aktif'] || 'Aktif';
 
   return (
     <Container>
       <Box py={8}>
         {/* Header */}
         <Flex justify="space-between" align="center" mb={6}>
-          <Heading size="lg" color="orange.500">
-            Payslip Saya
-          </Heading>
+          <Box>
+            <Heading size="lg" color="orange.500" mb={1}>
+              Payslip Saya
+            </Heading>
+            <Text fontSize="sm" color={labelColor}>
+              Informasi profil karyawan dan status slip gaji digital.
+            </Text>
+          </Box>
+          <Badge colorScheme="orange" px={3} py={1} borderRadius="full" fontSize="0.8rem">
+            Tahap Pengembangan
+          </Badge>
         </Flex>
 
-        {/* Summary Cards */}
-        <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={6} mb={8}>
-          {/* Employee Info Card */}
-          <Box bg={cardBg} borderColor={borderColor} borderWidth="1px" borderRadius="lg" p={5}>
-            <Stack gap={3}>
-              <Flex align="center" gap={2}>
-                <Box as={FiFileText} fontSize="xl" color="orange.500" />
-                <Text fontSize="sm" color={labelColor} fontWeight="medium">
-                  Informasi Karyawan
-                </Text>
-              </Flex>
-              <Box>
-                <Text fontSize="lg" fontWeight="bold" color={valueColor}>
-                  {summaryData.employee_name}
-                </Text>
-                <Text fontSize="sm" color={labelColor}>
-                  {summaryData.employee_id} • {summaryData.position}
-                </Text>
-              </Box>
-            </Stack>
-          </Box>
-
-          {/* Base Salary Card */}
-          <Box bg={cardBg} borderColor={borderColor} borderWidth="1px" borderRadius="lg" p={5}>
-            <Stack gap={3}>
-              <Flex align="center" gap={2}>
-                <Box as={FiDollarSign} fontSize="xl" color="blue.500" />
-                <Text fontSize="sm" color={labelColor} fontWeight="medium">
-                  Gaji Pokok
-                </Text>
-              </Flex>
-              <Box>
-                <Text fontSize="2xl" fontWeight="bold" color={valueColor}>
-                  {formatCurrency(summaryData.base_salary)}
-                </Text>
-                <Text fontSize="sm" color={labelColor}>
-                  Per bulan
-                </Text>
-              </Box>
-            </Stack>
-          </Box>
-
-          {/* Last Payment Date Card */}
-          <Box bg={cardBg} borderColor={borderColor} borderWidth="1px" borderRadius="lg" p={5}>
-            <Stack gap={3}>
-              <Flex align="center" gap={2}>
-                <Box as={FiCalendar} fontSize="xl" color="purple.500" />
-                <Text fontSize="sm" color={labelColor} fontWeight="medium">
-                  Pembayaran Terakhir
-                </Text>
-              </Flex>
-              <Box>
-                <Text fontSize="lg" fontWeight="bold" color={valueColor}>
-                  {formatDate(summaryData.last_payment_date)}
-                </Text>
-                <Text fontSize="sm" color={labelColor}>
-                  Tanggal bayar
-                </Text>
-              </Box>
-            </Stack>
-          </Box>
-
-          {/* Last Payment Amount Card */}
-          <Box bg={cardBg} borderColor={borderColor} borderWidth="1px" borderRadius="lg" p={5}>
-            <Stack gap={3}>
-              <Flex align="center" gap={2}>
-                <Box as={FiDollarSign} fontSize="xl" color="green.500" />
-                <Text fontSize="sm" color={labelColor} fontWeight="medium">
-                  Total Terakhir
-                </Text>
-              </Flex>
-              <Box>
-                <Text fontSize="2xl" fontWeight="bold" color="green.500">
-                  {formatCurrency(summaryData.last_payment_amount)}
-                </Text>
-                <Text fontSize="sm" color={labelColor}>
-                  Gaji bersih
-                </Text>
-              </Box>
-            </Stack>
-          </Box>
-        </Grid>
-
-        {/* Payslip History Section */}
-        <Box bg={cardBg} borderColor={borderColor} borderWidth="1px" borderRadius="lg" overflow="hidden">
-          <Box p={5} borderBottom="1px solid" borderColor={borderColor}>
-            <Flex justify="space-between" align="center">
-              <Heading size="md">Riwayat Payslip</Heading>
-              <Select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                width="150px"
-                size="sm"
-              >
-                {yearOptions.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </Select>
-            </Flex>
-          </Box>
-          <Box overflowX="auto">
-            <Box as="table" width="100%" css={{ borderCollapse: 'collapse' }}>
-              <Box as="thead" bg={useColorModeValue('gray.50', 'gray.700')}>
-                <Box as="tr">
-                  <Box as="th" textAlign="left" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Bulan
-                  </Box>
-                  <Box as="th" textAlign="left" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Tanggal Bayar
-                  </Box>
-                  <Box as="th" textAlign="right" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Gaji Kotor
-                  </Box>
-                  <Box as="th" textAlign="right" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Potongan
-                  </Box>
-                  <Box as="th" textAlign="right" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Gaji Bersih
-                  </Box>
-                  <Box as="th" textAlign="center" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Status
-                  </Box>
-                  <Box as="th" textAlign="center" p={3} fontSize="sm" fontWeight="semibold" color={labelColor}>
-                    Aksi
-                  </Box>
-                </Box>
-              </Box>
-              <Box as="tbody">
-                {payslipList.length === 0 ? (
-                  <Box as="tr">
-                    <Box as="td" colSpan={7} textAlign="center" py={8}>
-                      <Text color={labelColor}>Tidak ada data payslip untuk tahun {selectedYear}</Text>
-                    </Box>
-                  </Box>
-                ) : (
-                  payslipList.map((payslip) => (
-                    <Box as="tr" key={payslip.id} borderTop="1px solid" borderColor={borderColor}>
-                      <Box as="td" p={3} fontWeight="medium">
-                        {payslip.month}
-                      </Box>
-                      <Box as="td" p={3}>
-                        {formatDate(payslip.payment_date)}
-                      </Box>
-                      <Box as="td" p={3} textAlign="right">
-                        {formatCurrency(payslip.gross_salary)}
-                      </Box>
-                      <Box as="td" p={3} textAlign="right" color="red.500">
-                        -{formatCurrency(payslip.deductions)}
-                      </Box>
-                      <Box as="td" p={3} textAlign="right" fontWeight="bold" color="green.500">
-                        {formatCurrency(payslip.net_salary)}
-                      </Box>
-                      <Box as="td" p={3} textAlign="center">
-                        {getStatusBadge(payslip.status)}
-                      </Box>
-                      <Box as="td" p={3} textAlign="center">
-                        <Button
-                          size="sm"
-                          colorScheme="orange"
-                          leftIcon={<FiDownload />}
-                          onClick={() => handleDownload(payslip.pdf_url, payslip.month)}
-                          isDisabled={payslip.status !== 'paid'}
-                        >
-                          Download
-                        </Button>
-                      </Box>
-                    </Box>
-                  ))
-                )}
-              </Box>
+        {/* Informasi Karyawan Card */}
+        <Box
+          bg={cardBg}
+          borderColor={borderColor}
+          borderWidth="1px"
+          borderRadius="xl"
+          p={6}
+          mb={8}
+          boxShadow="sm"
+        >
+          <Flex align="center" gap={3} mb={5} pb={4} borderBottom="1px solid" borderColor={borderColor}>
+            <Box
+              w="44px"
+              h="44px"
+              borderRadius="12px"
+              bg="orange.100"
+              _dark={{ bg: 'orange.900' }}
+              color="orange.500"
+              display="flex"
+              align="center"
+              justify="center"
+            >
+              <Icon as={FiUser} boxSize={5} />
             </Box>
-          </Box>
+            <Box>
+              <Text fontSize="md" fontWeight="bold" color={valueColor}>
+                Detail Identitas Karyawan
+              </Text>
+              <Text fontSize="xs" color={labelColor}>
+                Data terverifikasi dari profil akun yang sedang aktif
+              </Text>
+            </Box>
+          </Flex>
+
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={5}>
+            <Box>
+              <Flex align="center" gap={2} mb={1}>
+                <Icon as={FiUser} fontSize="sm" color="gray.400" />
+                <Text fontSize="xs" fontWeight="semibold" color={labelColor} textTransform="uppercase">
+                  Nama Lengkap
+                </Text>
+              </Flex>
+              <Text fontSize="md" fontWeight="bold" color={valueColor}>
+                {employeeName}
+              </Text>
+            </Box>
+
+            <Box>
+              <Flex align="center" gap={2} mb={1}>
+                <Icon as={FiFileText} fontSize="sm" color="gray.400" />
+                <Text fontSize="xs" fontWeight="semibold" color={labelColor} textTransform="uppercase">
+                  ID Karyawan
+                </Text>
+              </Flex>
+              <Text fontSize="md" fontWeight="bold" color="blue.500">
+                {employeeId}
+              </Text>
+            </Box>
+
+            <Box>
+              <Flex align="center" gap={2} mb={1}>
+                <Icon as={FiBriefcase} fontSize="sm" color="gray.400" />
+                <Text fontSize="xs" fontWeight="semibold" color={labelColor} textTransform="uppercase">
+                  Jabatan
+                </Text>
+              </Flex>
+              <Text fontSize="md" fontWeight="bold" color={valueColor}>
+                {employeePosition}
+              </Text>
+            </Box>
+
+            <Box>
+              <Flex align="center" gap={2} mb={1}>
+                <Icon as={FiShield} fontSize="sm" color="gray.400" />
+                <Text fontSize="xs" fontWeight="semibold" color={labelColor} textTransform="uppercase">
+                  Divisi / Departemen
+                </Text>
+              </Flex>
+              <Text fontSize="md" fontWeight="medium" color={valueColor}>
+                {employeeDepartment}
+              </Text>
+            </Box>
+
+            <Box>
+              <Flex align="center" gap={2} mb={1}>
+                <Icon as={FiMail} fontSize="sm" color="gray.400" />
+                <Text fontSize="xs" fontWeight="semibold" color={labelColor} textTransform="uppercase">
+                  Email Akun
+                </Text>
+              </Flex>
+              <Text fontSize="md" fontWeight="medium" color={valueColor}>
+                {employeeEmail}
+              </Text>
+            </Box>
+
+            <Box>
+              <Flex align="center" gap={2} mb={1}>
+                <Icon as={FiAlertCircle} fontSize="sm" color="gray.400" />
+                <Text fontSize="xs" fontWeight="semibold" color={labelColor} textTransform="uppercase">
+                  Status Karyawan
+                </Text>
+              </Flex>
+              <Badge colorScheme="green" px={2} py={0.5} borderRadius="md" fontSize="xs">
+                {employeeStatus}
+              </Badge>
+            </Box>
+          </Grid>
         </Box>
 
-        {/* Info Note */}
-        <Box mt={6} p={4} bg="blue.50" _dark={{ bg: 'blue.900' }} borderRadius="md" borderLeft="4px solid" borderColor="blue.500">
-          <Text fontSize="sm" color={labelColor}>
-            <strong>Catatan:</strong> Payslip hanya dapat didownload setelah status pembayaran menjadi "Dibayar". 
-            Jika ada pertanyaan terkait payslip, silakan hubungi HRD.
+        {/* Status In-Progress Banner */}
+        <Box
+          bg={inProgressBg}
+          borderColor={inProgressBorder}
+          borderWidth="1.5px"
+          borderRadius="2xl"
+          p={{ base: 6, md: 8 }}
+          textAlign="center"
+          position="relative"
+          overflow="hidden"
+          boxShadow="sm"
+        >
+          <Box
+            w="64px"
+            h="64px"
+            borderRadius="full"
+            bg="orange.100"
+            _dark={{ bg: 'orange.900' }}
+            color="orange.500"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            margin="0 auto 1.25rem"
+          >
+            <Icon as={FiClock} boxSize={8} />
+          </Box>
+
+          <Heading size="md" color={valueColor} mb={2}>
+            Rincian Gaji Digital Sedang Dalam Proses
+          </Heading>
+
+          <Text fontSize="sm" color={labelColor} maxW="600px" mx="auto" lineHeight="1.7" mb={5}>
+            Modul integrasi slip gaji otomatis saat ini sedang dalam tahap sinkronisasi dengan database penggajian internal. Rincian gaji, tunjangan, dan unduhan slip PDF akan dapat diakses langsung di halaman ini setelah proses integrasi selesai.
           </Text>
+
+          <Flex justify="center" wrap="wrap" gap={3}>
+            <Badge colorScheme="orange" variant="subtle" px={3} py={1} borderRadius="full">
+              Status: Sedang Dalam Pembuatan
+            </Badge>
+            <Badge colorScheme="blue" variant="subtle" px={3} py={1} borderRadius="full">
+              Keamanan Data Payroll Terjamin
+            </Badge>
+          </Flex>
+        </Box>
+
+        {/* Informasi Kontak Bantuan */}
+        <Box
+          mt={6}
+          p={4}
+          bg={useColorModeValue('gray.50', 'gray.800')}
+          borderRadius="lg"
+          borderWidth="1px"
+          borderColor={borderColor}
+        >
+          <Flex align="start" gap={3}>
+            <Icon as={FiAlertCircle} color="orange.500" mt={0.5} />
+            <Text fontSize="xs" color={labelColor} lineHeight="1.6">
+              <strong>Pertanyaan seputar honor atau slip gaji fisik?</strong>
+              <br />
+              Untuk konfirmasi rincian honor, perhitungan freelance, atau permohonan slip gaji resmi, silakan hubungi tim <strong>Finance</strong> atau <strong>HR&GA</strong> Carrot Academy.
+            </Text>
+          </Flex>
         </Box>
       </Box>
     </Container>
