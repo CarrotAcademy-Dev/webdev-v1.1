@@ -428,6 +428,10 @@ export function AuthProvider({ children }) {
     const login = async (email, password) => {
         const apiUrl = API_CONFIG.endpoints.auth;
         
+        if (!apiUrl) {
+            throw new Error('API Auth Endpoint tidak terkonfigurasi. Pastikan VITE_API_AUTH_ENDPOINT sudah diisi di Environment Variables.');
+        }
+
         // V2.0: Use POST with URLSearchParams (avoid preflight OPTIONS)
         const params = new URLSearchParams();
         params.append('action', 'login');
@@ -440,7 +444,20 @@ export function AuthProvider({ children }) {
             body: params
         });
         const textResponse = await response.text();
-        const result = JSON.parse(textResponse);
+
+        let result;
+        try {
+            result = JSON.parse(textResponse);
+        } catch (e) {
+            console.error('[Auth Error] Server mengembalikan non-JSON response:', textResponse);
+            if (textResponse.includes('Fungsi skrip tidak ditemukan') || textResponse.includes('Script function not found')) {
+                throw new Error('Google Apps Script Auth error: Fungsi skrip tidak ditemukan (doGet/doPost).');
+            }
+            if (textResponse.includes('accounts.google.com') || textResponse.includes('Sign in')) {
+                throw new Error('Akses Google Apps Script Auth ditolak. Pastikan deployment diatur ke "Who has access: Anyone".');
+            }
+            throw new Error('Respon server tidak valid (mengembalikan HTML/Error page). Cek tab Network di F12 untuk detailnya.');
+        }
         
         // V2.0: Check status instead of message
         if (result.status === 'success') {
