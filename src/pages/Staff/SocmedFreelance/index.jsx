@@ -65,6 +65,9 @@ const parseNum = (val) => {
 
 const ITEMS_PER_PAGE = 12;
 
+// Flag sementara untuk menyembunyikan tab Rekap Penggajian dari user (ubah ke true jika ingin ditampilkan kembali)
+const SHOW_PAYROLL = false;
+
 function SocmedFreelancePage() {
   const toast = useToast();
   const [selectedPeriod, setSelectedPeriod] = useState('');
@@ -385,15 +388,17 @@ function SocmedFreelancePage() {
               </Badge>
             )}
           </Tab>
-          <Tab fontWeight="700" gap={2} fontSize="0.95rem">
-            <FiDollarSign />
-            Rekap Penggajian
-            {gajiList.length > 0 && (
-              <Badge colorScheme="green" borderRadius="full" px={2} fontSize="0.75rem">
-                {gajiList.length}
-              </Badge>
-            )}
-          </Tab>
+          {SHOW_PAYROLL && (
+            <Tab fontWeight="700" gap={2} fontSize="0.95rem">
+              <FiDollarSign />
+              Rekap Penggajian
+              {gajiList.length > 0 && (
+                <Badge colorScheme="green" borderRadius="full" px={2} fontSize="0.75rem">
+                  {gajiList.length}
+                </Badge>
+              )}
+            </Tab>
+          )}
         </TabList>
 
         <TabPanels>
@@ -487,7 +492,7 @@ function SocmedFreelancePage() {
                           <th style={{ width: '160px' }}>Tanggal Produksi</th>
                           <th>Judul / Topik Konten</th>
                           <th style={{ width: '180px' }}>Tipe Konten</th>
-                          <th style={{ width: '180px' }}>Status Produksi</th>
+                          <th style={{ width: '180px' }}>Fee Satuan</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -538,14 +543,10 @@ function SocmedFreelancePage() {
                                     '-'
                                   )}
                                 </td>
-                                <td>
-                                  {item.status_produksi ? (
-                                    <Badge colorScheme={statusBadgeScheme} borderRadius="8px" px={2.5} py={0.5}>
-                                      {item.status_produksi}
-                                    </Badge>
-                                  ) : (
-                                    '-'
-                                  )}
+                                <td style={{ fontWeight: 700, color: '#2F855A' }}>
+                                  {item.fee_satuan !== undefined && item.fee_satuan !== null && item.fee_satuan !== ''
+                                    ? formatCurrency(parseNum(item.fee_satuan))
+                                    : (item.status_produksi ? formatCurrency(parseNum(item.status_produksi)) : '-')}
                                 </td>
                               </tr>
                             );
@@ -881,14 +882,15 @@ function SocmedFreelancePage() {
             )}
           </TabPanel>
 
-          {/* ================= TAB 4: REKAP PENGGAJIAN ================= */}
-          <TabPanel p={0}>
-            {isLoadingData ? (
-              <Box py={8}>
-                <Skeleton height="180px" borderRadius="18px" mb={6} />
-                <Skeleton height="280px" borderRadius="14px" />
-              </Box>
-            ) : (
+          {/* ================= TAB 4: REKAP PENGGAJIAN (DI-HIDE SEMENTARA) ================= */}
+          {SHOW_PAYROLL && (
+            <TabPanel p={0}>
+              {isLoadingData ? (
+                <Box py={8}>
+                  <Skeleton height="180px" borderRadius="18px" mb={6} />
+                  <Skeleton height="280px" borderRadius="14px" />
+                </Box>
+              ) : (
               <>
                 {/* Hero Card Rekap Penggajian */}
                 {activeGaji ? (
@@ -1038,6 +1040,7 @@ function SocmedFreelancePage() {
               </>
             )}
           </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
     </StyledSocmedFreelancePage>
