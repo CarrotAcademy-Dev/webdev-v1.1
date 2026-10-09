@@ -2,14 +2,22 @@
 import { useState, useMemo } from 'react';
 
 /**
+ * Batasi nomor halaman ke rentang 1..totalPages (minimal 1 walau data kosong)
+ */
+const clampPage = (page, totalPages) => Math.max(1, Math.min(page, totalPages));
+
+/**
  * Hook untuk pagination logic
  */
 export const usePagination = (data = [], itemsPerPage = 10) => {
-    const [currentPage, setCurrentPage] = useState(1);
+    const [requestedPage, setCurrentPage] = useState(1);
 
     const paginationData = useMemo(() => {
         const totalItems = data.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
+        // Data bisa menyusut (search/filter, hapus data) saat user ada di halaman akhir:
+        // pakai halaman terakhir yang masih ada supaya tabel tidak kosong
+        const currentPage = clampPage(requestedPage, totalPages);
         const indexOfLastItem = currentPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -24,7 +32,7 @@ export const usePagination = (data = [], itemsPerPage = 10) => {
             startIndex: indexOfFirstItem,
             endIndex: Math.min(indexOfLastItem, totalItems),
         };
-    }, [data, currentPage, itemsPerPage]);
+    }, [data, requestedPage, itemsPerPage]);
 
     const goToPage = (page) => {
         const pageNumber = Math.max(1, Math.min(page, paginationData.totalPages));
@@ -33,13 +41,13 @@ export const usePagination = (data = [], itemsPerPage = 10) => {
 
     const nextPage = () => {
         if (paginationData.hasNextPage) {
-            setCurrentPage(prev => prev + 1);
+            setCurrentPage(prev => clampPage(prev, paginationData.totalPages) + 1);
         }
     };
 
     const prevPage = () => {
         if (paginationData.hasPrevPage) {
-            setCurrentPage(prev => prev - 1);
+            setCurrentPage(prev => clampPage(prev, paginationData.totalPages) - 1);
         }
     };
 
@@ -48,7 +56,7 @@ export const usePagination = (data = [], itemsPerPage = 10) => {
     };
 
     const goToLastPage = () => {
-        setCurrentPage(paginationData.totalPages);
+        setCurrentPage(Math.max(1, paginationData.totalPages));
     };
 
     const resetPage = () => {
